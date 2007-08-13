@@ -10,8 +10,9 @@ require "lib/daemon"
 require "lib/config"
 
 def puts(*args)
+  print "L"
   args.each_with_index do |arg,i |
-    $stdout.print " > ", "  "*i, arg
+    $stdout.print "> ", " "*(i-1).abs, arg
   end
   Kernel.puts
 end
@@ -39,13 +40,13 @@ module Rutot
   VersionSuffix = 'pre-alpha'
   
   def self.version
-    Version.join('.') + "-" + VersionSuffix
+    "#{self}-" + Version.join('.') + "-" + VersionSuffix
   end
 
   def self.start
     unless Daemon.run?
-      d = Daemon.start
-      d
+      daemon = Daemon.start
+      daemon
     end
   end
   
@@ -55,8 +56,9 @@ begin
   #
   # Rutot starts the friendly Rutlov bot.
   #
+  puts "Starting  #{Rutot.version}  at #{Time.now}."
+  Kernel.puts
   r = Rutot.start
-
 end
 
 
