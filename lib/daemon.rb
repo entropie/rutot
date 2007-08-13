@@ -8,8 +8,8 @@ module Rutot
   class Connections < Array
     def <<(cntccls)
       con = Connection.new(cntccls)
-      puts :CON, "connection handle `%s´ saved" % con.config.servername
-      puts :CHN, " -> #{con.config.channels.join(', ')}"
+      puts :CON, "connection handle `%s@%s´ saved" % [con.config.nick, con.config.servername]
+      puts :CHN, "", con.config.channels.join(', ')
       push(con)
       con
     end
@@ -61,6 +61,7 @@ module Rutot
 
     def self.start(options = { })
       options.extend(ParamHash).process!(:config_file => :optional)
+      
       options[:config_file] ||= DefaultOptions[:config_file]
       daemon = self.new
       __run__(options, daemon)
