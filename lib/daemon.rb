@@ -70,7 +70,9 @@ module Rutot
 
     def self.__run__(options, handler)
       options.extend(ParamHash).process!(:config_file => :required)
+      
       userconfig = Config.read(options[:config_file], handler)
+
       rutlov = Rutlov.new(options)
       rutlov.config = userconfig
       rutlov
