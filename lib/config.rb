@@ -50,11 +50,11 @@ module Rutot
     attr_accessor :port
     attr_accessor :channels
     attr_reader   :nick
-    
-    def self.read(file)
+
+    def self.read(file, handler)
       klass = ConfigModules.constants.map{ |cl|
         ConfigModules.const_get(cl)
-      }.inject(self.new(file)) do |m, config_module|
+      }.inject(self.new(file, handler)) do |m, config_module|
         m.extend(config_module)
       end
       klass.instance_eval(File.readlines(file).join)
@@ -65,15 +65,16 @@ module Rutot
       @nick = name
     end
     
-    def initialize(configfile)
-      @configfile = configfile
+    def initialize(configfile, handler)
+      @configfile, @handler = configfile, handler
     end
 
     def Server(name, port = 6676, &blk)
       instance_eval(&blk)
       self.servername = name
       self.port = port
-      Connection << self
+      @handler << self.dup
+      self
     end
 
   end

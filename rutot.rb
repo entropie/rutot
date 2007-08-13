@@ -3,6 +3,8 @@
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 
+require "pp"
+
 require "lib/helper/paramhash"
 require "lib/daemon"
 require "lib/config"
@@ -20,19 +22,20 @@ module Rutot
   class Rutlov
 
     attr_accessor :config
+    attr_accessor :connections
     
     def initialize(options)
       @config = options[:config_file]
     end
 
     def start
-      self
     end
     
   end
 
   
   Version = %w'0 0 1'
+
   VersionSuffix = 'pre-alpha'
   
   def self.version
@@ -41,15 +44,21 @@ module Rutot
 
   def self.start
     unless Daemon.run?
-      Daemon.start
+      d = Daemon.start
+      d
     end
   end
   
 end
 
+begin
+  #
+  # Rutot starts the friendly Rutlov bot.
+  #
+  r = Rutot.start
 
-# Rutot starts the friendly Rutlov bot.
-Rutot.start
+end
+
 
 
 =begin
