@@ -46,15 +46,17 @@ module Rutot
   class Config
 
     attr_reader   :configfile
+    attr_reader   :nick
+
     attr_accessor :servername
     attr_accessor :port
     attr_accessor :channels
-    attr_reader   :nick
 
     def self.read(file, handler)
       klass = ConfigModules.constants.map{ |cl|
         ConfigModules.const_get(cl)
       }.inject(self.new(file, handler)) do |m, config_module|
+        puts :INT, "adding module #{config_module}"
         m.extend(config_module)
       end
       klass.instance_eval(File.readlines(file).join)
@@ -70,6 +72,7 @@ module Rutot
     end
 
     def Server(name, port = 6676, &blk)
+      puts :CNF, "parsing section: Server(\"#{name}\")"
       instance_eval(&blk)
       self.servername = name
       self.port = port
