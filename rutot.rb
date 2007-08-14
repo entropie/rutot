@@ -6,6 +6,9 @@
 require "pp"
 
 require "lib/helper/paramhash"
+require "lib/contrib"
+require "lib/irc"
+require "lib/rutot"
 require "lib/daemon"
 require "lib/config"
 
@@ -20,20 +23,6 @@ end
 
 module Rutot
 
-  class Rutlov
-
-    attr_accessor :config
-    attr_accessor :connections
-    
-    def initialize(options)
-      @config = options[:config_file]
-    end
-
-    def start
-    end
-    
-  end
-
   
   Version = %w'0 0 1'
 
@@ -45,8 +34,10 @@ module Rutot
 
   def self.start
     unless Daemon.run?
-      daemon = Daemon.start
-      daemon
+      @daemon = Daemon.start
+      @daemon
+    else
+      raise "daemon already running, #{daemon}}"
     end
   end
   
@@ -59,6 +50,7 @@ begin
   puts "Starting  #{Rutot.version}  at #{Time.now}."
   Kernel.puts
   r = Rutot.start
+  #Rutot.start
 end
 
 
