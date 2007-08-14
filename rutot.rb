@@ -5,13 +5,6 @@
 
 require "pp"
 
-require "lib/helper/paramhash"
-require "lib/contrib"
-require "lib/irc"
-require "lib/rutot"
-require "lib/daemon"
-require "lib/config"
-
 def puts(*args)
   print "L"
   args.each_with_index do |arg,i |
@@ -20,6 +13,15 @@ def puts(*args)
   Kernel.puts
 end
   
+
+
+require "lib/helper/paramhash"
+require "lib/contrib"
+require "lib/irc"
+require "lib/rutot"
+require "lib/daemon"
+require "lib/config"
+
 
 module Rutot
 

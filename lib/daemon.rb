@@ -6,7 +6,8 @@
 module Rutot
 
   class Daemon
-
+    include Contribs[:baldur]
+    #include Contribs[:baldur]
     include Helper
 
     include KeywordArguments
@@ -34,8 +35,8 @@ module Rutot
       
       options[:config_file] ||= DefaultOptions[:config_file]
       daemon = self.new
-      __run__(options, daemon)
-      daemon.connections = Connections.connect_all
+      bot = __run__(options, daemon)
+      daemon.connections = Connections.connect_all(daemon, bot)
       daemon
     end
 
@@ -43,10 +44,10 @@ module Rutot
       options.extend(ParamHash).process!(:config_file => :required)
       
       userconfig = Config.read(options[:config_file], handler)
-
-      rutlov = Rutlov.new(options)
-      rutlov.config = userconfig
-      rutlov
+      IRCConnection.debuglevel.network = true
+      rutlov = Rutlov.new(userconfig)
+      # rutlov.config = userconfig
+      # rutlov
     end
 
   end

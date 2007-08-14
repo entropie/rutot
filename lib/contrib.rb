@@ -24,7 +24,7 @@ module Rutot
       end
       
       puts :CNT, "trying to load `#{which}´"
-      contribdir = File.join(ContribDirectory, which)
+      contribdir = File.join(ContribDirectory, which.to_s)
       newbox = Module.new{ include Box }
       newbox.module_eval %q{
         def self.getBinding

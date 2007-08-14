@@ -7,8 +7,20 @@ module Rutot
 
   module ConfigModules
     
-    module Freenode
+    module Server
+      attr_reader :realname, :ident
+
+      def ident(name)
+        @ident = name
+      end
       
+      def realname(name)
+        @realname = name
+      end
+    end
+
+    module Freenode
+
       def freenode(password)
         self
       end
@@ -17,7 +29,12 @@ module Rutot
 
     module Channels
       
-      attr_reader :channels
+      attr_reader :channels, :home_channel
+
+      def home_channel(chan)
+        @home_channel = chan
+#        pp self
+      end
       
       def join(*args, &blk)
         @channels = Rutot::Channels.new(self)
@@ -52,6 +69,14 @@ module Rutot
     attr_accessor :port
     attr_accessor :channels
 
+    def [](obj)
+      if iv = instance_variable_get("@"+obj.to_s)
+        p iv
+      # elsif
+      #   iv  = instance_variable_get("@"+obj.to_s)
+      end
+    end
+    
     def self.read(file, handler)
       klass = ConfigModules.constants.map{ |cl|
         ConfigModules.const_get(cl)

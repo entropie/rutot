@@ -5,20 +5,6 @@
 
 module Rutot
 
-  class Rutlov
-
-    # Config releated only to current bot instance.
-    attr_accessor :config
-
-    # server connections
-    attr_accessor :connections
-    
-    def initialize(options)
-      @config = options[:config_file]
-    end
-
-  end
-
 end
 
 
