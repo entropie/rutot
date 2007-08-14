@@ -31,7 +31,7 @@ module Rutot
       
       attr_reader :channels, :home_channel
 
-      def home_channel(chan)
+      def home(chan)
         @home_channel = chan
 #        pp self
       end

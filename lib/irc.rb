@@ -134,16 +134,6 @@ module Rutot
         end
         :success
       end
-      @bot.conn.add_event(:PRIVMSG, :say_stuff) do |msg, conn|
-        target = msg.params.first
-        nick = msg.prefix[/[^:!]+/]
-        next if target =~ /#/
-          next unless @bot.home_op? nick
-        next unless msg.params.last =~ /\Asay /
-        _, target, message = msg.params.last.split(' ', 3)
-        @bot.msg(target, message)
-        :success
-      end
 
       @bot.conn.add_event(:PRIVMSG, :do_reconnect) do |msg, conn|
         target = msg.params.first
@@ -158,8 +148,7 @@ module Rutot
         next unless msg.params.first !~ /#/
           nick = msg.prefix[/[^:!]+/]
         message = msg.params.last
-        p @home_channel
-        @bot.msg(@bot.home_channel, "<#{nick}> #{message}")
+        @bot.msg(@bot.home_channel, "/MSG: #{nick}  #{message}")
         :success
       end
 

@@ -28,6 +28,8 @@ class Rutlov < IRCClient
     @ident      = 'rutlov'
     @realname   = 'rutlov'
     @channels   = config.channels
+    @home_channel = config.home_channel
+    @master     = config.master
     super()
 
     @config = config
