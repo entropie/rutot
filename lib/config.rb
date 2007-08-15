@@ -40,23 +40,37 @@ module Rutot
 
       def home(chan)
         @home_channel = chan
-#        pp self
       end
       
       def join(*args, &blk)
         @channels = Rutot::Channels.new(self)
-        instance_eval(&blk)
+        @channels.instance_eval(&blk)
         self
       end
 
-      def channel(name)
+      def channel(name, &blk)
+        instance_eval(&blk)
         @channels << name
       end
-      
+
     end
     
   end
 
+  class Channel
+
+    attr_reader :name
+    attr_reader :plugins
+    
+    def initialize(name)
+      @name = name
+      @plugins = Plugins.new
+    end
+    def plugin(name)
+      @plugins.select(name.to_sym)
+    end
+  end
+  
   class Channels < Array
 
     attr_accessor :server
@@ -64,25 +78,33 @@ module Rutot
     def initialize(server)
       @server = server
     end
+
+    def channel(name, &blk)
+      chan = Channel.new(name)
+      chan.instance_eval(&blk)
+      self << chan
+    end
     
+    # def map!
+    #   each do |c|
+    #     pp c
+    #   end
+    #   nil
+    # end
+
   end
   
   class Config
 
     attr_reader   :configfile
     attr_reader   :nick
+    attr_reader   :plugins
 
     attr_accessor :servername
     attr_accessor :port
     attr_accessor :channels
 
-    def [](obj)
-      if iv = instance_variable_get("@"+obj.to_s)
-        p iv
-      # elsif
-      #   iv  = instance_variable_get("@"+obj.to_s)
-      end
-    end
+    def [](obj);    end
     
     def self.read(file, handler)
       klass = ConfigModules.constants.map{ |cl|

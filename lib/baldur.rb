@@ -22,7 +22,11 @@ class Rutlov < IRCClient
   attr_reader   :nicklist
   attr_reader   :daddy
 
+  def load_plugins
+  end
+  
   def initialize(config)
+
     @serverport = config.port
     @serverhost = config.servername
     @nick       = config.nick
@@ -40,7 +44,7 @@ class Rutlov < IRCClient
     @conn.add_codes IRCConnection::ReplyCodes::RFC2812
 
     @conn.add_event :RPL_ENDOFMOTD, :join_channels do |msg, conn|
-      join @channels
+      join @channels.map{ |c| c.name}
       conn.remove_event :RPL_ENDOFMOTD, :join_channels 
       :success
     end

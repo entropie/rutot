@@ -2,19 +2,21 @@
 #
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
+
 module Rutot
-  module Events
-    module EventHandler
 
-      module Extended
-        ORDER = 1
-      end
-
-    end
+  class Plugins
+    include Helper
+    include KeywordArguments
   end
+
+  class DefaultPlugins < Plugins
+  end
+  
+  class ChannelPlugins < Plugins
+  end
+  
 end
-
-
 
 
 =begin

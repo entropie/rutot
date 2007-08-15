@@ -8,6 +8,7 @@ module Rutot
     module EventHandler
 
       module Default
+
         ORDER = 0
 
         def privmsg_default

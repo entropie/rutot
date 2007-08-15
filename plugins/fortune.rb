@@ -2,18 +2,11 @@
 #
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
-module Rutot
-  module Events
-    module EventHandler
 
-      module Extended
-        ORDER = 1
-      end
 
-    end
-  end
+respond_on(:PRIVMSG, prefix(:fortune)) do |h|
+  h.respond(`fortune -s`)
 end
-
 
 
 

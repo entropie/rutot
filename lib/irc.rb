@@ -10,7 +10,7 @@ module Rutot
     def <<(cntccls)
       con = Connection.new(cntccls)
       puts :CON, "connection handle `%s@%s´ saved" % [con.config.nick, con.config.servername]
-      puts :CHN, "", con.config.channels.join(', ')
+      puts :CHN, "", con.config.channels.map{ |c| c.name}.join(', ')
       push(con)
       con
     end

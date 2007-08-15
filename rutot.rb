@@ -16,6 +16,8 @@ end
 
 
 require "lib/helper/paramhash"
+require "lib/responder"
+require "lib/plugins"
 require "lib/contrib"
 require "lib/irc_events"
 require "lib/irc"
