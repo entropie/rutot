@@ -6,6 +6,13 @@
 module Rutot
 
   module ConfigModules
+
+    module Master
+      attr_reader :daddy
+      def master(master)
+        @daddy = master
+      end
+    end
     
     module Server
       attr_reader :realname, :ident

@@ -20,7 +20,8 @@ class Rutlov < IRCClient
   attr_accessor :channels
   attr_accessor :home_channel
   attr_reader   :nicklist
-  
+  attr_reader   :daddy
+
   def initialize(config)
     @serverport = config.port
     @serverhost = config.servername
@@ -29,7 +30,7 @@ class Rutlov < IRCClient
     @realname   = 'rutlov'
     @channels   = config.channels
     @home_channel = config.home_channel
-    @master     = config.master
+    @daddy      = config.daddy
     super()
 
     @config = config

@@ -17,7 +17,9 @@ end
 
 require "lib/helper/paramhash"
 require "lib/contrib"
+require "lib/irc_events"
 require "lib/irc"
+
 require "lib/rutot"
 require "lib/daemon"
 require "lib/config"
@@ -52,7 +54,6 @@ begin
   puts "Starting  #{Rutot.version}  at #{Time.now}."
   Kernel.puts
   r = Rutot.start
-  #Rutot.start
 end
 
 
