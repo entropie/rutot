@@ -4,12 +4,14 @@
 #
 
 
+
 Dir.chdir('/home/mit/Source/rutot/')
 require "rubygems"
 require "pp"
 
 
 class String; alias :dc :downcase end
+
 def puts(*args)
   print "L"
   args.each_with_index do |arg,i |
@@ -24,7 +26,6 @@ require "lib/plugins"
 require "lib/contrib"
 require "lib/irc_events"
 require "lib/irc"
-
 require "lib/rutot"
 require "lib/daemon"
 require "lib/config_modules"
@@ -34,7 +35,7 @@ require "lib/config"
 module Rutot
 
   
-  Version = %w'0 0 1'
+  Version = %w'0 0 3'
 
   VersionSuffix = 'pre-alpha'
   
