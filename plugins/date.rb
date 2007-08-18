@@ -3,8 +3,9 @@
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 
+
 respond_on(:PRIVMSG, prefix_or_nick(:date), :args => [:Integer]) do |h|
-  format = "%x - %A, %3j"
+  format = "%x - %A, %3j :)"
   unless h.args.empty?
     mdays = h.args.first
     tn = Time.now + mdays*24*60*60
@@ -12,7 +13,7 @@ respond_on(:PRIVMSG, prefix_or_nick(:date), :args => [:Integer]) do |h|
   else
     h.respond(Time.now.strftime(format))
   end
-end.name='date'
+end
 
 =begin
 Local Variables:

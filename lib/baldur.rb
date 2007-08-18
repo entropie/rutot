@@ -29,8 +29,8 @@ class Rutlov < IRCClient
     @serverhost = config.servername
     @nick       = config.nick
     @plugins    = Plugins.new(self)
-    @ident      = 'rutlov'
-    @realname   = 'rutlov'
+    @ident      = config.ident
+    @realname   = config.realname
     @channels   = config.channels
     @home_channel = config.home_channel
     @daddy      = config.daddy

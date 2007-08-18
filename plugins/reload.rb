@@ -4,8 +4,9 @@
 #
 
 respond_on(:PRIVMSG, prefix_or_nick(:reload)) do |h|
-  pp h.bot
-end.name='date'
+  h.bot.plugins.reload
+  h.respond(ReplyBox.k)
+end
 
 
 

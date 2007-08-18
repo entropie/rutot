@@ -23,11 +23,13 @@ module Rutot
     module Server
       attr_reader :realname, :ident
 
-      def ident(name)
-        @ident = name
+      def ident(name=nil)
+        @ident = name if name
+        @ident
       end
       
-      def realname(name)
+      def realname(name=nil)
+        @realname = nil if name
         @realname = name
       end
     end

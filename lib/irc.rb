@@ -45,7 +45,7 @@ module Rutot
     def connect!(bot)
       @bot = bot
       Events.load_all!(@bot)
-      @bot.plugins.attach('a', @bot.conn, @bot)
+      @bot.plugins.attach(@bot.conn, @bot)
       @bot.connect
       @bot.loop
     end

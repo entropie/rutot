@@ -7,9 +7,23 @@ module Rutot
 
   class Plugins
 
+    class ReplyBox
+      Replies = {
+        :k => [:aight, :k, :done]
+      }
+      
+      def self.method_missing(m, *args, &blk)
+        ar = Replies[m]
+        ar.sort_by{ rand }.first
+      rescue
+        "uh... #{$1}"
+      end
+    end
+    
     class RespondHandle
 
       attr_reader :type, :keywords, :options, :handler, :respond_msg, :name
+      attr_accessor :bot
 
       def initialize(type, keywords, options, &blk)
         @name = "#{type}:#{keywords}"
@@ -88,8 +102,16 @@ module Rutot
     
     class Responder < Array
 
+      attr_reader :bot
+      
+      def initialize(bot)
+        super()
+        @bot = bot
+      end
+      
       def add(type, handler, options, &blk)
         rh = RespondHandle.new(type, handler, options, &blk)
+        rh.bot = bot
         self << rh
         rh
       end
@@ -113,10 +135,19 @@ module Rutot
     end
     
     def reset
-      @responder = Responder.new
+      if @responder
+        detach(@bot.conn, @bot)
+        @responder.clear
+      end
+      @responder = Responder.new(bot)
     end
 
-    def attach(name, con, bot)
+    def reload
+      reset
+      attach(@bot.conn, @bot)
+    end
+
+    def attach(con, bot)
       load_plugin_files!
       self.responder.each do |plugin|
         puts :PLG, "#{bot.nick}: attaching plugin: `#{plugin.name}´"
@@ -127,6 +158,14 @@ module Rutot
             bot.msg(target, plugin.call(message))
           end
         end
+      end
+    end
+
+    def detach(con, bot)
+      load_plugin_files!
+      self.responder.each do |plugin|
+        puts :PLG, "#{bot.nick}: DETACHING plugin: `#{plugin.name}´"
+        con.remove_event(plugin.type, plugin.name)
       end
     end
     

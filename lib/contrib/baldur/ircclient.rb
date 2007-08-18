@@ -91,6 +91,11 @@ class IRCClient
     end
     @conn.send(line)
   end
+
+  def part(chan, str="")
+    @conn.send("PART chan : #{str}")
+  end
+  
   def quit(str="")
     @conn.send("QUIT :#{str}")
     @conn.disconnect
