@@ -26,6 +26,7 @@ module Rutot
         puts :CON,
         "calling connect: #{connection.config.nick}@#{connection.server}"
         connection.connect!(bot)
+        connection.connected = true
       end
     end
     
@@ -44,6 +45,7 @@ module Rutot
     def connect!(bot)
       @bot = bot
       Events.load_all!(@bot)
+      @bot.plugins.attach('a', @bot.conn, @bot)
       @bot.connect
       @bot.loop
     end

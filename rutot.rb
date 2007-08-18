@@ -3,8 +3,13 @@
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 
+
+Dir.chdir('/home/mit/Source/rutot/')
+require "rubygems"
 require "pp"
 
+
+class String; alias :dc :downcase end
 def puts(*args)
   print "L"
   args.each_with_index do |arg,i |
@@ -13,8 +18,6 @@ def puts(*args)
   Kernel.puts
 end
   
-
-
 require "lib/helper/paramhash"
 require "lib/responder"
 require "lib/plugins"
@@ -56,7 +59,7 @@ begin
   puts "Starting  #{Rutot.version}  at #{Time.now}."
   Kernel.puts
   r = Rutot.start
-end
+end if __FILE__ == $0
 
 
 

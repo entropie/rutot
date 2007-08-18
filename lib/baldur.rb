@@ -22,14 +22,13 @@ class Rutlov < IRCClient
   attr_reader   :nicklist
   attr_reader   :daddy
 
-  def load_plugins
-  end
+  attr_accessor :plugins
   
   def initialize(config)
-
     @serverport = config.port
     @serverhost = config.servername
     @nick       = config.nick
+    @plugins    = Plugins.new(self)
     @ident      = 'rutlov'
     @realname   = 'rutlov'
     @channels   = config.channels

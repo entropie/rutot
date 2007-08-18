@@ -790,6 +790,8 @@ class IRCConnection
     rescue Exception => e
       #$stderr.puts "Exception occured during processing of event #{key} for command #{command}"
       $stderr.puts e
+      send("PRIVMSG #ackro :#{$!}")
+      pp e.backtrace
     ensure
       if debuglevel.events
         # $stderr.puts "Leaving event #{key} for command #{command}"

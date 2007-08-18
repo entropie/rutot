@@ -9,8 +9,14 @@ module Rutot
 
     module Master
       attr_reader :daddy
+      attr_reader :myself
       def master(master)
         @daddy = master
+      end
+
+      def myself(arg = nil)
+        @myself = arg if arg
+        @myself
       end
     end
     
@@ -60,15 +66,11 @@ module Rutot
   class Channel
 
     attr_reader :name
-    attr_reader :plugins
     
     def initialize(name)
       @name = name
-      @plugins = Plugins.new
     end
-    def plugin(name)
-      @plugins.select(name.to_sym)
-    end
+
   end
   
   class Channels < Array
@@ -85,26 +87,19 @@ module Rutot
       self << chan
     end
     
-    # def map!
-    #   each do |c|
-    #     pp c
-    #   end
-    #   nil
-    # end
-
   end
   
   class Config
 
     attr_reader   :configfile
     attr_reader   :nick
-    attr_reader   :plugins
 
+    attr_accessor :plugins
     attr_accessor :servername
     attr_accessor :port
     attr_accessor :channels
 
-    def [](obj);    end
+    attr_reader   :mods
     
     def self.read(file, handler)
       klass = ConfigModules.constants.map{ |cl|
@@ -122,11 +117,24 @@ module Rutot
     end
     
     def initialize(configfile, handler)
-      @configfile, @handler = configfile, handler
+      @configfile, @handler, @mods = configfile, handler, []
     end
 
+    def finish
+      self
+    end
+    
+    def modules(*mods)
+      mods.each{ |m| mod(m) }
+    end
+
+    def mod(mod)
+      @mods << mod
+    end
+    
     def Server(name, port = 6676, &blk)
       puts :CNF, "parsing section: Server(\"#{name}\")"
+      self.plugins = Plugins.new(self)
       instance_eval(&blk)
       self.servername = name
       self.port = port

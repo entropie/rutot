@@ -13,12 +13,22 @@ module Rutot
     EventPrefix = ','
     
     class EventDispatcher
+
       attr_accessor :bot
+
       def initialize(bot)
         @bot = bot
       end
+      
     end
     
+    def self.map!
+      puts :EDI, "mapping plugin modules for `#{bot.nick}´"
+      bot.channels.each do |chan|
+        chan.plugins.attach(chan.name, bot.conn, bot)
+      end
+    end
+
     def self.load_all!(bot)
       Dir["#{EventDirectory}*.rb"].each do |eventfile|
         load eventfile
@@ -38,10 +48,6 @@ module Rutot
           ed.send im
         }
       }
-      puts :EDI, "mapping plugin modules for `#{bot.nick}´"
-      bot.channels.each do |chan|
-        chan.plugins.attach(chan.name, bot.conn, bot)
-      end
       ed
     end
   end

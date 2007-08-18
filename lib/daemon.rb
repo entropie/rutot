@@ -18,6 +18,7 @@ module Rutot
 
     attr_accessor :connections
 
+
     def <<(connection)
       @connections << connection
     end
@@ -42,11 +43,10 @@ module Rutot
 
     def self.__run__(options, handler)
       options.extend(ParamHash).process!(:config_file => :required)
-      
       userconfig = Config.read(options[:config_file], handler)
       IRCConnection.debuglevel.network = true
-      rutlov = Rutlov.new(userconfig)
-      rutlov.load_plugins
+      rutlov = Rutlov.new(userconfig.finish)
+      #rutlov.load_plugins
       rutlov
     end
 
