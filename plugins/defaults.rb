@@ -8,7 +8,7 @@ respond_on(:PRIVMSG, prefix_or_nick(:uptime)) do |h|
 end
 
 respond_on(:PRIVMSG, prefix_or_nick(:quit)) do |h|
-  h.bot.quit "lata"
+  h.bot.quit `fortune drugs zippy -s chucknorris bofh-excuses wisdom fortunes`
 end
 
 

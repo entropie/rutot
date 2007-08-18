@@ -9,9 +9,10 @@ module Rutot
 
     class ReplyBox
       Replies = {
-        :k => [:aight, :k, :done]
+        :k =>           [:aight, :k, :done],
+        :YO =>          ["YEAH!", 'Yo.', 'Definitely yes.']
       }
-      
+
       def self.method_missing(m, *args, &blk)
         ar = Replies[m]
         ar.sort_by{ rand }.first
