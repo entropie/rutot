@@ -27,6 +27,7 @@ require "lib/irc"
 
 require "lib/rutot"
 require "lib/daemon"
+require "lib/config_modules"
 require "lib/config"
 
 

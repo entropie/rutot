@@ -75,7 +75,6 @@ module Rutot
           if args.empty? and @options[:arg_req]
             raise "we want arguments"
           end
-
           @args = []
           @options[:args].each_with_index do |a, i|
             @args <<
