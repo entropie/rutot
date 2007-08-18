@@ -35,14 +35,9 @@ module Rutot
   class Config
 
     attr_reader   :configfile
-    attr_reader   :nick
+    attr_reader   :nick, :mods, :configfile
 
-    attr_accessor :plugins
-    attr_accessor :servername
-    attr_accessor :port
-    attr_accessor :channels
-
-    attr_reader   :mods
+    attr_accessor :plugins, :servername, :port, :channels
     
     def self.read(file, handler)
       klass = ConfigModules.constants.map{ |cl|
