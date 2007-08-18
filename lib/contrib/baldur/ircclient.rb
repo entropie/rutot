@@ -1,4 +1,3 @@
-#require 'ircconnection'
 class IRCClient
 
   attr_accessor :serverhost, :serverport, :nick, :ident, :realname
@@ -93,7 +92,7 @@ class IRCClient
   end
 
   def part(chan, str="")
-    @conn.send("PART chan : #{str}")
+    @conn.send("PART #{chan} : #{str}")
   end
   
   def quit(str="")

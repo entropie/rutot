@@ -22,6 +22,8 @@ class Rutlov < IRCClient
   attr_reader   :nicklist
   attr_reader   :daddy
 
+  attr_reader   :ident, :realname
+  
   attr_accessor :plugins
   
   def initialize(config)
@@ -30,7 +32,7 @@ class Rutlov < IRCClient
     @nick       = config.nick
     @plugins    = Plugins.new(self)
     @ident      = config.ident
-    @realname   = config.realname
+    @realname   ='Rutlov Übermorgen'
     @channels   = config.channels
     @home_channel = config.home_channel
     @daddy      = config.daddy

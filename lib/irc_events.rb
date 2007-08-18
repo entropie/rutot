@@ -8,6 +8,8 @@
 module Rutot
   module Events
 
+    State = Struct.new(:op, :voice)
+    
     EventDirectory = File.dirname(__FILE__) + "/handler/"
 
     EventPrefix = ','
