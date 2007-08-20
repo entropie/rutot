@@ -830,9 +830,15 @@ class IRCConnection
     end
   end
 
+  def send_throttle(line)
+    line.to_s.split("\n").each do |a|
+      @conn.write a.chomp + "\r\n"
+    end
+  end
+  
   def send(*args)
     args.each do |line|
-      @conn.write line.chomp + "\r\n"
+      send_throttle(line)
       if debuglevel.network
         $stderr.puts "-> #{line}"
         $stderr.flush

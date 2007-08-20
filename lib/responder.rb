@@ -10,7 +10,8 @@ module Rutot
     class ReplyBox
       Replies = {
         :k =>           [:aight, :k, :done],
-        :YO =>          ["YEAH!", 'Yo.', 'Definitely yes.']
+        :YO =>          ["YEAH!", 'Yo.', 'Definitely yes.'],
+        :NO =>          ["uh.", 'Hmm, nope.', 'We all gonna die down here.']
       }
 
       def self.method_missing(m, *args, &blk)
@@ -27,6 +28,7 @@ module Rutot
       attr_accessor :bot
 
       def initialize(type, keywords, options, &blk)
+        # @name = "#{type}:#{keywords}"
         @name = "#{type}:#{keywords}"
         @respond_msg = ''
         @type, @keywords, @handler, @options = type, keywords, blk, options
@@ -38,7 +40,7 @@ module Rutot
       end
 
       def respond(*msg)
-        @respond_msg = msg.join(' ')
+        (@respond_msg ||= []) << msg.join("\n")
       end
       
       def args=(args)
@@ -93,6 +95,7 @@ module Rutot
       end
       
       def call(*args)
+        p @respond_msg
         @args = args
         parse_args!
         @handler.call(self)
