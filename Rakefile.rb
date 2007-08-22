@@ -17,7 +17,7 @@ task :spechtml do
 end
 
 task :rdoc do
-  system('rdoc -a -I gif -S -m Rutot -o ~/public_html/doc/rutotdoc/ -x "(_darcs|bin|spec)"')
+  system('rdoc -a -I gif -S -m Rutot -o ~/public_html/doc/rutotdoc/ -x "(_darcs|bin|spec|plugins|contrib)"')
 end
 
 task :all => [:spec, :spechtml, :rdoc] do
