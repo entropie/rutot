@@ -30,8 +30,8 @@ respond_on(:PRIVMSG, prefix_or_nick(:uptime)) do |h|
   h.respond(`uptime`)
 end
 
-respond_on(:PRIVMSG, prefix_or_nick(:quite)) do |h|
-  h.bot.spooler.quite!
+respond_on(:PRIVMSG, prefix_or_nick(:quiet)) do |h|
+  h.bot.spooler.quiet!
 end
 
 respond_on(:PRIVMSG, prefix_or_nick(:talk)) do |h|

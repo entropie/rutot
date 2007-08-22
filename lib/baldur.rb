@@ -12,25 +12,25 @@ module Rutot
     
     attr_reader :bot
     attr_reader :blocked
-    attr_reader :quite
+    attr_reader :quiet
     
     def initialize(bot, p = 0)
       @blocked = false
       @bot = bot
-      @quite = false
+      @quiet = false
       super()
     end
 
-    def quite!; @quite = true;  end
-    def talk!;  @quite = false; end
-    def quite?; @quite;         end
+    def quiet!; @quiet = true;  end
+    def talk!;  @quiet = false; end
+    def quiet?; @quiet;         end
     
     def blocked?
       @blocked
     end
     
     def push(target, *lines)
-      if quite?
+      if quiet?
         puts :Q, "I’am not allowed to talk."
         return
       elsif lines.to_s.size.zero?
