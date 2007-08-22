@@ -26,10 +26,11 @@ end
 respond_on(:PRIVMSG, /https?:\/\//, :args => [:Everything]) do |h|
   begin
     uri = URI.extract(h.raw.join(' ')).select{ |i| begin URI.parse(i); rescue; nil end }.first
+
     case ct = fetch(uri).content_type
     when /text\/\w+/
       str =
-        if rand < 0.5 and uri.size <= 40
+        if rand < 0.1 and uri.size <= 40
           "Hpricot.open('%s').at(:title).inner_text # => \"%s\""
         else
           "Page title of %s is „%s“."
@@ -39,6 +40,7 @@ respond_on(:PRIVMSG, /https?:\/\//, :args => [:Everything]) do |h|
       h.respond(str % [ uri, title])
     else
     end
+  rescue NoMethodError
   rescue
     h.respond(ReplyBox.SRY)
   end
