@@ -26,7 +26,7 @@ module Rutot
 
     def channel(name, &blk)
       chan = Channel.new(name)
-      chan.instance_eval(&blk)
+      chan.instance_eval(&blk) if block_given?
       self << chan
     end
     

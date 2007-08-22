@@ -214,14 +214,14 @@ module Rutot
     def prefix_or_nick(*args)
       args.inject([]) do |m, arg|
         rrgx = "^rutlov[:, ]+"
-        rrgx += "(#{arg})\s+"
+        rrgx += "(#{arg})(?:$|\s+)"
         m << [prefix(arg), prefix(arg, 2), Regexp.new(rrgx)]
       end.flatten
     end
 
     def prefix_or_nick_r(rgx, arg)
       rrgx = "^rutlov[:, ]+"
-      rrgx += "(#{rgx})\s+"
+      rrgx += "(#{rgx})(?:$|\s+)"
       [Regexp.new(rrgx)]
     end
     

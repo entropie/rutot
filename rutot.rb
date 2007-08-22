@@ -35,7 +35,7 @@ require "lib/config"
 module Rutot
 
   
-  Version = %w'0 0 3'
+  Version = %w'0 1 1'
 
   VersionSuffix = 'pre-alpha'
   

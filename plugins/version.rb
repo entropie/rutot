@@ -4,8 +4,8 @@
 #
 
 respond_on(:PRIVMSG, prefix_or_nick(:version)) do |h|
-  h.respond("Rutlov, the friendly Ruby Bot: Version: %s" % Rutot.version,
-            "+ http://pb.ackro.org/static/p/ackro.html")
+  h.respond("Rutlov, the friendly Ruby Bot.  Version: %s" % Rutot.version) #,
+  #"+ http://pb.ackro.org/static/p/ackro.html")
 end
 
 =begin
