@@ -48,7 +48,8 @@ respond_on(:PRIVMSG, prefix_or_nick(:np)) do |h|
 end
 
 respond_on(:PRIVMSG, prefix_or_nick(:help), :args => [:String] ) do |h|
-  h.respond(h.bot.plugins.responder.map{ |r| r.keywordsgeil })
+  h.respond("What if you were on a lonely island?" +
+            "You should take some special trouble to get it yourself!")
 end
 
 respond_on(:PRIVMSG, prefix_or_nick(:join, :j), :args => [:String] ) do |h|
