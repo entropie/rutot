@@ -15,10 +15,10 @@ module Rutot
 
     class ReplyBox
       Replies = {
-        :k =>           [:aight, :k, :done],
-        :YO =>          ["YEAH!", 'Yo.', 'Definitely yes.'],
-        :NO =>          ["uh.", 'Hmm, nope.', 'We all gonna die down here.'],
-        :SRY =>         [ proc{ "#{if $! then "Uhh, #{$!}  " else '' end}%s" % `fortune bofh-excuses`.split("\n").last.to_irc_msg} ]
+        :k =>           [:aight, :k, :done, :mhmk, :yup, :klar],
+        :YO =>          ["YEAH!", 'Yo.', 'Definitely yes.', 'Sure.', 'You really don’t want to know it.'],
+        :NO =>          ["Uh.", 'Hmm, nope.', 'We all gonna die down here.', '*Shrug*'],
+        :SRY =>         [ proc{ "#{if $! then "Uhh, #{$!}.  " else '' end}Reason: %s" % `fortune bofh-excuses -s`.split("\n").last.to_irc_msg} ]
       }
 
       def self.method_missing(m, *args, &blk)
@@ -36,7 +36,7 @@ module Rutot
     
     class RespondHandle
 
-      attr_reader   :type, :keywords, :options, :handler, :respond_msg, :name
+      attr_reader   :type, :keywords, :options, :handler, :respond_msg, :name, :raw
       attr_accessor :bot
 
       def initialize(type, keywords, options, &blk)
@@ -88,6 +88,11 @@ module Rutot
             raise "Error, This is not my fault dood, you forgot to instruct me correctly."
           end
           @args = []
+
+          if @options[:args].size == 1 and @options[:args].first == :Everything
+            return @args << args
+          end
+          
           @options[:args].each_with_index do |a, i|
             @args <<
               case options[:args][i]
@@ -109,6 +114,7 @@ module Rutot
       
       def call(*args)
         @args = args
+        @raw  = @args.dup
         parse_args!
         ret = @handler.call(self)
         self.clear!
@@ -202,23 +208,22 @@ module Rutot
     
     def prefix(arg, h = 1)
       @prefix ||= Events::EventPrefix
-      /#{@prefix*h} ?(#{arg.to_s})/
+      /#{@prefix*h} ?(#{arg.to_s})(?:$|\s+)/
     end
 
     def prefix_or_nick(*args)
       args.inject([]) do |m, arg|
         rrgx = "^rutlov[:, ]+"
-        rrgx += "(#{arg})"
+        rrgx += "(#{arg})\s+"
         m << [prefix(arg), prefix(arg, 2), Regexp.new(rrgx)]
       end.flatten
     end
 
     def prefix_or_nick_r(rgx, arg)
       rrgx = "^rutlov[:, ]+"
-      rrgx += "(#{rgx})"
+      rrgx += "(#{rgx})\s+"
       [Regexp.new(rrgx)]
     end
-
     
     def select(name)
       Dir["#{PluginDirectory}/*.rb"].#
@@ -227,7 +232,6 @@ module Rutot
         self.load(pluginfile)
       }
     end
-
     
     def load(plugin)
       eval(File.open(plugin).readlines.join, binding)

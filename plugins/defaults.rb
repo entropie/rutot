@@ -3,12 +3,23 @@
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 
-respond_on(:PRIVMSG, /\?\?+$/) do |h|
+respond_on(:PRIVMSG, /\w+\?\?+$/) do |h|
   h.respond(ReplyBox.YO)
 end
 
 respond_on(:PRIVMSG, prefix_or_nick(:ping)) do |h|
   :pong
+end
+
+respond_on(:PRIVMSG, prefix_or_nick(:botsnack)) do |h|
+  [
+   'My favorite snack!',
+   'Yummy.',
+   'Thanks a lot, sweety.',
+   'Sage meinen Dank, Sai.',
+   'Your place or my place?',
+   'Gimme BEER, not cookies.'
+  ].sort_by{ rand}.first
 end
 
 respond_on(:PRIVMSG, prefix_or_nick(:LOC)) do |h|
@@ -40,12 +51,12 @@ respond_on(:PRIVMSG, prefix_or_nick(:help), :args => [:String] ) do |h|
   h.respond(h.bot.plugins.responder.map{ |r| r.keywordsgeil })
 end
 
-respond_on(:PRIVMSG, prefix_or_nick(:join), :args => [:String] ) do |h|
+respond_on(:PRIVMSG, prefix_or_nick(:join, :j), :args => [:String] ) do |h|
   h.bot.join(h.args.first)
   h.respond(ReplyBox.k)
 end
 
-respond_on(:PRIVMSG, prefix_or_nick(:part), :args => [:String] ) do |h|
+respond_on(:PRIVMSG, prefix_or_nick(:part, :p), :args => [:String] ) do |h|
   h.bot.part(h.args.first)
   h.respond(ReplyBox.k)
 end

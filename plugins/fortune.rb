@@ -16,7 +16,7 @@ respond_on(:PRIVMSG, prefix_or_nick(:fortune), :args => [:String]) do |h|
           ''
         end
       end
-  h.respond(`fortune drugs zippy -s chucknorris bofh-excuses wisdom fortunes #{s}`)
+  h.respond(`fortune -s drugs zippy futurama tao chucknorris bofh-excuses wisdom fortunes #{s}`)
 end
 
 
