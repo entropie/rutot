@@ -11,7 +11,7 @@ respond_on(:PRIVMSG, :plugins, prefix_or_nick(:plugins)) do |h|
     else
       bot.config.base_mods
     end
-    h.respond m.join(', ')
+  h.respond m.map{ |p| p.to_s}.sort.join(', ')
 end
 
 
