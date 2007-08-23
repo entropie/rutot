@@ -3,8 +3,7 @@
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 
-
-respond_on(:PRIVMSG, prefix_or_nick(:date, :time), :args => [:Integer]) do |h|
+respond_on(:PRIVMSG, :date, prefix_or_nick(:date, :time), :args => [:Integer]) do |h|
   format = "%x - %A, M:%m D:%3j Y:%Y"
   ts =
     unless h.args.empty?

@@ -10,7 +10,7 @@ module Rutot
     def <<(cntccls)
       con = Connection.new(cntccls)
       puts :CON, "connection handle `%s@%s´ saved" % [con.config.nick, con.config.servername]
-      puts :CHN, "", con.config.channels.map{ |c| c.name}.join(', ')
+      con.config.channels.map{ |c| puts :CHN, "", "%20s -> [%s]" % [c.name, c.plugins.join(',')]}.join("\n")
       push(con)
       con
     end
@@ -34,7 +34,7 @@ module Rutot
   
   class Connection
 
-    attr_reader :config, :connected, :bot
+    attr_accessor :config, :connected, :bot
 
     include Events
     
@@ -45,7 +45,9 @@ module Rutot
     def connect!(bot)
       @bot = bot
       Events.load_all!(@bot)
+      @bot.plugins.load_plugin_files!
       @bot.plugins.attach(@bot.conn, @bot)
+      @bot.plugins.attach_defaults(@bot.conn, @bot)
       @bot.connect
       @bot.loop
     end

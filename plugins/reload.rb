@@ -3,7 +3,7 @@
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 
-respond_on(:PRIVMSG, prefix_or_nick(:reload)) do |h|
+respond_on(:PRIVMSG, :reload, prefix_or_nick(:reload)) do |h|
   h.bot.plugins.reload
   h.respond(ReplyBox.k)
 end

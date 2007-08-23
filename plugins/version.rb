@@ -3,7 +3,7 @@
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 
-respond_on(:PRIVMSG, prefix_or_nick(:version)) do |h|
+respond_on(:PRIVMSG, :version, prefix_or_nick(:version)) do |h|
   h.respond("Rutlov, the friendly Ruby Bot.  Version: %s" % Rutot.version) #,
   #"+ http://pb.ackro.org/static/p/ackro.html")
 end

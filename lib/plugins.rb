@@ -5,9 +5,36 @@
 
 module Rutot
 
+  class Plugin
+    attr_reader :channel, :name
+    def initialize(file)
+      @name = name
+    end
+    def channel=(chan)
+      @channel = chan
+    end
+  end
+  
   class Plugins
     include Helper
     include KeywordArguments
+
+    def map!
+      self.bot.channels.each do |chan|
+        self.bot.base_mods.each do |m|
+          puts :PLG, "#{chan.name}: mapping defaultplugin #{m}"
+          chan.plugins << m unless chan.plugins.include?(m)
+        end
+
+        chan.plugins.each do |plug|
+          puts :PLG, "#{chan.name}: attaching #{plug}"
+          plug = Plugin.new(plug)
+          plug.channel = chan.name
+          bot.mod(plug)
+        end
+      end
+    end
+    
   end
 
   class DefaultPlugins < Plugins

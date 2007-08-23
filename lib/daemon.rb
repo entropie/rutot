@@ -46,7 +46,6 @@ module Rutot
       userconfig = Config.read(options[:config_file], handler)
       IRCConnection.debuglevel.network = true
       rutlov = Rutot::Rutlov.new(userconfig.finish)
-      #rutlov.load_plugins
       rutlov
     end
 

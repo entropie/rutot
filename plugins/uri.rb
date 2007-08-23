@@ -23,21 +23,21 @@ def fetch(uri_str, limit = 10)
   end
 end
 
-respond_on(:PRIVMSG, /https?:\/\//, :args => [:Everything]) do |h|
+respond_on(:PRIVMSG, :uridesc, /https?:\/\//, :args => [:Everything]) do |h|
   begin
     uri = URI.extract(h.raw.join(' ')).select{ |i| begin URI.parse(i); rescue; nil end }.first
 
     case ct = fetch(uri).content_type
     when /text\/\w+/
       str =
-        if rand < 0.1 and uri.size <= 40
-          "Hpricot.open('%s').at(:title).inner_text # => \"%s\""
-        else
-          "Page title of %s is „%s“."
-        end
+        #if rand < 0.1 and uri.size <= 40
+        #  "Hpricot.open('%s').at(:title).inner_text # => \"%s\""
+        #else
+          "Page title is: %s."
+        #end
       title = Hpricot(open(uri)).at(:title).inner_text
       uri = URI.parse(uri).host if uri.size > 40
-      h.respond(str % [ uri, title])
+      h.respond(str % [ title.gsub(/\s+/, ' ').strip ])
     else
     end
   rescue NoMethodError

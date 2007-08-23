@@ -37,7 +37,7 @@ module Rutot
     class RespondHandle
 
       attr_reader   :type, :keywords, :options, :handler, :respond_msg, :name, :raw
-      attr_accessor :bot
+      attr_accessor :bot, :msg, :con, :channel
 
       def initialize(type, keywords, options, &blk)
         @name = "#{type}:#{keywords}"
@@ -58,7 +58,6 @@ module Rutot
 
       def args; @args; end
 
-
       def format_arguments
         rargs = @args.dup.join
         self.keywords.each do |kw|
@@ -66,8 +65,8 @@ module Rutot
         end
         rargs.strip.split(" ")
       end
+
       private :format_arguments
-      
 
       def keywords
         case @keywords
@@ -109,7 +108,7 @@ module Rutot
       end
 
       def clear!
-        @respond_msg = []
+        @respond_msg, @msg, @con = [], nil, nil
       end
       
       def call(*args)
@@ -152,7 +151,10 @@ module Rutot
     end
 
     def load_plugin_files!
-      bot.config.mods.each do |mod|
+      a=bot.channels.inject([]) do |m, chan|
+        m.push(*chan.plugins)
+      end
+      a.uniq.each do |mod|
         select(mod)
       end
     end
@@ -167,20 +169,58 @@ module Rutot
 
     def reload
       reset
+      load_plugin_files!
       attach(@bot.conn, @bot)
+      attach_defaults(@bot.conn, @bot)
     end
 
+    def attach_defaults(con, bot)
+      #   self.responder.each do |plugin|
+      #     next unless bot.config.base_mods.include?(plugin.name)
+
+      #     puts :PLG, "#{bot.nick}:@* ATTACHING plugin: `#{plugin.name}´"
+      #     con.add_event(plugin.type, plugin.name) do |msg, con|
+      #       message = msg.params.last
+      #       target = msg.params.first
+
+      #       plugin.channel = msg.params.first
+      #       plugin.msg = msg
+      #       plugin.con = con
+      #       if plugin.keywords.any?{ |a| message =~ a }
+      #         puts :PLG, "#{message} matches #{plugin.name}"
+      #         ret = parse_plugin_retval(plugin.call(message))
+      #         bot.spooler.push(target, *ret)
+      #       end
+      #     end
+      #   end
+    end
+    
     def attach(con, bot)
-      load_plugin_files!
-      self.responder.each do |plugin|
-        puts :PLG, "#{bot.nick}: ATTACHING plugin: `#{plugin.name}´"
-        con.add_event(plugin.type, plugin.name) do |msg, con|
-          message = msg.params.last
-          target = msg.params.first
-          if plugin.keywords.any?{ |a| message =~ a }
-            puts :PLG, "#{message} matches #{plugin.name}"
-            ret = parse_plugin_retval(plugin.call(message))
-            bot.spooler.push(target, *ret)
+      bot.channels.each do |chan|
+        self.responder.each do |plugin|
+          #next if  bot.config.base_mods.include?(plugin.name)
+          
+          puts :PLG, "#{bot.nick}:@#{chan.name} ATTACHING plugin: `#{plugin.name}´"
+          con.add_event(plugin.type, plugin.name) do |msg, con|
+            message = msg.params.last
+            target = msg.params.first
+
+            plugin.channel = msg.params.first
+            plugin.msg = msg
+            plugin.con = con
+
+            tchan = bot.config.channels[plugin.channel]
+            if plugin and tchan and tchan.plugins.include?(plugin.name)
+              if plugin.keywords.any?{ |a| message =~ a }
+                puts :PLG, "#{message} matches #{plugin.name}"
+                ret = parse_plugin_retval(plugin.call(message))
+                bot.spooler.push(target, *ret)
+              end
+            elsif plugin.keywords.any?{ |a| message =~ a } # default plugin (hopefully..)
+              puts :PLG, "#{message} matches #{plugin.name}"
+              ret = parse_plugin_retval(plugin.call(message))
+              bot.spooler.push(target, *ret)
+            end
           end
         end
       end
@@ -200,10 +240,10 @@ module Rutot
       end
     end
     
-    def respond_on(type, handler, options = { }, &blk)
+    def respond_on(type, name, handler, options = { }, &blk)
       options.extend(ParamHash).
         process!(:args => :optional, :arg_req => :optional)
-      @responder.add(type, handler, options, &blk)
+      @responder.add(type, handler, options, &blk).name = name
     end
     
     def prefix(arg, h = 1)

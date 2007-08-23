@@ -11,7 +11,7 @@ def cl_title(t)
   t.gsub(/<.*>(.*)<.*>/, '\1')
 end
 
-respond_on(:PRIVMSG, prefix_or_nick(:google, :search, :g), :args => [:Everything], :arg_req => true) do |h|
+respond_on(:PRIVMSG, :google, prefix_or_nick(:google, :search, :g), :args => [:Everything], :arg_req => true) do |h|
   begin
     query = google.search(a=h.args.join(' '))
     r = query.results.first
@@ -21,12 +21,12 @@ respond_on(:PRIVMSG, prefix_or_nick(:google, :search, :g), :args => [:Everything
   end
 end
 
-respond_on(:PRIVMSG, prefix_or_nick(:gspell), :args => [:Everything], :arg_req => true) do |h|
+respond_on(:PRIVMSG, :gspell, prefix_or_nick(:gspell), :args => [:Everything], :arg_req => true) do |h|
   cp = google.spell(a=h.args.join(' '))
   if cp
-    h.respond("[gspell]  „%s“: %s" % [a, cp])
+    h.respond("[gspell]  %s: %s" % [a, cp])
   else
-    h.respond "[gspell]  „%s“ is spelled right." % a
+    h.respond "[gspell]  %s is spelled right." % a
   end
 end
 

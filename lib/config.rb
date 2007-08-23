@@ -9,9 +9,28 @@ module Rutot
   class Channel
 
     attr_reader :name
+    attr_reader :whitelist
+    attr_reader :blacklist
+
+    attr_reader :plugins 
+
+    def modules(*mods)
+      mods.each{ |m| @mods << m }
+    end
+
+    def whitelist(*args)
+      @whitelist.push(*args)
+    end
+
+    def modules(*mods)
+      @plugins.push(*mods)
+    end
+
+    #alias :modules :plugins
     
     def initialize(name)
-      @name = name
+      @mods = []
+      @plugins, @name, @whitelist, @blacklist = [], name, [], []
     end
 
   end
@@ -20,10 +39,14 @@ module Rutot
 
     attr_accessor :server
 
+    def [](nam)
+      self.select{ |n| n.name.to_sym == nam.to_sym}.shift
+    end
+    
     def initialize(server)
       @server = server
     end
-
+    
     def channel(name, &blk)
       chan = Channel.new(name)
       chan.instance_eval(&blk) if block_given?
@@ -37,37 +60,41 @@ module Rutot
     attr_reader   :configfile
     attr_reader   :nick, :mods, :configfile
 
-    attr_accessor :plugins, :servername, :port, :channels
+    attr_accessor :plugins, :servername, :port, :channels, :base_mods
     
     def self.read(file, handler)
       klass = ConfigModules.constants.map{ |cl|
         ConfigModules.const_get(cl)
       }.inject(self.new(file, handler)) do |m, config_module|
-        puts :INT, "adding module #{config_module}"
+        puts :INT, "adding module #{config_module}" #if $DEBUG
         m.extend(config_module)
       end
       klass.instance_eval(File.readlines(file).join)
       klass
     end
 
+    def base_mods
+      @base_mods.select{ |bm| bm.kind_of?(Symbol)}
+    end
+    
     def name(name)
       @nick = name
     end
     
     def initialize(configfile, handler)
-      @configfile, @handler, @mods = configfile, handler, []
+      @configfile, @handler, @mods, @base_mods = configfile, handler, [], []
     end
 
     def finish
+      plugins.map!
       self
     end
     
-    def modules(*mods)
-      mods.each{ |m| mod(m) }
-    end
-
-    def mod(mod)
-      @mods << mod
+    def mod(*mods)
+      mods.each{ |m|
+        @base_mods << m
+      }
+      @base_mods
     end
     
     def Server(name, port = 6676, &blk)
