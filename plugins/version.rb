@@ -4,7 +4,20 @@
 #
 
 respond_on(:PRIVMSG, :version, prefix_or_nick(:version)) do |h|
-  h.respond("Rutlov, the friendly Ruby Bot.  Version: %s" % Rutot.version) #,
+  nams = %w'bot dood guy bird gay mate cop criminal MACHINE'.sort_by{ rand }.first
+  strs = [
+          'tasty',
+          'sinister',
+          'all seeing',
+          'pragmatic',
+          'lost',
+          'bugfree™',
+          'supernatural',
+          'dumb',
+          'pleasant',
+          'friendly'
+         ].sort_by{ rand }.first
+  h.respond("Rutlov, the #{strs} Ruby #{nams}.  Version: %s" % Rutot.version) #,
   #"+ http://pb.ackro.org/static/p/ackro.html")
 end
 

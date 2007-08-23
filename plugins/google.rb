@@ -15,7 +15,7 @@ respond_on(:PRIVMSG, :google, prefix_or_nick(:google, :search, :g), :args => [:E
   begin
     query = google.search(a=h.args.join(' '))
     r = query.results.first
-    h.respond "[google] \"%s\":%s (approx: %i results)" % [cl_title(r.title), r.url, query.result_count]
+    h.respond "[google] \"%s\": %s (approx: %i results)" % [cl_title(r.title), r.url, query.result_count]
   rescue
     h.respond "[google] \"%s\" — No Matches" % a
   end

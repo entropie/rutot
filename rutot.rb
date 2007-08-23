@@ -19,7 +19,7 @@ def puts(*args)
   end
   Kernel.puts
 end
-  
+
 require "lib/helper/paramhash"
 require "lib/responder"
 require "lib/plugins"
@@ -30,7 +30,6 @@ require "lib/rutot"
 require "lib/daemon"
 require "lib/config_modules"
 require "lib/config"
-
 
 module Rutot
 
@@ -61,6 +60,7 @@ begin
   puts "Starting  #{Rutot.version}  at #{Time.now}."
   Kernel.puts
   r = Rutot.start
+  
 end if __FILE__ == $0
 
 

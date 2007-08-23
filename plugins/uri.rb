@@ -26,15 +26,9 @@ end
 respond_on(:PRIVMSG, :uridesc, /https?:\/\//, :args => [:Everything]) do |h|
   begin
     uri = URI.extract(h.raw.join(' ')).select{ |i| begin URI.parse(i); rescue; nil end }.first
-
     case ct = fetch(uri).content_type
     when /text\/\w+/
-      str =
-        #if rand < 0.1 and uri.size <= 40
-        #  "Hpricot.open('%s').at(:title).inner_text # => \"%s\""
-        #else
-          "Page title is: %s."
-        #end
+      str = "Page title is: %s."
       title = Hpricot(open(uri)).at(:title).inner_text
       uri = URI.parse(uri).host if uri.size > 40
       h.respond(str % [ title.gsub(/\s+/, ' ').strip ])
