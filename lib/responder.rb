@@ -83,6 +83,7 @@ module Rutot
       def parse_args!
         args = format_arguments
         if @options[:args]
+
           if args.empty? and @options[:arg_req]
             raise "Error, This is not my fault dood, you forgot to instruct me correctly."
           end
@@ -95,12 +96,13 @@ module Rutot
           @options[:args].each_with_index do |a, i|
             @args <<
               case options[:args][i]
-              when :Integer: Integer(args[i])
-              when :String : String(args[i])
-              else
-                args[i]
+              when :Integer:  Integer(args[i])
+              when :String :  String(args[i])
+              when :Everything
+                String(args[i..args.size-1].join(' '))
               end
           end
+          @args.compact!
         else
           @args = []
         end
@@ -171,30 +173,8 @@ module Rutot
       reset
       load_plugin_files!
       attach(@bot.conn, @bot)
-      attach_defaults(@bot.conn, @bot)
     end
 
-    def attach_defaults(con, bot)
-      #   self.responder.each do |plugin|
-      #     next unless bot.config.base_mods.include?(plugin.name)
-
-      #     puts :PLG, "#{bot.nick}:@* ATTACHING plugin: `#{plugin.name}´"
-      #     con.add_event(plugin.type, plugin.name) do |msg, con|
-      #       message = msg.params.last
-      #       target = msg.params.first
-
-      #       plugin.channel = msg.params.first
-      #       plugin.msg = msg
-      #       plugin.con = con
-      #       if plugin.keywords.any?{ |a| message =~ a }
-      #         puts :PLG, "#{message} matches #{plugin.name}"
-      #         ret = parse_plugin_retval(plugin.call(message))
-      #         bot.spooler.push(target, *ret)
-      #       end
-      #     end
-      #   end
-    end
-    
     def attach(con, bot)
       bot.channels.each do |chan|
         self.responder.each do |plugin|
@@ -210,13 +190,14 @@ module Rutot
             plugin.con = con
 
             tchan = bot.config.channels[plugin.channel]
-            if plugin and tchan and tchan.plugins.include?(plugin.name)
+
+            if(plugin && tchan && tchan.plugins.include?(plugin.name))
               if plugin.keywords.any?{ |a| message =~ a }
                 puts :PLG, "#{message} matches #{plugin.name}"
                 ret = parse_plugin_retval(plugin.call(message))
                 bot.spooler.push(target, *ret)
               end
-            elsif plugin.keywords.any?{ |a| message =~ a } # default plugin (hopefully..)
+            elsif plugin.keywords.any?{ |a| message =~ a }
               puts :PLG, "#{message} matches #{plugin.name}"
               ret = parse_plugin_retval(plugin.call(message))
               bot.spooler.push(target, *ret)
@@ -253,14 +234,14 @@ module Rutot
 
     def prefix_or_nick(*args)
       args.inject([]) do |m, arg|
-        rrgx = "^rutlov[:, ]+"
+        rrgx = "^#{bot.nick}[:, ]+"
         rrgx += "(#{arg})(?:$|\s+)"
         m << [prefix(arg), prefix(arg, 2), Regexp.new(rrgx)]
       end.flatten
     end
 
     def prefix_or_nick_r(rgx, arg)
-      rrgx = "^rutlov[:, ]+"
+      rrgx = "^#{bot.nick}[:, ]+"
       rrgx += "(#{rgx})(?:$|\s+)"
       [Regexp.new(rrgx)]
     end

@@ -26,6 +26,15 @@ respond_on(:PRIVMSG, :LOC, prefix_or_nick(:LOC)) do |h|
   `/home/mit/bin/loc`.split("\n").join(' — ')
 end
 
+respond_on(:PRIVMSG, :kcode, prefix_or_nick(:kcode), :args => [:String]) do |h|
+  # unless h.args.to_s.empty?
+  #   p 1
+  #   $KCODE = h.args.to_s
+  # end
+  h.respond $KCODE  
+end
+
+
 respond_on(:PRIVMSG, :uptime, prefix_or_nick(:uptime)) do |h|
   h.respond(`uptime`)
 end

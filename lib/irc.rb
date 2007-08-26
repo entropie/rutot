@@ -47,7 +47,6 @@ module Rutot
       Events.load_all!(@bot)
       @bot.plugins.load_plugin_files!
       @bot.plugins.attach(@bot.conn, @bot)
-      @bot.plugins.attach_defaults(@bot.conn, @bot)
       @bot.connect
       @bot.loop
     end
