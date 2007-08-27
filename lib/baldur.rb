@@ -34,7 +34,7 @@ module Rutot
         puts :Q, "I’am not allowed to talk."
         return
       elsif lines.to_s.size.zero?
-        puts :SPO, "REC: empty string; ignoring…"
+        puts :SPO, "REC: empty string; ignoring"
         return
       end
       puts :SPO, "REC: for #{target} : #{lines.to_s.size}bytes"
@@ -83,7 +83,6 @@ module Rutot
 
       @config = config
 
-
       @nicklist = Hash.new{|h,k|h[k]={}}
 
       @conn.add_codes IRCConnection::ReplyCodes::RFC2812
@@ -112,6 +111,14 @@ module Rutot
       end
 
       Thread.abort_on_exception = true
+
+      Thread.start do
+        sleep 20
+        Kernel.loop do
+          @plugins.handle_independent_things!
+        end
+      end
+
       Thread.start do
         @message_spooler.loop do |ele|
           msg(ele.target, ele.lines)

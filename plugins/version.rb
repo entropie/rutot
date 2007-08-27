@@ -17,8 +17,8 @@ respond_on(:PRIVMSG, :version, prefix_or_nick(:version)) do |h|
           'pleasant',
           'friendly'
          ].sort_by{ rand }.first
-  h.respond("Rutlov, the #{strs} Ruby #{nams}.  Version: %s" % Rutot.version) #,
-  #"+ http://pb.ackro.org/static/p/ackro.html")
+  h.respond("Rutlov, the #{strs} Ruby #{nams}.  Version: %s" % Rutot.version +
+    "\nSee ,source")
 end
 
 =begin

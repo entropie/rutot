@@ -790,7 +790,7 @@ class IRCConnection
     rescue Exception => e
       #$stderr.puts "Exception occured during processing of event #{key} for command #{command}"
       $stderr.puts e
-      send("PRIVMSG #ackro :#{$!}")
+      p $!
       pp e.backtrace
     ensure
       if debuglevel.events
@@ -874,7 +874,7 @@ class IRCConnection
     return Message.new(prefix, command, rawcommand, params, rawparams, line)
   end
 
-  def each  
+  def each
     @conn.each do |line|
       if debuglevel.network
         $stderr.puts "<- #{line}"

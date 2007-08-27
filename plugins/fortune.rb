@@ -3,6 +3,11 @@
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 
+
+timed_response(60*60, :fortune) do |h|
+  h.respond(`fortune`)
+end
+
 respond_on(:PRIVMSG, :excuse, prefix_or_nick(:excuse)) do |h|
   h.respond(`fortune bofh-excuses`.gsub(/\n[^$]/, "  "))
 end

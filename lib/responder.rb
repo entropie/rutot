@@ -139,6 +139,49 @@ module Rutot
         self << rh
         rh
       end
+    end
+
+
+    class Independent < Array
+
+      class Sprog
+        
+        attr_reader :name, :interval, :handler
+
+        attr_accessor :last
+        
+        def initialize(name, interval, &blk)
+          @name, @interval = name, interval
+          @handler = blk
+          @last = { }
+        end
+
+        def last
+          @last
+        end
+
+        def call(rc)
+          @handler.call(rc)
+        end
+        
+      end
+
+      def select(responder)
+        responder.select{ |r| r.name == name}
+      end
+      
+      def initialize(bot)
+        super()
+        @bot = bot
+      end
+
+      
+      def add_timed(interval, name, options = { }, &blk)
+        self << Sprog.new(name, interval, &blk)
+      end
+
+      def add_extern(handler, nanem, options, &blk)
+      end
 
     end
     
@@ -147,8 +190,10 @@ module Rutot
     attr_reader :responder
     attr_reader :bot
 
+    attr_reader :independent
+    
     def initialize(bot)
-      @bot = bot
+      @bot, @independent = bot, Independent.new(bot)
       reset
     end
 
@@ -175,11 +220,32 @@ module Rutot
       attach(@bot.conn, @bot)
     end
 
+    def handle_independent_things!
+      self.independent.each do |ind|
+        rc = responder.select{ |r| r.name == ind.name }.shift
+        tchan = bot.config.channels.
+          select{ |c| c.plugins.include?(rc.name)}
+        tchan.each do |c|
+          begin
+            if ind.last[c.name] + ind.interval <= Time.now
+              bot.spooler.push(c.name, *ind.call(rc))
+              ind.last[c.name] = Time.now
+            else
+              # nothing
+            end
+            rc.clear!
+          rescue
+            ind.last[c.name] = Time.now
+          end
+        end
+        sleep 1
+      end
+    end
+    
+    
     def attach(con, bot)
       bot.channels.each do |chan|
         self.responder.each do |plugin|
-          #next if  bot.config.base_mods.include?(plugin.name)
-          
           puts :PLG, "#{bot.nick}:@#{chan.name} ATTACHING plugin: `#{plugin.name}´"
           con.add_event(plugin.type, plugin.name) do |msg, con|
             message = msg.params.last
@@ -225,6 +291,10 @@ module Rutot
       options.extend(ParamHash).
         process!(:args => :optional, :arg_req => :optional)
       @responder.add(type, handler, options, &blk).name = name
+    end
+
+    def timed_response(intervall, name, options = { }, &blk)
+      @independent.add_timed(intervall, name, options, &blk)
     end
     
     def prefix(arg, h = 1)
