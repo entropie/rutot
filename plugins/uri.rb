@@ -48,6 +48,7 @@ respond_on(:PRIVMSG, :uridesc, /https?:\/\//, :args => [:Everything]) do |h|
       str = "#{tiny}Page title is: %s.".strip
       h.respond(str % [ title.gsub(/\s+/, ' ').strip ])
     else
+      h.respond tinyurl(uri)
     end
   rescue NoMethodError
   rescue

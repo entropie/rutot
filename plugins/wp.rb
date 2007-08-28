@@ -7,14 +7,15 @@ require 'hpricot'
 require 'open-uri'
 
 def swpi(str)
-  url = "http://en.wikipedia.org/wiki/#{str.capitalize}"
+  str = str.split.map{|a| a.capitalize}.join('_')
+  url = "http://en.wikipedia.org/wiki/#{str}"
   h = Hpricot(open(url))
   "#{url}  " + h.at(:p).inner_text.gsub(/\n/, ' ')
 end
 
 
 respond_on(:PRIVMSG, :wp, prefix_or_nick(:wp), :args => [:Everything], :arg_req => true) do |h|
-  h.respond(swpi(h.args.first.to_s))
+  h.respond(swpi(h.args.join(' ')))
 end
 
 =begin
