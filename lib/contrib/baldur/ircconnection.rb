@@ -1,3 +1,8 @@
+#
+#
+# Author: Stefan Walk <stefan.walk@physik.tu-darmstadt.de>
+#
+
 require 'socket'
 require 'timeout'
 

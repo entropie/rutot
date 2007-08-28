@@ -1,3 +1,8 @@
+#
+#
+# Author: Stefan Walk <stefan.walk@physik.tu-darmstadt.de>
+#
+
 class IRCClient
 
   attr_accessor :serverhost, :serverport, :nick, :ident, :realname
