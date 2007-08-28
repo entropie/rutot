@@ -10,7 +10,7 @@ google = Google::API::Web.new(api)
 
 
 respond_on(:PRIVMSG, :imdb, prefix_or_nick(:imdb), :args => [:Everything], :arg_req => true) do |h|
-  query = google.search("site:imdb.com " + (a=h.args.join(' ')))
+  query = google.search("site:imdb.com \"" + (a=h.args.join(' ')) + "\"")
   begin
     if query
       r = query.results.first
