@@ -10,6 +10,14 @@ require "rubygems"
 require "pp"
 
 
+class String
+  unless defined?(ord)
+    def ord
+      self[0]
+    end
+  end
+end
+
 class String; alias :dc :downcase end
 
 def puts(*args)

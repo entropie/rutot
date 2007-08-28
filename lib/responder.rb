@@ -211,14 +211,17 @@ module Rutot
         detach(@bot.conn, @bot)
         @responder.clear
       end
+      @independent = Independent.new(bot)
       @responder = Responder.new(bot)
     end
 
+    
     def reload
       reset
       load_plugin_files!
       attach(@bot.conn, @bot)
     end
+
 
     def handle_independent_things!
       self.independent.each do |ind|
@@ -228,7 +231,8 @@ module Rutot
         tchan.each do |c|
           begin
             if ind.last[c.name] + ind.interval <= Time.now
-              bot.spooler.push(c.name, *ind.call(rc))
+              bot.spooler.push(c.name, parse_plugin_retval(ind.call(rc)))
+              
               ind.last[c.name] = Time.now
             else
               # nothing
@@ -273,6 +277,7 @@ module Rutot
       end
     end
 
+
     def parse_plugin_retval(pret)
       pret.to_s.to_irc_msg
     end
@@ -287,20 +292,24 @@ module Rutot
       end
     end
     
+
     def respond_on(type, name, handler, options = { }, &blk)
       options.extend(ParamHash).
         process!(:args => :optional, :arg_req => :optional)
       @responder.add(type, handler, options, &blk).name = name
     end
 
+
     def timed_response(intervall, name, options = { }, &blk)
       @independent.add_timed(intervall, name, options, &blk)
     end
     
+
     def prefix(arg, h = 1)
       @prefix ||= Events::EventPrefix
       /#{@prefix*h} ?(#{arg.to_s})(?:$|\s+)/
     end
+
 
     def prefix_or_nick(*args)
       args.inject([]) do |m, arg|
@@ -310,12 +319,14 @@ module Rutot
       end.flatten
     end
 
+
     def prefix_or_nick_r(rgx, arg)
       rrgx = "^#{bot.nick}[:, ]+"
       rrgx += "(#{rgx})(?:$|\s+)"
       [Regexp.new(rrgx)]
     end
     
+
     def select(name)
       Dir["#{PluginDirectory}/*.rb"].#
         grep(/#{name}\.rb$/).each { |pluginfile|
@@ -324,6 +335,7 @@ module Rutot
       }
     end
     
+
     def load(plugin)
       eval(File.open(plugin).readlines.join, binding)
     end
