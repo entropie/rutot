@@ -1,5 +1,6 @@
 #
 #
+# Author:  Michael Fellinger <m.fellinger@gmail.com>
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 
@@ -15,7 +16,8 @@ class TryRuby
     code.gsub!(/[^[:print:]]/, " ")
     code.gsub!(/[^a-zA-Z0-9.-]/){|c| "%%%x" % c.ord }
     resp = open(@url % code, "Cookie" => @session).read
-    if resp == "An error has occured.  Try refreshing this page to reload your session.\n"
+    if resp == "An error has occured.  Try refreshing this page to reload your session.\n" or
+        resp == "Your session has been closed, either due to inactivity or a bit of code which ran too long. Refresh the page and you can begin a new session.\n"
       reload_session
       retry
     end
@@ -29,16 +31,9 @@ class TryRuby
 end
 
 try = TryRuby.new
-# p try.req(%{"Hello, World!"})
-# p try.req(%{"1 + 12"})
-
-try = TryRuby.new
 respond_on(:PRIVMSG, :irb, prefix_or_nick(:irb), :args => [:Everything], :arg_req => true) do |h|
   h.respond try.req(h.args.join(' '))
 end
-
-# p try.req(%{:a}).strip
-# p try.req(%{1+2}).strip
 
 =begin
 Local Variables:
