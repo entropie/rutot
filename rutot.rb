@@ -7,6 +7,8 @@
 
 Dir.chdir('/home/mit/Source/rutot/')
 require "rubygems"
+require "text/format"
+
 require "pp"
 
 
@@ -35,6 +37,7 @@ require "lib/plugins"
 require "lib/contrib"
 require "lib/irc_events"
 require "lib/irc"
+require "lib/message_spooler"
 require "lib/rutot"
 require "lib/daemon"
 require "lib/config_modules"

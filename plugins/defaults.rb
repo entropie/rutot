@@ -11,6 +11,31 @@ respond_on(:PRIVMSG, :ping, prefix_or_nick(:ping)) do |h|
   :pong
 end
 
+respond_on(:PRIVMSG, :more, prefix_or_nick(:more, :m)) do |h|
+  begin
+    h.respond(h.bot.spooler.more(h.channel).lines)
+  rescue
+    h.respond(ReplyBox.NO)
+  end
+end
+
+respond_on(:PRIVMSG, :lorem, prefix_or_nick(:lorem)) do |h|
+  h.respond("Lorem ipsum dolor sit amet, consectetur adipisicing elit",
+            "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+            "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+            "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+            "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+            "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+            "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+            "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+            "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+            "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+            "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.")
+
+end
+
 respond_on(:PRIVMSG, :botsnack, prefix_or_nick(:botsnack)) do |h|
   [
    'My favorite snack!',

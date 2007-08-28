@@ -6,51 +6,6 @@
 
 module Rutot
 
-  class MessageSpooler < Array
-
-    Element = Struct.new(:target, :lines)
-    
-    attr_reader :bot
-    attr_reader :blocked
-    attr_reader :quiet
-    
-    def initialize(bot, p = 0)
-      @blocked = false
-      @bot = bot
-      @quiet = false
-      super()
-    end
-
-    def quiet!; @quiet = true;  end
-    def talk!;  @quiet = false; end
-    def quiet?; @quiet;         end
-    
-    def blocked?
-      @blocked
-    end
-    
-    def push(target, *lines)
-      if quiet?
-        puts :Q, "I’am not allowed to talk."
-        return
-      elsif lines.to_s.size.zero?
-        puts :SPO, "REC: empty string; ignoring"
-        return
-      end
-      puts :SPO, "REC: for #{target} : #{lines.to_s.size}bytes"
-      self << Element.new(target, lines)
-    end
-
-    def loop(&blk)
-      until empty? and blocked?
-        el = self.pop
-        yield el if el
-        sleep 0.1
-      end
-    end
-    
-  end
-  
   class Rutlov < IRCClient
 
     attr_accessor :config

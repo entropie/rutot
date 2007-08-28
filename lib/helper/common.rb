@@ -28,7 +28,7 @@ module Rutot
         str = str.split.map{|a| a.capitalize}.join('_')
         url = "http://#{lang}.wikipedia.org/wiki/#{str}"
         h = Hpricot(open(url))
-        "#{url}  " + h.at(:p).inner_text.gsub(/\n/, ' ')
+        Text::Format.new.format_one_paragraph("#{url}  " + h.at(:p).inner_text.gsub(/\n/, ' '))
       end
 
       
