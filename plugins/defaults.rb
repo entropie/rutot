@@ -27,10 +27,6 @@ respond_on(:PRIVMSG, :LOC, prefix_or_nick(:LOC)) do |h|
 end
 
 respond_on(:PRIVMSG, :kcode, prefix_or_nick(:kcode), :args => [:String]) do |h|
-  # unless h.args.to_s.empty?
-  #   p 1
-  #   $KCODE = h.args.to_s
-  # end
   h.respond $KCODE  
 end
 
@@ -66,7 +62,6 @@ respond_on(:PRIVMSG, :help, prefix_or_nick(:help), :args => [:String] ) do |h|
 end
 
 respond_on(:PRIVMSG, :join, prefix_or_nick(:join, :j), :args => [:String] ) do |h|
-  p 1
   h.bot.join(h.args.first)
   h.respond(ReplyBox.k)
 end

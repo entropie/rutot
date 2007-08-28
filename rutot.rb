@@ -29,6 +29,7 @@ def puts(*args)
 end
 
 require "lib/helper/paramhash"
+require "lib/helper/common"
 require "lib/responder"
 require "lib/plugins"
 require "lib/contrib"

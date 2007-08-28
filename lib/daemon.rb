@@ -6,10 +6,9 @@
 module Rutot
 
   class Daemon
-    include Contribs[:baldur]
-    #include Contribs[:baldur]
-    include Helper
 
+    include Contribs[:baldur]
+    include Helper
     include KeywordArguments
     
     DefaultOptions = {

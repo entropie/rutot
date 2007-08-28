@@ -337,7 +337,9 @@ module Rutot
     
 
     def load(plugin)
-      eval(File.open(plugin).readlines.join, binding)
+      b = self.dup.extend(Helper::Common)
+      bind = b.send(:binding)
+      eval(File.open(plugin).readlines.join, bind)
     end
 
   end

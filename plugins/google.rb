@@ -3,9 +3,7 @@
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 
-require 'google/api/web'
-api = File.open(File.expand_path("~/Data/Secured/google.api")).readlines.join.strip
-google = Google::API::Web.new(api)
+google = hlp_google
 
 def cl_title(t)
   t.gsub(/<.*>(.*)<.*>/, '\1')

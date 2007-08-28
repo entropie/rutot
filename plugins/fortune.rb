@@ -5,11 +5,11 @@
 
 
 timed_response(60*60, :fortune) do |h|
-  h.respond(`fortune`)
+  h.respond(hlp_fortune)
 end
 
 respond_on(:PRIVMSG, :excuse, prefix_or_nick(:excuse)) do |h|
-  h.respond(`fortune bofh-excuses`.gsub(/\n[^$]/, "  "))
+  h.respond(hlp_fortune(['bofh-excuses'], [:s], true))
 end
 
 
@@ -18,11 +18,11 @@ respond_on(:PRIVMSG, :fortune, prefix_or_nick(:fortune), :args => [:String]) do 
     s =
       if h.args.empty? then '' else
         if h.args.first =~ /^[a-zA-Z0-9\-]+$/
-          "99% #{h.args.first}"
+          "80% #{h.args.first}"
         else ''
         end
       end
-    f = `fortune -s drugs zippy futurama tao chucknorris bofh-excuses wisdom fortunes #{s}`
+    f = hlp_fortune([s])
     unless f.empty?
       h.respond(f)
     else

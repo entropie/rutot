@@ -19,6 +19,10 @@ module Rutot
     include Helper
     include KeywordArguments
 
+    def include(pl)
+      self.class.send(:include, Contribs[pl])
+    end
+    
     def map!
       self.bot.channels.each do |chan|
         self.bot.base_mods.each do |m|

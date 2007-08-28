@@ -3,13 +3,11 @@
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 
-load '/home/mit/iimdb.rb'
-require 'google/api/web'
-api = File.open(File.expand_path("~/Data/Secured/google.api")).readlines.join.strip
-google = Google::API::Web.new(api)
-
+google = hlp_google
+include :imdb
 
 respond_on(:PRIVMSG, :imdb, prefix_or_nick(:imdb), :args => [:Everything], :arg_req => true) do |h|
+ 
   query = google.search("site:imdb.com \"" + (a=h.args.join(' ')) + "\"")
   begin
     if query
