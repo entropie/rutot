@@ -22,7 +22,7 @@ module Rutot
     attr_reader   :daddy
     attr_reader   :ident
     attr_reader   :realname
-    
+
     def initialize(config)
       @serverport      = config.port
       @serverhost      = config.servername

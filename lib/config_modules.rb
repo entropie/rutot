@@ -13,11 +13,19 @@ module Rutot
 
         attr_reader :daddy
         attr_reader :myself
-
+        attr_reader :prefix
+        
         def master(master)
           @daddy = master
         end
 
+        def prefix(prfx = nil)
+          @prefix = prfx if prfx
+          @prefix
+        end
+
+        alias :bot_prefix :prefix
+        
         def myself(arg = nil)
           @myself = arg if arg
           @myself
