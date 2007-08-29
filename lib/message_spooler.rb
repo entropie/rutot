@@ -28,16 +28,20 @@ module Rutot
     end
 
     def more(target)
-      make_more(@more[target], true) if @more[target]
+      ret = @more[target] if @more[target]
+      @more[target] = nil
+      ret
     end
     
-    def make_more(ele, e = false)
+    def make_more(ele)
       if need_more?(ele)
-        lines = ele.lines[MaxLines...-1]
+        lines = ele.lines[MaxLines..-1]
         @more[ele.target] = Element.new(ele.target, lines)
-        Element.new(ele.target, ele.lines[0..MaxLines-1] << "say ,more")
+        nel = Element.new(ele.target, ele.lines[0..MaxLines-1])
+        nel.lines << "say ,more" unless nel.lines.empty?
+        nel
       else
-        @more[ele.target] = nil
+        puts ele
         ele
       end
     end
