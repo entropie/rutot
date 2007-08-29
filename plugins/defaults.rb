@@ -92,8 +92,13 @@ respond_on(:PRIVMSG, :join, prefix_or_nick(:join, :j), :args => [:String] ) do |
 end
 
 respond_on(:PRIVMSG, :part, prefix_or_nick(:part, :p), :args => [:String] ) do |h|
-  h.bot.part(h.args.first)
+  arg = if not (str = h.args.first).empty?
+          str
+        else
+          h.channel
+        end
   h.respond(ReplyBox.k)
+  h.bot.part(arg, `fortune drugs zippy -s chucknorris bofh-excuses wisdom fortunes`.to_irc_msg)
 end
 
 
