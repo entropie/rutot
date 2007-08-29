@@ -39,7 +39,7 @@ module Rutot
 
 
       def hlp_tinyurl(url)
-        uri = uri.to_s
+        uri = url.to_s
         unless uri.empty?
           escaped_uri = URI.escape("http://tinyurl.com/api-create.php?url=#{uri}")
           Net::HTTP.get_response(URI.parse(escaped_uri)).body

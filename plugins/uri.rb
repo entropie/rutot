@@ -11,11 +11,10 @@ respond_on(:PRIVMSG, :uridesc, /https?:\/\//, :args => [:Everything]) do |h|
       title = Hpricot(open(uri)).at(:title).inner_text
       
       tiny = if uri.size > 60 then "#{hlp_tinyurl(uri)}  " else '' end
-      uri = URI.parse(uri).host if uri.size > 40
       str = "#{tiny}Page title is: %s.".strip
       h.respond(str % [ title.gsub(/\s+/, ' ').strip ])
     else
-      h.respond hlp_tinyurl(uri)
+      h.respond hlp_tinyurl(uri) if uri.size > 60
     end
   rescue NoMethodError
   rescue
