@@ -7,12 +7,12 @@
 
 respond_on(:PRIVMSG, :wp, prefix_or_nick(:wp), :args => [:Everything], :arg_req => true) do |h|
   lang =
-    if h.args.first.first =~ /(de|en)/
-      h.args.first.shift
+    if h.args.join(' ') =~ /^(de|en) /
+      $1
     else
       "en"
     end
-  h.respond(hlp_wikipedia(h.args.join(' '), lang))
+  h.respond(hlp_wikipedia(h.args.last.last, lang))
 end
 
 =begin

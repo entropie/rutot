@@ -4,9 +4,9 @@
 #
 
 
-timed_response(60*60, :fortune) do |h|
-  h.respond(hlp_fortune)
-end
+# timed_response(60*60, :fortune) do |h|
+#   h.respond(hlp_fortune)
+# end
 
 respond_on(:PRIVMSG, :excuse, prefix_or_nick(:excuse)) do |h|
   h.respond(hlp_fortune(['bofh-excuses', 'zx-error'], [:s], true))
