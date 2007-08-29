@@ -36,7 +36,7 @@ respond_on(:PRIVMSG, :remove, prefix_or_nick(:remove, :rm, :forget), :args => [:
   end
 end
 
-respond_on(:PRIVMSG, :kws, /#{bot_prefix}\w+ is [^(also)]/) do |h|
+respond_on(:PRIVMSG, :kws, /#{bot_prefix}\w+ is (?!also)]/) do |h|
   begin
     kw, t, *d = h.raw.join.split
     kw, d = kw[1..-1], d.join(' ')
