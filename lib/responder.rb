@@ -309,7 +309,7 @@ module Rutot
 
     def prefix(arg, h = 1)
       @prefix ||= Events::EventPrefix
-      /#{@prefix*h} ?(#{arg.to_s})(?:$|\s+)/
+      /#{if h == 1 then "^" else "" end}#{@prefix*h} ?(#{arg.to_s})(?:$|\s+)/
     end
 
 
