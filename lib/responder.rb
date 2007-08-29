@@ -110,7 +110,7 @@ module Rutot
       end
 
       def clear!
-        @respond_msg, @msg, @con = [], nil, nil
+        @respond_msg, @msg, @con, @args, @raw = [], nil, nil, [], []
       end
       
       def call(*args)
@@ -215,7 +215,6 @@ module Rutot
       @responder = Responder.new(bot)
     end
 
-    
     def reload
       reset
       load_plugin_files!
@@ -303,7 +302,10 @@ module Rutot
     def timed_response(intervall, name, options = { }, &blk)
       @independent.add_timed(intervall, name, options, &blk)
     end
-    
+
+    def bot_prefix
+      bot.config.prefix
+    end
 
     def prefix(arg, h = 1)
       @prefix ||= Events::EventPrefix
@@ -325,7 +327,6 @@ module Rutot
       rrgx += "(#{rgx})(?:$|\s+)"
       [Regexp.new(rrgx)]
     end
-    
 
     def select(name)
       Dir["#{PluginDirectory}/*.rb"].#
@@ -337,7 +338,10 @@ module Rutot
     
 
     def load(plugin)
-      b = self.dup.extend(Helper::Common)
+      b = self.dup
+      b.extend(Helper)
+      b.extend(Helper::Common)
+      b.extend(Helper::Database)
       bind = b.send(:binding)
       eval(File.open(plugin).readlines.join, bind)
     end
