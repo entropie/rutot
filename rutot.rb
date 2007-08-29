@@ -32,6 +32,7 @@ end
 
 require "lib/helper/paramhash"
 require "lib/helper/common"
+require "lib/helper/database"
 require "lib/responder"
 require "lib/plugins"
 require "lib/contrib"
@@ -46,7 +47,7 @@ require "lib/config"
 module Rutot
 
   
-  Version = %w'0 1 7'
+  Version = %w'0 1 9'
 
   VersionSuffix = 'alpha'
   
