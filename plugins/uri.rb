@@ -17,6 +17,7 @@ respond_on(:PRIVMSG, :uridesc, /https?:\/\//, :args => [:Everything]) do |h|
       h.respond hlp_tinyurl(uri) if uri.size > 60
     end
   rescue NoMethodError
+    p $!
   rescue
     h.respond(ReplyBox.SRY)
   end

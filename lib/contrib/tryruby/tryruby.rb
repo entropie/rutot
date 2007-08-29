@@ -5,18 +5,25 @@
 #
 
 class TryRuby
+
+  class ReloadException < Exception; end
+  
   def initialize
     @url = "http://tryruby.hobix.com/irb?cmd=%s"
     reload_session
   end
 
   def req code
-    code.gsub!(/[^[:print:]]/, " ")
-    code.gsub!(/[^a-zA-Z0-9.-]/){|c| "%%%x" % c.ord }
-    resp = open(@url % code, "Cookie" => @session).read
-    if resp == "An error has occured.  Try refreshing this page to reload your session.\n" or
-        resp == "Your session has been closed, either due to inactivity or a bit of code which ran too long. Refresh the page and you can begin a new session.\n"
-      reload_session
+    begin
+      code.gsub!(/[^[:print:]]/, " ")
+      code.gsub!(/[^a-zA-Z0-9.-]/){|c| "%%%x" % c.ord }
+      resp = open(@url % code, "Cookie" => @session).read
+      if resp == "An error has occured.  Try refreshing this page to reload your session.\n" or
+          resp == "Your session has been closed, either due to inactivity or a bit of code which ran too long. Refresh the page and you can begin a new session.\n"
+        reload_session
+        raise ReloadException, "session dead"
+      end
+    rescue ReloadException => e
       retry
     end
     resp

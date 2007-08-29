@@ -41,7 +41,6 @@ module Rutot
         nel.lines << "say ,more" unless nel.lines.empty?
         nel
       else
-        puts ele
         ele
       end
     end

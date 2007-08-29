@@ -60,8 +60,7 @@ module Rutot
           end
         case response
         when Net::HTTPSuccess     then response
-          
-        when Net::HTTPRedirection then fetch(response['location'], limit - 1)
+        when Net::HTTPRedirection then hlp_fetch_uri(response['location'], limit - 1)
         else
           response.error!
         end
