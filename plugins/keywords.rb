@@ -3,17 +3,29 @@
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 
-
 def fbk(kw)
   Database::KeywordBundle.find_by_keyword(kw)
 end
 
+def cl_title(t)
+  t.gsub(/<.*>(.*)<.*>/, '\1')
+end
+
+
 respond_on(:PRIVMSG, :kwg, /,\w+\?/) do |h|
   kw = h.raw.join[1..-2]
-  if kw = fbk(kw)
-    h.respond(kw.to_ary)
+  if kwn = fbk(kw)
+    h.respond(kwn.to_ary)
   else
-    h.respond('google?')
+    begin
+      google = hlp_google
+      query = google.search(kw)
+      r = query.results.first
+      h.respond "[google] \"%s\": %s (approx: %i results)" %
+        [cl_title(r.title), r.url, query.result_count]
+    rescue
+      p $!
+    end
   end
 end
 
@@ -36,7 +48,7 @@ respond_on(:PRIVMSG, :remove, prefix_or_nick(:remove, :rm, :forget), :args => [:
   end
 end
 
-respond_on(:PRIVMSG, :kws, /#{bot_prefix}\w+ is (?!also)]/) do |h|
+respond_on(:PRIVMSG, :kws, /#{bot_prefix}\w+ is (?!also)/) do |h|
   begin
     kw, t, *d = h.raw.join.split
     kw, d = kw[1..-1], d.join(' ')

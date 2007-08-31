@@ -118,11 +118,11 @@ module Rutot
 
     class Independent < Array
 
-      class Sprog
+      class Sprog < RespondHandle
         
         attr_reader :name, :interval, :handler
 
-        attr_accessor :last
+        attr_accessor :last, :bot
         
         def initialize(name, interval, &blk)
           @name, @interval = name, interval
@@ -134,12 +134,23 @@ module Rutot
           @last
         end
 
-        def call(rc)
-          @handler.call(rc)
+        def call
+          @args = @raw = []
+          ret = @handler.call(self)
+          self.clear!
+          ret
         end
-        
+
       end
 
+      class DynamicResponder < Sprog
+        def initialize(name, &blk)
+          @name = name
+          @handler = blk
+        end
+      end
+
+      
       def select(responder)
         responder.select{ |r| r.name == name}
       end
@@ -148,13 +159,15 @@ module Rutot
         super()
         @bot = bot
       end
-
       
       def add_timed(interval, name, options = { }, &blk)
-        self << Sprog.new(name, interval, &blk)
+        sprog = Sprog.new(name, interval, &blk)
+        sprog.bot = @bot
+        self << sprog
       end
 
-      def add_extern(handler, nanem, options, &blk)
+      def dynamic_response(name, &blk)
+        sprog = Sprog.new(new, &blk)
       end
 
     end

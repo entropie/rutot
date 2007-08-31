@@ -3,8 +3,6 @@
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 
-
-
 respond_on(:PRIVMSG, :wp, prefix_or_nick(:wp), :args => [:Everything], :arg_req => true) do |h|
   lang =
     if h.args.join(' ') =~ /^(de|en) /

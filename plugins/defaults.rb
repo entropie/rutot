@@ -51,15 +51,6 @@ respond_on(:PRIVMSG, :LOC, prefix_or_nick(:LOC)) do |h|
   `/home/mit/bin/loc`.split("\n").join(' — ')
 end
 
-respond_on(:PRIVMSG, :kcode, prefix_or_nick(:kcode), :args => [:String]) do |h|
-  h.respond $KCODE  
-end
-
-
-respond_on(:PRIVMSG, :source, prefix_or_nick(:source)) do |h|
-  h.respond('HG repos available at http://ackro.ath.cx:8000')
-end
-
 respond_on(:PRIVMSG, :uptime, prefix_or_nick(:uptime)) do |h|
   h.respond(`uptime`)
 end

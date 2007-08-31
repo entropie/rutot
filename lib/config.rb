@@ -12,8 +12,11 @@ module Rutot
     attr_reader :whitelist
     attr_reader :blacklist
     attr_reader :plugins 
-
+    attr_reader :independent
+    
     attr_accessor :last_msg_time
+
+    attr_accessor :prefix
     
     def modules(*mods)
       mods.each{ |m| @mods << m }
@@ -27,10 +30,15 @@ module Rutot
       @plugins.push(*mods)
     end
 
+    def independent(*mods)
+      @independent.push(*mods)
+    end
+    
     def initialize(name)
       @mods = []
       @last_msg_time = Time.now
-      @plugins, @name, @whitelist, @blacklist = [], name, [], []
+      @plugins, @independent, @name, @whitelist, @blacklist =
+        [], [], name, [], []
     end
 
   end

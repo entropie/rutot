@@ -16,6 +16,30 @@ module Rutot
   end
   
   class Plugins
+
+    class ReplyBox
+      Replies = {
+        :k =>           [:aight, :k, :done, :mhmk, :yup, :klar],
+        :YO =>          ["YEAH!", 'Yo.', 'Definitely yes.', 'Sure.', 'You really don’t want to know it.'],
+        :NO =>          ["Uh.", 'Hmm, nope.', 'We all gonna die down here.', '*Shrug*'],
+        :SRY =>         [ proc{ "#{if $! then "Uhh, #{$!}.  " else '' end}Reason: %s" % `fortune bofh-excuses -s`.split("\n").last.to_irc_msg} ]
+      }
+
+      def self.method_missing(m, *args, &blk)
+        ar = Replies[m]
+        ret = ar.sort_by{ rand }.first
+        if ret.kind_of?(Proc)
+          ret.call
+        else
+          ret
+        end
+      rescue
+        "uh... #{$!}"
+      end
+    end
+
+
+    
     include Helper
     include KeywordArguments
 
@@ -41,12 +65,6 @@ module Rutot
     
   end
 
-  class DefaultPlugins < Plugins
-  end
-  
-  class ChannelPlugins < Plugins
-  end
-  
 end
 
 

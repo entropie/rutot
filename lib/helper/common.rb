@@ -9,14 +9,19 @@ module Rutot
 
     module Common
 
+      
       require 'hpricot'
       require 'open-uri'
       require 'uri'
       require 'net/http'
 
       Fortunes = [:drugs, :zippy, :futurama, :tao, 'bofh-excuses',
-                 :wisdom, :fortunes]
+                  :wisdom, :fortunes]
       
+
+      def hlp_replybox(m)
+        ReplyBox.send(m)
+      end
 
       def hlp_fortune(which = [], opts = [:s, :e], only = false)
         w = unless only then Fortunes.dup.push(*which).flatten else which end
@@ -28,7 +33,9 @@ module Rutot
         str = str.split.map{|a| a.capitalize}.join('_')
         url = "http://#{lang}.wikipedia.org/wiki/#{str}"
         h = Hpricot(open(url))
-        Text::Format.new.format_one_paragraph("#{url}  " + h.at(:p).inner_text.gsub(/\n/, ' '))
+        text = h.at(:p).inner_text.gsub(/\n/, ' ')
+        text = '' if text =~ 
+          Text::Format.new.format_one_paragraph("#{url}  " + text)
       end
 
       

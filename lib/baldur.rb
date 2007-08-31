@@ -69,8 +69,10 @@ module Rutot
 
       Thread.start do
         sleep 20
+        puts "looping independent..."
         Kernel.loop do
           @plugins.handle_independent_things!
+          sleep 1
         end
       end
 
