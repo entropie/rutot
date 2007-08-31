@@ -3,9 +3,9 @@
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 
-include :hgwatch
+include :drbinterface
 
-hg = HGWatch.new
+hg = DRBInterface.new
 
 respond_on(:PRIVMSG, :hg, prefix_or_nick(:hg)) do |h|
   if hg.empty?

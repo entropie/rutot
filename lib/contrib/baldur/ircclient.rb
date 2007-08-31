@@ -78,7 +78,7 @@ class IRCClient
   
   def msg(target, *args)
     args.flatten.each do |line|
-      puts :SND, line
+      puts :SND, "#{target}  #{line}"
       @conn.send("PRIVMSG #{target} :#{line}")
     end
   end

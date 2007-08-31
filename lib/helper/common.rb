@@ -19,9 +19,15 @@ module Rutot
                   :wisdom, :fortunes]
       
 
+      def hlp_fbk(kw)
+        Database::KeywordBundle.find_by_keyword(kw)
+      end
+      
+
       def hlp_replybox(m)
         ReplyBox.send(m)
       end
+
 
       def hlp_fortune(which = [], opts = [:s, :e], only = false)
         w = unless only then Fortunes.dup.push(*which).flatten else which end
@@ -34,8 +40,8 @@ module Rutot
         url = "http://#{lang}.wikipedia.org/wiki/#{str}"
         h = Hpricot(open(url))
         text = h.at(:p).inner_text.gsub(/\n/, ' ')
-        text = '' if text =~ 
-          Text::Format.new.format_one_paragraph("#{url}  " + text)
+        text = '' if text =~ /^Wikipedia does not have an article with this exact name./
+        Text::Format.new.format_one_paragraph("#{url}  " + text)
       end
 
       

@@ -5,7 +5,7 @@
 
 respond_on(:PRIVMSG, :anc, prefix_or_nick(:anc), :args => [:String, :Everything], :arg_req => true) do |h|
   anstr = 'an -n 10 -d /usr/share/dict/words -c %s %s'
-  ret =`#{ anstr % [h.args.first, h.args.last.gsub(/\s+/,'')] } |tail -n 20`
+  ret =`#{ anstr % [h.args.first, h.args.last.gsub(/\s+/,'')] }`
   begin
     if ret =~ /^an: /
       raise "\"#{ret.chomp}\""
@@ -19,7 +19,7 @@ end
 
 respond_on(:PRIVMSG, :anagram, prefix_or_nick(:an), :args => [:Everything], :arg_req => true) do |h|
   anstr = 'an -n 10 -d /usr/share/dict/words %s'
-  ret =`#{ anstr % [h.args.last.to_s.gsub(/\s+/,'')] } |tail -n 20`
+  ret =`#{ anstr % [h.args.last.to_s.gsub(/\s+/,'')] }`
   begin
     if ret =~ /^an: /
       raise "\"#{ret.chomp}\""

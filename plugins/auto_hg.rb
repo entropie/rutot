@@ -3,9 +3,9 @@
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 
-include :hgwatch
+include :drbinterface
 
-hg = HGWatch.new
+hg = DRBInterface.new
 
 
 timed_response(10, :auto_hg) do |h|

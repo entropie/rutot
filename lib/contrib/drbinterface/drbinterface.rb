@@ -5,7 +5,7 @@
 
 require 'drb'
 
-class HGWatch
+class DRBInterface
 
   Host = 'localhost'
   Port = 7666

@@ -6,6 +6,8 @@
 require "yaml"
 
 chans = ["#ackro", "#test"]
+# sc = hlp_fbk('statschannel').definitions.map{ |sc| sc.text}
+# chans = sc if sc
 
 respond_on(:PRIVMSG, :gstats, prefix_or_nick(:makestats), :args => [:Everything]) do |h|
   Thread.new { 
@@ -13,9 +15,6 @@ respond_on(:PRIVMSG, :gstats, prefix_or_nick(:makestats), :args => [:Everything]
     retthingy = { }
     nickc = 0
 
-    sc = hlp_fbk('statschannel').definitions.map{ |sc| sc.text}
-    chans = sc if sc
-    
     chans.each do |chan|
       ich = chan
       idf = bot.channels.map{ |c| c.name }.include?(ich)
@@ -23,7 +22,9 @@ respond_on(:PRIVMSG, :gstats, prefix_or_nick(:makestats), :args => [:Everything]
         h.bot.join(ich)
         sleep 10
       end
-      retthingy[ich] = nl = h.bot.nicklist[ich]
+      p "stats for #{ich}"
+      
+      retthingy[ich] = nl = h.bot.nicklist[ich].keys
       nickc += nl.size
       h.bot.part(ich, 'Big brother is watching you.  This is a channel/user map bot.') unless idf
     end
@@ -32,11 +33,7 @@ respond_on(:PRIVMSG, :gstats, prefix_or_nick(:makestats), :args => [:Everything]
       yamlfile.write(YAML::dump(retthingy))
     end
 
-    msg = retthingy.map{ |c, nicks|
-      "#{c}: #{nicks.size}"
-    }
-
-    h.bot.spooler.push(h.channel, "Wrote %i nicks from %i channels.  #{`cat ~/Tmp/irc_map.yaml | rafb.rb`}" % [nickc, chans.size])
+    #h.bot.spooler.push(h.channel, "Wrote %i nicks from %i channels.  #{`cat ~/Tmp/irc_map.yaml | rafb.rb`}" % [nickc, chans.size])
     #h.bot.spooler.push(h.channel, *msg)
   }
   
