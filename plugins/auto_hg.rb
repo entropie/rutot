@@ -10,7 +10,7 @@ hg = HGWatch.new
 
 timed_response(10, :auto_hg) do |h|
   if hg.new?
-    h.respond(hg.last)
+    h.respond(hg.last.last)
   end
 end
 
