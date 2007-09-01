@@ -6,11 +6,11 @@
 require "yaml"
 
 chans = ["#ackro", "#test", '#emacs', '#ruby']
-# sc = hlp_fbk('statschannel').definitions.map{ |sc| sc.text}
-# chans = sc if sc
+sc = hlp_fbk('statschannel').definitions.map{ |sc| sc.text}
+chans = sc if sc
 
 respond_on(:PRIVMSG, :gstats, prefix_or_nick(:makestats), :args => [:Everything]) do |h|
-  h.respond "recorded users for #{chans.join(', ')}  "
+  h.respond "recorded users for #{chans.join(', ')}.  "
   
   retthingy = { }
   nickc = 0
