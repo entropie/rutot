@@ -169,7 +169,6 @@ module Rutot
         self.load(pluginfile)
       }
     end
-    
 
     def load(plugin)
       b = self.dup

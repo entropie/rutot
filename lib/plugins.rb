@@ -37,8 +37,6 @@ module Rutot
         "uh... #{$!}"
       end
     end
-
-
     
     include Helper
     include KeywordArguments
