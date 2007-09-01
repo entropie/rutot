@@ -12,7 +12,7 @@ end
 module Rutot
 
   class Plugins
-   
+    
     PluginDirectory = File.join(File.dirname(__FILE__), '..', 'plugins')
 
     attr_reader :responder
@@ -54,20 +54,21 @@ module Rutot
       self.independent.each do |ind|
         tchan = bot.config.channels.
           select{ |c| c.independent.include?(ind.name)}
-        tchan.each do |c|
-          begin
-            if ind.last[c.name] + ind.interval <= Time.now
-              bot.spooler.push(c.name, parse_plugin_retval(ind.call))
+        Thread.new do
+          tchan.each do |c|
+            begin
+              if ind.last[c.name] + ind.interval <= Time.now
+                bot.spooler.push(c.name, parse_plugin_retval(ind.call))
+                ind.last[c.name] = Time.now
+              else
+                # nothing
+              end
+            rescue
               ind.last[c.name] = Time.now
-            else
-              # nothing
             end
-          rescue
-            p $!
-            ind.last[c.name] = Time.now
           end
+          sleep 1
         end
-        sleep 1
       end
     end
     
@@ -89,14 +90,18 @@ module Rutot
 
             if(plugin && tchan && tchan.plugins.include?(plugin.name))
               if plugin.keywords.any?{ |a| message =~ a }
+                Thread.new do
+                  puts :PLG, "#{message} matches #{plugin.name}"
+                  ret = parse_plugin_retval(plugin.call(message))
+                  bot.spooler.push(target, *ret)
+                end
+              end
+            elsif plugin.keywords.any?{ |a| message =~ a }
+              Thread.new do
                 puts :PLG, "#{message} matches #{plugin.name}"
                 ret = parse_plugin_retval(plugin.call(message))
                 bot.spooler.push(target, *ret)
               end
-            elsif plugin.keywords.any?{ |a| message =~ a }
-              puts :PLG, "#{message} matches #{plugin.name}"
-              ret = parse_plugin_retval(plugin.call(message))
-              bot.spooler.push(target, *ret)
             end
           end
         end
