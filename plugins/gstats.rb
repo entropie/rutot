@@ -13,33 +13,60 @@ def make_graph(uri)
   channels, ret = {}, ''
   uri.gsub!(/html$/, 'txt')
 
-  ret << "graph { splines = true; maxiter=5000; \n"
+  ret << "graph {maxiter=5000; splines=true\n"
   channels = YAML::load(open(uri).read)
 
-  channels.sort.each { |channel, users|
-    ret << %{"#{channel} (#{channel.size})" [fontsize=#{6*(1+Math.log(users.size+1))}];} << "\n"
+  colors = {
+    60 => 'red',
+    58 => 'violetred1',
+    56 => 'violetred3',
+    54 => 'orangered2',
+    52 => 'palevioletred2',
+    50 => 'orchid',
+    45 => 'navajowhite3',
+    42 => 'moccasin',
+    38 => 'mediumorchid4',
+    34 => 'maroon4',
+    30 => 'lightskyblue3',
+    27 => 'lightsalmon2',
+    25 => 'lightcyan4',
+    20 => 'lemonchiffon4'
   }
-
+  
   channels.sort.each { |channel1, users1|
+
+    n = 6*(1+Math.log(users1.size+1))
+    color = colors.sort.reverse.select{ |i, c| i <= n }.flatten.first(2).last || 'peachpuff'
+    ret << %{"#{channel1}" [ label="#{channel1}: #{users1.size}",center="true",fontcolor="black",style="rounded,filled",shape="diamond",fillcolor=#{color}, color=#{color},fontsize="#{6*(1+Math.log(users1.size+1))}"];} << "\n"
+    
     channels.sort.each { |channel2, users2|
       break  if channel1 <= channel2
       unless (users1 & users2).empty?
         common = (users1 & users2).size / [users1.size, users2.size].min.to_f
 
-        case
-        when common > 0.45
-          s = "bold"
-        when common > 0.25
-          s = "solid"
-        when common > 0.10
-          s = "dotted"
-        else
-          s = "invis"
-        end
+        s =
+          case
+          when common > 0.55
+            ["bold", "violetred4"]
+          when common > 0.30
+            ["bold", "mediumvioletred"]
+          when common > 0.20
+            ["bold", "lightseagreen"]
+          when common > 0.10
+            ["solid", "khaki3"]
+          when common > 0.07
+            ["solid", "slategray4"]
+          when common > 0.04
+            ["dashed", "snow3"]
+          when common > 0.02
+            ["dashed", "snow1"]
+          else
+            ["invis", "lightslategrey"]
+          end
 
-        weight = 1.333 ** (users1 & users2).size
+        weight = 1.666 ** (users1 & users2).size
 
-        ret << %{"#{channel1}" -- "#{channel2}" [style=#{s},weight=#{weight}];}
+        ret << %{"#{channel1}" -- "#{channel2}" [fillcolor=#{s.first}, color="#{s.last}", style=#{s.first}, weight=#{weight.to_s[0..12].to_f}];}
         ret << "\n"
       end
     }
@@ -52,12 +79,10 @@ def make_graph(uri)
     f.write(ret)
   end
   `fdp /tmp/rutot_graph -o /tmp/rutot_graph_out.dot`
-  `dot -Tpng /tmp/rutot_graph_out.dot -o /tmp/rutot_graph.png`
+  `fdp -Tpng /tmp/rutot_graph_out.dot -o /tmp/rutot_graph.png`
   `cp /tmp/rutot_graph.png /home/mit/public_html/`
   return 'http://ackro.ath.cx/~mit/rutot_graph.png'
 end
-
-
 
 respond_on(:PRIVMSG, :gstats, prefix_or_nick(:makestats), :args => [:Everything]) do |h|
   retthingy = { }
@@ -70,7 +95,7 @@ respond_on(:PRIVMSG, :gstats, prefix_or_nick(:makestats), :args => [:Everything]
       idf = bot.channels.map{ |c| c.name }.include?(ich)
       unless idf
         h.bot.join(ich)
-        sleep 60*5
+        sleep 60*1
       end
       puts "stats for #{ich}"
       
@@ -79,7 +104,7 @@ respond_on(:PRIVMSG, :gstats, prefix_or_nick(:makestats), :args => [:Everything]
       
       retthingy[ich] = nl.keys
       nickc += nl.size
-      h.bot.part(ich), 'I’d try to map the user of various irc channels.  Infos in #ackro.') unless idf
+      h.bot.part(ich, 'I’d try to map the user of various irc channels.  Infos in #ackro.') unless idf
     end
 
     h.bot.spooler.talk!

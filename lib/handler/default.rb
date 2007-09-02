@@ -73,15 +73,22 @@ module Rutot
 
         def quit_remove_name_from_nicklist
           @bot.conn.add_event(:QUIT, :remove_name_from_nicklist) do |msg, conn|
-            nick = msg.prefix[/[^:!]+/]
-            @bot.nicklist.each do |channel, sublist|
-              entry = sublist.delete nick.dc
+            begin
+              nick = msg.prefix[/[^:!]+/]
+              chan = nil
+              @bot.nicklist.each do |channel, sublist|
+                chan = channel
+                entry = sublist.delete nick.dc
+              end
+              if chan
+                @bot.update_nicklist(chan) 
+                SeenList.add_or_update(chan, nick.dc, "[Quit] "+msg.params.last)
+              end
+              :success
+            rescue
+              p $!
             end
-            @bot.update_nicklist(channel.dc)
-            SeenList.add_or_update(channel.dc, nick.dc, "[Quit] "+msg.params.last)
-            :success
           end
-
         end
 
         def mode_rescan_modes
@@ -119,10 +126,10 @@ module Rutot
   end
 end
 =begin
-    Local Variables:
-      mode:ruby
-    fill-column:70
-    indent-tabs-mode:nil
-    ruby-indent-level:2
-    End:
+Local Variables:
+ mode:ruby
+ fill-column:70
+ indent-tabs-mode:nil
+ ruby-indent-level:2
+End:
 =end

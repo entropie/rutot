@@ -136,7 +136,7 @@ module Rutot
         
       end
 
-      OG = Og.setup(Config)
+      Og.setup(Config)
     end
 
   end
