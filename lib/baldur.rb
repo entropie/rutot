@@ -118,6 +118,8 @@ module Rutot
     def update_nicklist(chan)
       nl = @nicklist[chan]
       channels[chan].nicks = nl
+    rescue
+      puts :DEB, "no nicklist for #{chan}; ignoring "
     end
     
   end
