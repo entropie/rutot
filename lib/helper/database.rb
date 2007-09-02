@@ -16,12 +16,61 @@ module Rutot
         :store => :sqlite,
         :name => 'keywords'
       }
-     
+
       $DBG = true
+
+      class SeenList
+        attr_accessor :channel, String
+        attr_accessor :nick,    String
+        attr_accessor :msg,     String
+        attr_accessor :time,    Time
+        def initialize(chan, nick)
+          @channel, @nick, @msg, @time = chan, nick, '', Time.now
+        end
+
+        def self.add_or_update(chan, nick, msg = '')
+          ret =
+            if r = find_by_channel_and_nick(chan, nick)
+              r.msg = msg unless msg.empty?
+              r.time = Time.now
+              r
+            else
+              r = create(chan, nick)
+              r.msg = msg unless msg.empty?
+              r
+            end
+          ret.save
+        end
+        
+      end
+
+      class ChannelStats
+        attr_accessor :channel, :uniq => true
+        attr_accessor :snapshot_date, Time, :uniq => true
+
+        has_many      :channels, ChannelStat
+        def initialize(channel = nil)
+          @channel = channel
+          @snapshot_date = Time.now
+        end
+
+        def self.clean
+        end
+      end
+
+      class ChannelStat
+        attr_accessor :usercount, Fixnum
+        belongs_to    :channel_stats, ChannelStats
+
+        def initialize(usercount = 0)
+          @usercount = usercount
+        end
+
+      end
+      
+      
       class Definition
-
         attr_accessor :text, String, :uniq => true
-
         belongs_to    :keyword_bundle, KeywordBundle
 
         def initialize(text = nil)

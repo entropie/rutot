@@ -17,6 +17,7 @@ module Rutot
     attr_accessor :last_msg_time
 
     attr_accessor :prefix
+    attr_accessor :nicks
     
     def modules(*mods)
       mods.each{ |m| @mods << m }
@@ -36,6 +37,7 @@ module Rutot
     
     def initialize(name)
       @mods = []
+      @nicks = { }
       @last_msg_time = Time.now
       @plugins, @independent, @name, @whitelist, @blacklist =
         [], [], name, [], []

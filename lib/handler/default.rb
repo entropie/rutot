@@ -9,8 +9,10 @@ module Rutot
 
       module Default
 
+        include Rutot::Helper::Database
+        
         ORDER = 0
-
+        
         def privmsg_default
           @bot.conn.add_event(:PRIVMSG, :default) do |msg, conn|
             next unless msg.params.first !~ /#/
@@ -29,6 +31,8 @@ module Rutot
               op = !!nick.gsub!(/@/,'')
               voice = !!nick.gsub!(/\+/,'')
               @bot.nicklist[channel.dc][nick.dc] = State.new(op, voice)
+              @bot.update_nicklist(channel.dc)
+              SeenList.add_or_update(channel.dc, nick.dc, '[JOIN]')
             end
             :success
           end
@@ -39,6 +43,8 @@ module Rutot
             nick = msg.prefix[/[^:!]+/]
             channel = msg.params.first
             @bot.nicklist[channel.dc][nick.dc] = State.new(false, false)
+            @bot.update_nicklist(channel.dc)
+            SeenList.add_or_update(channel.dc, nick.dc, '[JOIN')
             :success
           end
         end
@@ -48,6 +54,8 @@ module Rutot
             nick = msg.prefix[/[^:!]+/]
             channel = msg.params.first
             @bot.nicklist[channel.dc].delete nick.dc
+            @bot.update_nicklist(channel.dc)
+            SeenList.add_or_update(channel.dc, nick.dc, "[Part] "+msg.params.last)
             :success
           end
         end
@@ -57,6 +65,8 @@ module Rutot
             nick    = msg.params[1]
             channel = msg.params[0]
             @bot.nicklist[channel.dc].delete nick.dc
+            @bot.update_nicklist(channel.dc)
+            SeenList.add_or_update(channel.dc, nick.dc, "[Kick] "+msg.params.last)
             :success
           end
         end
@@ -67,6 +77,8 @@ module Rutot
             @bot.nicklist.each do |channel, sublist|
               entry = sublist.delete nick.dc
             end
+            @bot.update_nicklist(channel.dc)
+            SeenList.add_or_update(channel.dc, nick.dc, "[Quit] "+msg.params.last)
             :success
           end
 

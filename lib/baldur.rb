@@ -114,6 +114,12 @@ module Rutot
       quit("lata")
       exec("ruby "+__FILE__)
     end
+
+    def update_nicklist(chan)
+      nl = @nicklist[chan]
+      channels[chan].nicks = nl
+    end
+    
   end
 
 
