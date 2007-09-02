@@ -48,6 +48,13 @@ module Rutot
         :success
       end
 
+      @conn.add_event :RPL_ENDOFMOTD, :freenode do |msg, conn|
+        sleep 10
+        msg('NickServ', "IDENTIFY #{config.freenode}") if config.freenode
+        :success
+      end
+
+      
       @last_ping_time = Time.now
       @last_pong_time = Time.now
 

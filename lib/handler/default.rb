@@ -44,7 +44,7 @@ module Rutot
             channel = msg.params.first
             @bot.nicklist[channel.dc][nick.dc] = State.new(false, false)
             @bot.update_nicklist(channel.dc)
-            SeenList.add_or_update(channel.dc, nick.dc, '[JOIN')
+            SeenList.add_or_update(channel.dc, nick.dc, '[JOIN]')
             :success
           end
         end

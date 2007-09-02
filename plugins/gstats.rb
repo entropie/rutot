@@ -1,14 +1,13 @@
 #
 #
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
+# Author:  Christian Neukirchen <chneukirchen@gmail.com>
 #
 
 require "yaml"
 require 'open-uri'
 
 chans = ["#ackro", "#test", '#emacs', '#ruby']
-
-#chans = sc if sc
 
 def make_graph(uri)
   channels, ret = {}, ''
@@ -18,7 +17,7 @@ def make_graph(uri)
   channels = YAML::load(open(uri).read)
 
   channels.sort.each { |channel, users|
-    ret << %{"#{channel}" [fontsize=#{6*(1+Math.log(users.size+1))}];} << "\n"
+    ret << %{"#{channel} (#{channel.size})" [fontsize=#{6*(1+Math.log(users.size+1))}];} << "\n"
   }
 
   channels.sort.each { |channel1, users1|
@@ -61,7 +60,6 @@ end
 
 
 respond_on(:PRIVMSG, :gstats, prefix_or_nick(:makestats), :args => [:Everything]) do |h|
-  #h.respond "recorded users for #{chans.join(', ')}.  "
   retthingy = { }
   nickc = 0
   begin
@@ -72,16 +70,16 @@ respond_on(:PRIVMSG, :gstats, prefix_or_nick(:makestats), :args => [:Everything]
       idf = bot.channels.map{ |c| c.name }.include?(ich)
       unless idf
         h.bot.join(ich)
-        sleep 30
+        sleep 60*5
       end
       puts "stats for #{ich}"
-
+      
       nl = h.bot.nicklist[ich]
       nl.delete(bot.nick)
       
       retthingy[ich] = nl.keys
       nickc += nl.size
-      h.bot.part(ich) unless idf #, 'Big brother is watching you.  This is a channel/user map bot.') unless idf
+      h.bot.part(ich), 'I’d try to map the user of various irc channels.  Infos in #ackro.') unless idf
     end
 
     h.bot.spooler.talk!

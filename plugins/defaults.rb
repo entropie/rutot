@@ -55,6 +55,12 @@ respond_on(:PRIVMSG, :uptime, prefix_or_nick(:uptime)) do |h|
   h.respond(`uptime`)
 end
 
+respond_on(:PRIVMSG, :nsregister, prefix_or_nick(:registerns)) do |h|
+  h.bot.msg('NickServ', "register #{bot.config.freenode}")
+  'k'
+end
+
+
 respond_on(:PRIVMSG, :quiet, prefix_or_nick(:quiet)) do |h|
   h.bot.spooler.quiet!
 end

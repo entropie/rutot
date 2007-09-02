@@ -48,8 +48,9 @@ module Rutot
 
       module Freenode
 
-        def freenode(password)
-          self
+        def freenode(password = nil)
+          @freenode_password = password if password
+          @freenode_password
         end
         
       end
