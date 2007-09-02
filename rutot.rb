@@ -48,9 +48,9 @@ require "lib/config"
 module Rutot
 
   
-  Version = %w'0 2 1'
+  Version = %w'0 2 3'
 
-  VersionSuffix = 'alpha'
+  VersionSuffix = 'testing'
   
   def self.version
     "#{self}-" + Version.join('.') + "-" + VersionSuffix
