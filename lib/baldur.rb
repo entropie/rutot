@@ -109,7 +109,7 @@ module Rutot
     end
 
     def has_privilege?(chan, nick)
-      #has_op?(chan, nick) or has_voice?(chan, nick)
+      has_op?(chan, nick) or has_voice?(chan, nick)
       true
     end
 
@@ -126,7 +126,7 @@ module Rutot
       nl = @nicklist[chan]
       channels[chan].nicks = nl
     rescue
-      puts :DEB, "no nicklist for #{chan}; ignoring " if $DEBUG
+      nil
     end
     
   end

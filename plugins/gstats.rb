@@ -103,7 +103,7 @@ respond_on(:PRIVMSG, :gstats, prefix_or_nick(:makestats), :args => [:Everything]
       puts "stats for #{ich}"
       unless idf
         h.bot.join(ich)
-        sleep 60*1
+        p "sleep %i " % [sleep(60*(3+(rand*10)).divmod(1).first)]
       end
 
       nl = h.bot.nicklist[ich]

@@ -33,35 +33,59 @@ module Rutot
       ret
     end
     
-    def make_more(ele)
+    def make_more(ele, f = false)
       if need_more?(ele)
-        lines = ele.lines[MaxLines..-1]
-        @more[ele.target] = Element.new(ele.target, lines)
+        lines =
+          unless f
+            ele.lines[MaxLines..-1]
+          else
+            ele.lines
+          end
+        m = @more[ele.target] = Element.new(ele.target, lines)
         nel = Element.new(ele.target, ele.lines[0..MaxLines-1])
-        nel.lines << "say ,more" unless nel.lines.empty?
+        nel.lines.last << "  [#{m.lines.size} left, say ,more]" unless nel.lines.empty?
         nel
       else
         ele
       end
     end
-    
-    def quiet!; @quiet = true;  end
-    def talk!;  @quiet = false; end
-    def quiet?; @quiet;         end
-    
-    def blocked?
-      @blocked
+
+    # Save entire message in spooler, replace beginning of
+    # first line with timestamp and other lines with two
+    # spaces.
+    def push_more(el)
+      @more[el.target] ||= Element.new(el.target, [])
+      return nil if el.lines.to_s.strip.empty?
+      el.lines.map!{ |l|
+        if el.lines.first == l
+          l.gsub!(/^/, "[At " + Time.now.strftime("%H:%M:%S] "))
+        else
+          l.gsub!(/^/, "  ")
+        end
+      }
+      @more[el.target].lines.push(*el.lines)
     end
     
-    def push(target, *lines)
-      if quiet?
-        puts :Q, "I’am not allowed to talk." if $DEBUG
-        return
-      elsif lines.to_s.size.zero?
-        puts :SPO, "REC: empty string; ignoring" if $DEBUG
-        return
+    def quiet!
+      @quiet = true
+    end
+
+    def talk!
+      @quiet = false
+      @bot.channels.each do |chan|
+        unless @more[chan.name].nil?
+          push(chan.name, "[Say ,more for %i skipped lines]" % @more[chan.name].lines.size) unless @more[chan.name].lines.empty?
+        end
       end
-      puts :SPO, "REC: for #{target} : #{lines.to_s.size}bytes"
+      @quiet
+    end
+
+    def quiet?;   @quiet; end
+    
+    def blocked?; @blocked; end
+    
+    def push(target, *lines)
+      puts :SPO, "REC: for #{target} : #{lines.to_s.size}bytes" unless lines.to_s.strip.size.zero?
       self << Element.new(target, lines)
     end
 
@@ -69,7 +93,11 @@ module Rutot
       until empty? and blocked?
         el = self.pop
         if el
-          yield make_more(el)
+          unless quiet?
+            yield make_more(el)  # return message for further processing
+          else
+            push_more(el)        # add message to @more because we’re forced to quiet
+          end
         end
         sleep 0.1
       end

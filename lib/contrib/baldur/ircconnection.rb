@@ -877,6 +877,9 @@ class IRCConnection
     end
     command = internal_to_command(command)
     return Message.new(prefix, command, rawcommand, params, rawparams, line)
+  rescue
+    p $!
+    pp $!.backtrace
   end
 
   def each

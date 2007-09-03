@@ -63,6 +63,7 @@ end
 
 respond_on(:PRIVMSG, :quiet, prefix_or_nick(:quiet)) do |h|
   h.bot.spooler.quiet!
+  ''
 end
 
 respond_on(:PRIVMSG, :talk, prefix_or_nick(:talk)) do |h|
