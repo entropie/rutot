@@ -7,7 +7,7 @@ def cl_title(t)
   t.gsub(/<.*>(.*)<.*>/, '\1')
 end
 
-respond_on(:PRIVMSG, :kwg, /,\w+\?/) do |h|
+respond_on(:PRIVMSG, :kwg, /^#{bot_prefix}\w+\?(?!\s)/) do |h|
   kw = h.raw.join[1..-2]
   if kwn = hlp_fbk(kw)
     h.respond(kwn.to_ary)
