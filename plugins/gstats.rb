@@ -5,6 +5,7 @@
 #
 
 require "yaml"
+
 require 'open-uri'
 
 chans = ["#ackro", "#test", '#emacs', '#ruby']
@@ -78,10 +79,15 @@ def make_graph(uri)
   File.open('/tmp/rutot_graph', 'w+') do |f|
     f.write(ret)
   end
+  
+  puts "making graphs..."
   `fdp /tmp/rutot_graph -o /tmp/rutot_graph_out.dot`
   `fdp -Tpng /tmp/rutot_graph_out.dot -o /tmp/rutot_graph.png`
+  g2 = "/home/mit/public_html/rutot_graph_#{t=Time.now.to_i}.png"
   `cp /tmp/rutot_graph.png /home/mit/public_html/`
-  return 'http://ackro.ath.cx/~mit/rutot_graph.png'
+  `cp /tmp/rutot_graph.png #{g2}`
+  puts "done making graphs."
+  return ['http://ackro.ath.cx/~mit/rutot_graph.png', "http://ackro.ath.cx/~mit/rutot_graph_#{t}.png"]
 end
 
 respond_on(:PRIVMSG, :gstats, prefix_or_nick(:makestats), :args => [:Everything]) do |h|
@@ -90,15 +96,16 @@ respond_on(:PRIVMSG, :gstats, prefix_or_nick(:makestats), :args => [:Everything]
   begin
     h.bot.spooler.quiet!
     chans = hlp_fbk('statschannel').definitions.map{ |sc| sc.text}
+    #chans = ["#ackro"]
     chans.each do |chan|
       ich = chan
       idf = bot.channels.map{ |c| c.name }.include?(ich)
+      puts "stats for #{ich}"
       unless idf
         h.bot.join(ich)
         sleep 60*1
       end
-      puts "stats for #{ich}"
-      
+
       nl = h.bot.nicklist[ich]
       nl.delete(bot.nick)
       
@@ -112,8 +119,15 @@ respond_on(:PRIVMSG, :gstats, prefix_or_nick(:makestats), :args => [:Everything]
     File.open(File.expand_path('~/Tmp/irc_map.yaml'), 'w+') do |yamlfile|
       yamlfile.write(YAML::dump(retthingy))
     end
+    
     uri = "#{uri = `cat ~/Tmp/irc_map.yaml | rafb.rb`}".gsub(/"/, '').strip
-    h.respond("Wrote %i nicks from %i channels.  #{uri} — #{make_graph(uri)}" % [nickc, chans.size])
+    graph = make_graph(uri)
+    if h.args.flatten.join.strip == 'polis'
+      fb = "[:img]\n#{graph.last}\n[:img_end]\n\n"
+      `echo "#{fb}" | ackro po way pipe to image`
+      h.respond("Postet to polis.\n")
+    end
+    h.respond(str=("Wrote %i nicks from %i channels.  #{uri} — #{graph.first}" % [nickc, chans.size]))
   rescue
     p $!
     pp $!.backtrace

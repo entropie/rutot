@@ -5,6 +5,8 @@
 
 
 
+
+
 Dir.chdir('/home/mit/Source/rutot/')
 require "rubygems"
 require "text/format"
@@ -29,6 +31,7 @@ def puts(*args)
   end
   Kernel.puts
 end
+
 
 require "lib/helper/paramhash"
 require "lib/helper/common"

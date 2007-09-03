@@ -5,6 +5,8 @@
 
 module Rutot
 
+  include Helper
+  
   class Plugin
     attr_reader :channel, :name
     def initialize(file)
@@ -37,7 +39,7 @@ module Rutot
         "uh... #{$!}"
       end
     end
-    
+
     include Helper
     include KeywordArguments
 

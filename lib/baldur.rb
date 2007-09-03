@@ -126,7 +126,7 @@ module Rutot
       nl = @nicklist[chan]
       channels[chan].nicks = nl
     rescue
-      puts :DEB, "no nicklist for #{chan}; ignoring "
+      puts :DEB, "no nicklist for #{chan}; ignoring " if $DEBUG
     end
     
   end

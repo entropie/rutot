@@ -17,7 +17,7 @@ module Rutot
         :name => 'keywords'
       }
 
-      $DBG = true
+      $DBG = true if $DEBUG
 
       class SeenList
         attr_accessor :channel, String

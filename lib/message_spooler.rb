@@ -55,10 +55,10 @@ module Rutot
     
     def push(target, *lines)
       if quiet?
-        puts :Q, "I’am not allowed to talk."
+        puts :Q, "I’am not allowed to talk." if $DEBUG
         return
       elsif lines.to_s.size.zero?
-        puts :SPO, "REC: empty string; ignoring"
+        puts :SPO, "REC: empty string; ignoring" if $DEBUG
         return
       end
       puts :SPO, "REC: for #{target} : #{lines.to_s.size}bytes"
