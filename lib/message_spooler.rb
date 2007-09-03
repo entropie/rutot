@@ -14,8 +14,10 @@ module Rutot
     attr_reader :bot
     attr_reader :blocked
     attr_reader :quiet
+    attr_reader :quiet_list
     
     def initialize(bot, p = 0)
+      @quiet_list = []
       @blocked = false
       @bot = bot
       @quiet = false
@@ -66,21 +68,40 @@ module Rutot
       @more[el.target].lines.push(*el.lines)
     end
     
-    def quiet!
-      @quiet = true
+    def quiet!(channel = nil)
+      unless channel
+        puts :SPL, "overall quiet"
+        @quiet = true
+      else
+        puts :SPL, "#{channel} quiet"
+        @quiet_list << channel
+        true
+      end
     end
 
-    def talk!
-      @quiet = false
+    def talk!(channel = nil)
+      unless channel
+        @quiet = false
+      else
+        puts :SPL, "talking again in #{channel}"
+        raise "not in list #{channel}" unless @quiet_list.delete(channel)
+      end
+      
       @bot.channels.each do |chan|
         unless @more[chan.name].nil?
-          push(chan.name, "[Say ,more for %i skipped lines]" % @more[chan.name].lines.size) unless @more[chan.name].lines.empty?
+          push(chan.name, "[Say ,more for %i skipped lines]" % @more[chan.name].lines.size) unless
+            @more[chan.name].lines.empty?
         end
       end
-      @quiet
     end
 
-    def quiet?;   @quiet; end
+    def quiet?(channel = nil)
+      unless channel
+        @quiet
+      else
+        @quiet_list.include?(channel)
+      end
+    end
     
     def blocked?; @blocked; end
     
@@ -93,7 +114,7 @@ module Rutot
       until empty? and blocked?
         el = self.pop
         if el
-          unless quiet?
+          if not quiet? and not quiet?(el.target)
             yield make_more(el)  # return message for further processing
           else
             push_more(el)        # add message to @more because we’re forced to quiet

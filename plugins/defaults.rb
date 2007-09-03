@@ -61,13 +61,34 @@ respond_on(:PRIVMSG, :nsregister, prefix_or_nick(:registerns)) do |h|
 end
 
 
-respond_on(:PRIVMSG, :quiet, prefix_or_nick(:quiet)) do |h|
-  h.bot.spooler.quiet!
-  ''
+respond_on(:PRIVMSG, :quiet, prefix_or_nick(:quiet), :args => [:String]) do |h|
+  begin
+    if h.args.empty?
+      h.bot.spooler.quiet!
+    else
+      h.bot.spooler.quiet!(h.args.join)
+    end
+  rescue
+    ReplyBox.SRY
+  end
 end
 
-respond_on(:PRIVMSG, :talk, prefix_or_nick(:talk)) do |h|
-  h.bot.spooler.talk!
+respond_on(:PRIVMSG, :quietlist, prefix_or_nick(:quietlist)) do |h|
+  h.bot.spooler.quiet_list.join(', ')
+end
+
+respond_on(:PRIVMSG, :talk, prefix_or_nick(:talk), :args => [:String]) do |h|
+  begin
+    if h.args.empty?
+      h.bot.spooler.talk!
+    else
+      h.bot.spooler.talk!(h.args.join)
+    end
+    ReplyBox.k
+  rescue
+    p $!
+    ReplyBox.SRY
+  end
   h.respond(ReplyBox.k)
 end
 
