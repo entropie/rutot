@@ -154,7 +154,6 @@ module Rutot
       end.flatten
     end
 
-
     def prefix_or_nick_r(rgx, arg)
       rrgx = "^#{bot.nick}[:, ]+"
       rrgx += "(#{rgx})(?:$|\s+)"

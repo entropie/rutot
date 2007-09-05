@@ -94,16 +94,17 @@ respond_on(:PRIVMSG, :gstats, prefix_or_nick(:makestats), :args => [:Everything]
   retthingy = { }
   nickc = 0
   begin
-    h.bot.spooler.quiet!
     chans = hlp_fbk('statschannel').definitions.map{ |sc| sc.text}
-    #chans = ["#ackro"]
     chans.each do |chan|
       ich = chan
       idf = bot.channels.map{ |c| c.name }.include?(ich)
       puts "stats for #{ich}"
       unless idf
         h.bot.join(ich)
-        p "sleep %i " % [sleep(60*(3+(rand*10)).divmod(1).first)]
+        h.bot.spooler.quiet!(ich)
+        si = 60*(3+(rand*10)).divmod(1).first
+        p :GST, "sleep %i " % [si]
+        sleep si
       end
 
       nl = h.bot.nicklist[ich]
@@ -111,10 +112,11 @@ respond_on(:PRIVMSG, :gstats, prefix_or_nick(:makestats), :args => [:Everything]
       
       retthingy[ich] = nl.keys
       nickc += nl.size
-      h.bot.part(ich, 'I’d try to map the user of various irc channels.  Infos in #ackro.') unless idf
+      unless idf
+        h.bot.part(ich, 'I’d try to map the user of various irc channels.  Infos in #ackro.')
+        h.bot.spooler.talk!(ich)
+      end
     end
-
-    h.bot.spooler.talk!
     
     File.open(File.expand_path('~/Tmp/irc_map.yaml'), 'w+') do |yamlfile|
       yamlfile.write(YAML::dump(retthingy))

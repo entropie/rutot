@@ -2,8 +2,10 @@
 #
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
-require 'pp'
-require "/home/mit/rand.rb"
+#require 'pp'
+#require "/home/mit/rand.rb"
+#include :rand
+
 
 module Rutot
 
