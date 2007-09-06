@@ -52,9 +52,9 @@ module Rutot
       end
     end
 
-    # Save entire message in spooler, replace beginning of
-    # first line with timestamp and other lines with two
-    # spaces.
+    # Save entire message in spooler, replace beginning of first line
+    # with timestamp and beginning of other lines with two spaces.
+    #
     def push_more(el)
       @more[el.target] ||= Element.new(el.target, [])
       return nil if el.lines.to_s.strip.empty?
@@ -86,15 +86,22 @@ module Rutot
         puts :SPL, "talking again in #{channel}"
         raise "not in list #{channel}" unless @quiet_list.delete(channel)
       end
-      
-      @bot.channels.each do |chan|
-        unless @more[chan.name].nil?
-          push(chan.name, "[Say ,more for %i skipped lines]" % @more[chan.name].lines.size) unless
-            @more[chan.name].lines.empty?
+    end
+    
+    def channel_more(chan = nil)
+      if chan and not @bot.channels[chan].nil?
+        push(chan, "[Say ,more for %i skipped lines]" % @more[chan].lines.size) if
+          @more[chan] and not @more[chan].lines.empty?
+      else
+        @bot.channels.each do |chan|
+          unless @more[chan.name].nil?
+            push(chan.name, "[Say ,more for %i skipped lines]" % @more[chan.name].lines.size) unless
+              @more[chan.name].lines.empty?
+          end
         end
       end
     end
-
+    
     def quiet?(channel = nil)
       unless channel
         @quiet

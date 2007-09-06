@@ -63,11 +63,12 @@ end
 
 respond_on(:PRIVMSG, :quiet, prefix_or_nick(:quiet), :args => [:String]) do |h|
   begin
-    if h.args.empty?
+    if h.args.flatten.join.empty?
       h.bot.spooler.quiet!
     else
       h.bot.spooler.quiet!(h.args.join)
     end
+    ''
   rescue
     ReplyBox.SRY
   end
@@ -79,10 +80,12 @@ end
 
 respond_on(:PRIVMSG, :talk, prefix_or_nick(:talk), :args => [:String]) do |h|
   begin
-    if h.args.empty?
+    if h.args.join.empty?
       h.bot.spooler.talk!
+      h.bot.spooler.channel_more
     else
-      h.bot.spooler.talk!(h.args.join)
+      h.bot.spooler.talk!(chan = h.args.join)
+      h.bot.spooler.channel_more(chan)
     end
     ReplyBox.k
   rescue

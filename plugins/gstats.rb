@@ -95,6 +95,7 @@ respond_on(:PRIVMSG, :gstats, prefix_or_nick(:makestats), :args => [:Everything]
   nickc = 0
   begin
     chans = hlp_fbk('statschannel').definitions.map{ |sc| sc.text}
+    #chans = ['#ackro', '#ruby-de']
     chans.each do |chan|
       ich = chan
       idf = bot.channels.map{ |c| c.name }.include?(ich)
@@ -115,6 +116,8 @@ respond_on(:PRIVMSG, :gstats, prefix_or_nick(:makestats), :args => [:Everything]
       unless idf
         h.bot.part(ich, 'I’d try to map the user of various irc channels.  Infos in #ackro.')
         h.bot.spooler.talk!(ich)
+      else
+        h.bot.spooler.channel_more(ich)
       end
     end
     

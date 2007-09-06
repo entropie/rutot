@@ -16,6 +16,8 @@ respond_on(:PRIVMSG, :uridesc, /https?:\/\//, :args => [:Everything]) do |h|
     else
       h.respond hlp_tinyurl(uri) if uri.size > 60
     end
+  rescue Hpricot::ParseError
+    p $!
   rescue NoMethodError
     p $!
   rescue
