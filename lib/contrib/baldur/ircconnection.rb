@@ -889,6 +889,7 @@ class IRCConnection
         $stderr.flush
       end
       msg = parse_line(line)
+      next unless msg
       call_events(msg)
       yield(msg, self)
     end

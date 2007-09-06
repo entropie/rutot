@@ -3,7 +3,7 @@
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 
-respond_on(:PRIVMSG, :translate, prefix_or_nick(:translate, :t), :args => [:String, :String, :Everything], :arg_req => true) do |h|
+respond_on(:PRIVMSG, :translate, prefix_or_nick(:translate, :t, :t8), :args => [:String, :String, :Everything], :arg_req => true) do |h|
   begin
     trans_prg = "translate -f #{f=h.args.shift} -t #{t=h.args.shift}"
     trans_string = h.args.shift.gsub("\"", '')
