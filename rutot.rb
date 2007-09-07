@@ -3,16 +3,13 @@
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 
-
-
-
-
 Dir.chdir('/home/mit/Source/rutot/')
 require "rubygems"
 require "text/format"
 
 require "pp"
 
+$KCODE = 'u'
 
 class String
   unless defined?(ord)

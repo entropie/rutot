@@ -6,6 +6,7 @@
 respond_on(:PRIVMSG, :uridesc, /https?:\/\//, :args => [:Everything]) do |h|
   begin
     uri = URI.extract(h.raw.join(' ')).select{ |i| begin URI.parse(i); rescue; nil end }.first
+    p uri
     case ct = hlp_fetch_uri(uri).content_type
     when /text\/\w+/
       title = Hpricot(open(uri)).at(:title).inner_text

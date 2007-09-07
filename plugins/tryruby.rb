@@ -9,8 +9,8 @@ include :tryruby
 try = TryRuby.new
 
 respond_on(:PRIVMSG, :irb, prefix_or_nick(:irb, :eval), :args => [:Everything], :arg_req => true) do |h|
-  try.reload_session if try.req("1") == ""
-  h.respond try.req(h.args.join(' '))
+  #try.reload_session if try.eval("1") == ""
+  h.respond try.eval(h.args.join(' '))
 end
 
 respond_on(:PRIVMSG, :irbreset, prefix_or_nick(:irb_reset)) do |h|
