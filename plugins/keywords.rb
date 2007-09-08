@@ -49,10 +49,8 @@ respond_on(:PRIVMSG, :kws, /#{bot_prefix}\w+ is (?!also)/) do |h|
     kw, d = kw[1..-1], d.join(' ')
     raise "exist already" if hlp_fbk(kw)
     if kw.size > 0 and d.size > 0
-      kwb = Database::KeywordBundle.new(kw)
-      kwb.save
-      kwb.definitions << ndef = Database::Definition.new(d)
-      ndef.save
+      kwb = Database::KeywordBundle.create(kw)
+      kwb.definitions << ndef = Database::Definition.create(d)
       h.respond(ReplyBox.k)
     end
   rescue
@@ -66,8 +64,7 @@ respond_on(:PRIVMSG, :kwsa, /#{bot_prefix}\w+ is also/) do |h|
     kw, t, ot, *d = h.raw.join.split
     kw, d = kw[1..-1], d.join(' ')
     raise "not exist" unless kwb = hlp_fbk(kw)
-    kwb.definitions << ndef = Database::Definition.new(d)
-    ndef.save
+    kwb.definitions << ndef = Database::Definition.create(d)
     h.respond(ReplyBox.k)
   rescue
     h.respond(ReplyBox.SRY)
