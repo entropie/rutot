@@ -14,7 +14,6 @@ require 'hpricot'
 
 def weather(str)
   station = "http://mobile.wunderground.com/cgi-bin/findweather/getForecast?query=#{str}"
-  p station
   doc = Hpricot(open(station))
 
   results = doc.search('/html/body//b').map{|r| r.inner_html}
@@ -34,7 +33,7 @@ respond_on(:PRIVMSG, :weather, prefix_or_nick(:wheater, :w), :args => [:String])
     unless h.args.join.empty?
       h.respond(weather(h.args.join))
     else
-      h.respond('Gimme some infos about where you lurking around, dood.')
+      h.respond('Say to me where you lurk around, dood.')
     end
   rescue
     p $!
