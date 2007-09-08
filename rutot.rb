@@ -48,7 +48,7 @@ require "lib/config"
 module Rutot
 
   
-  Version = %w'0 2 7'
+  Version = %w'0 2 9'
 
   VersionSuffix = 'testing'
   

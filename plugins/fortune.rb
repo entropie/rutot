@@ -5,7 +5,7 @@
 
 
 respond_on(:PRIVMSG, :excuse, prefix_or_nick(:excuse)) do |h|
-  h.respond(hlp_fortune(['bofh-excuses', 'zx-error'], [:s], true))
+  h.respond(hlp_fortune(['bofh-excuses', 'zx-error'], [:s], true).split(/\n/).last)
 end
 
 
