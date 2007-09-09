@@ -4,27 +4,36 @@
 #
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 
-task :spec do
-  sh 'spec spec -r pitch'
-end
+require 'rutot.rb'
 
-task :specdoc do
-  sh 'spec spec -f s -r pitch'
-end
+VERS = Rutot.version
 
-task :spechtml do
-  sh 'spec spec -f h -r pitch -o ~/public_html/pitch.html'
+desc "sync tarballs to googlecode"
+task :google_sync => [:rdoc, :distribute]do
+  file = "pkg/#{VERS}.tar"
+  ext = ['bz2', 'gz']
+  ext.each do |e|
+    desc = `hg head`.split("\n").grep(/summary/).to_s[/\w+:\s(.*)/, 1].strip
+    pw = File.open(File.expand_path('~/Data/Secured/googlecode.pw')).readlines.join.strip
+    `googlecode_upload.py --config-dir none -s #{desc} -p rutot -P #{pw} -u mictro #{file}.#{e}`
+  end
 end
 
 task :rdoc do
-  system('rdoc -a -I gif -S -m Rutot -o ~/public_html/doc/rutotdoc/ -x "(_darcs|bin|spec|plugins|contrib)"')
+  system('rdoc -a -I gif -S -m Rutot -o doc -x "(bin|plugins)"')
 end
 
-task :all => [:spec, :spechtml, :rdoc] do
-end
+desc "create bzip2 and tarball"
+task :distribute => [:rdoc] do
+  sh "rm -rf pkg/#{VERS}"
+  sh "mkdir -p pkg/#{VERS}"
+  sh "cp -r {bin,doc,lib,Rakefile.rb} pkg/#{VERS}/"
 
-task :profile do
-  sh 'spec spec -r pitch -r profile'
+  Dir.chdir('pkg') do |pwd|
+    sh "tar -zcvf #{VERS}.tar.gz #{VERS}"
+    sh "tar -jcvf #{VERS}.tar.bz2 #{VERS}"
+  end
+  sh "rm -rf pkg/#{VERS}"
 end
 
 desc "list all still undocumented methods"
@@ -48,14 +57,12 @@ task :undocumented do
           puts "#{' ' * indent}..."
           puts e
         end
-      lines_till_here.clear
+        lines_till_here.clear
       end
       lines_till_here << line
     end
   end
 end
-
-task "create HISTORY from hg"
 
 
 desc "remove those annoying spaces at the end of lines"

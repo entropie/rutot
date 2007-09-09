@@ -29,21 +29,22 @@ def puts(*args)
   Kernel.puts
 end
 
-
-require "lib/helper/paramhash"
-require "lib/helper/common"
-require "lib/helper/database"
-require "lib/responder"
-require "lib/responder_methods"
-require "lib/plugins"
-require "lib/contrib"
-require "lib/irc_events"
-require "lib/irc"
-require "lib/message_spooler"
-require "lib/rutot"
-require "lib/daemon"
-require "lib/config_modules"
-require "lib/config"
+begin
+  require "lib/helper/paramhash"
+  require "lib/helper/common"
+  require "lib/helper/database"
+  require "lib/responder"
+  require "lib/responder_methods"
+  require "lib/plugins"
+  require "lib/contrib"
+  require "lib/irc_events"
+  require "lib/irc"
+  require "lib/message_spooler"
+  require "lib/rutot"
+  require "lib/daemon"
+  require "lib/config_modules"
+  require "lib/config"
+end if __FILE__ == $0
 
 module Rutot
 
@@ -68,13 +69,14 @@ module Rutot
 end
 
 begin
+  p 1
   #
   # Rutot starts the friendly Rutlov bot.
   #
   puts "Starting  #{Rutot.version}  at #{Time.now}."
   Kernel.puts
   r = Rutot.start
-  
+
 end if __FILE__ == $0
 
 
