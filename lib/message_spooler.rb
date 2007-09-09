@@ -9,6 +9,7 @@ module Rutot
 
     MaxLines = 4
     
+    # Contents of @mrore
     Element = Struct.new(:target, :lines)
 
     attr_reader :bot
@@ -25,16 +26,19 @@ module Rutot
       super()
     end
 
+    # returns true if ele.lines > MaxLines
     def need_more?(ele)
       if ele.lines.size > MaxLines then true else false end
     end
 
+    # return @more and clean it
     def more(target)
       ret = @more[target] if @more[target]
       @more[target] = nil
       ret
     end
-    
+
+    # strip message lines if needed and save rest in @more
     def make_more(ele, f = false)
       if need_more?(ele)
         lines =
@@ -67,7 +71,8 @@ module Rutot
       }
       @more[el.target].lines.push(*el.lines)
     end
-    
+
+    # sets quiet for channel or overall if +channel+ is nil
     def quiet!(channel = nil)
       unless channel
         puts :SPL, "overall quiet"
@@ -79,6 +84,7 @@ module Rutot
       end
     end
 
+    # sets talk for channel or overall if +channel+ is +nil+
     def talk!(channel = nil)
       unless channel
         @quiet = false
@@ -87,7 +93,9 @@ module Rutot
         raise "not in list #{channel}" unless @quiet_list.delete(channel)
       end
     end
-    
+
+    # checks whether there are ommited lines, parse in every channel
+    # or in specifc if +chan+ is non +nil+.
     def channel_more(chan = nil)
       if chan and not @bot.channels[chan].nil?
         push(chan, "[Say ,more for %i skipped lines]" % @more[chan].lines.size) if
@@ -101,7 +109,9 @@ module Rutot
         end
       end
     end
-    
+
+    # returns true if bot is set overall quiet or quiete for specific
+    # channel if +channel+ is non +nil+
     def quiet?(channel = nil)
       unless channel
         @quiet
@@ -109,14 +119,19 @@ module Rutot
         @quiet_list.include?(channel)
       end
     end
-    
-    def blocked?; @blocked; end
-    
+
+    # returns +@blocked+
+    def blocked?
+      @blocked
+    end
+
+    # push line to spooler
     def push(target, *lines)
       puts :SPO, "REC: for #{target} : #{lines.to_s.size}bytes" unless lines.to_s.strip.size.zero?
       self << Element.new(target, lines)
     end
 
+    # reads message spooler and handles more stuff.
     def loop(&blk)
       until empty? and blocked?
         el = self.pop
