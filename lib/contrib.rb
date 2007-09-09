@@ -16,7 +16,7 @@ module Rutot
     def self.contribs
       @@contribs
     end
-    
+
     def self.[](which)
       unless @@contribs[which.to_sym].nil?
         puts :CNT, "choosing contrib from cache"

@@ -7,7 +7,7 @@ include :theyfightcrime
 
 respond_on(:PRIVMSG, :tfcp, prefix_or_nick(:theyfightcrime, :tfc)) do |h|
   begin
-    h.respond(Text::Format.new.format_one_paragraph(TheyFightCrime.new.movieplot))
+    h.respond(TheyFightCrime.new.movieplot)
   rescue
     h.respond ReplyBox.SRY
   end

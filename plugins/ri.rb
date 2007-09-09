@@ -6,7 +6,6 @@
 include :ri
 
 respond_on(:PRIVMSG, :ri, prefix_or_nick(:ri), :args => [:String], :arg_req => true) do |h|
-  p h.args
   begin 
     h.respond(Ri[h.args.first])
   rescue

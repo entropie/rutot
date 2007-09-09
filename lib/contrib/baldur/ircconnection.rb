@@ -24,7 +24,8 @@ class IRCConnection
   end
   
   self.debuglevel = DebugLevel.new(false, false)
-  module ReplyCodes #{{{
+
+  module ReplyCodes
     RFC2812 = {
       'RPL_WELCOME' => '001',
       'RPL_YOURHOST' => '002',
@@ -741,6 +742,7 @@ class IRCConnection
     }
 
   end # }}}
+  
   def initialize()
     @events = Hash.new {|h,k| h[k] = {} }
     @codetable_names = ReplyCodes::RFC2812

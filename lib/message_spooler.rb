@@ -17,7 +17,7 @@ module Rutot
     attr_reader :quiet
     attr_reader :quiet_list
     
-    def initialize(bot, p = 0)
+    def initialize(bot)
       @quiet_list = []
       @blocked = false
       @bot = bot
