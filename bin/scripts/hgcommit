@@ -1,0 +1,55 @@
+#!/usr/bin/env ruby
+
+require 'drb'
+require 'pathname'
+require 'cgi'
+
+CV = `hg log`.split("\n\n").first
+retHash = Hash[*CV.split("\n").map{ |a,b| a.gsub(/^(\w+)(:)/, '\1').split(/\s\s+/)}.flatten]
+retHash['name'] = (pa =Pathname.new(Dir.pwd)).basename
+retStr = "[Mercurial: #{retHash['name']} by #{retHash['user']} — #{retHash['tag']}]\n#{retHash['summary']}"
+
+if retHash['summary'] =~ /version/i
+  Dir.chdir `hg root`.strip do
+    p `rake google_sync`
+  end
+end
+@conf = {
+  :port => '7666',
+  :host => 'localhost'
+}
+
+DRb.start_service
+bot = DRbObject.new(nil, "druby://#{@conf[:host]}:#{@conf[:port]}")
+bot.message(retStr)
+
+
+
+
+# require '/home/mit/Source/ackro/trunk/bin/ackro.rb'
+
+# tl=Ackro::Tlogs[:pb]
+# Ackro::Tlogs.default = :pb
+
+# fb = ["[:topic]\n<b>HG</b>: %s\n[:topic_end]\n\n" % [CGI.escapeHTML(retHash['name'].to_s)],
+#       "[:body]\n<strong>%s</strong> %s\n[:body_end]"  % [retHash['user'], retHash['summary']] ]
+# co = tl.components[:hg].post_to(:spool, :way => :array, :array => fb)
+
+# Dir.chdir("/home/hg/")
+# unless Pathname.new('/home/hg/#{pa.basename}').exist?
+# else
+#   Dir.chdir("/home/hg/#{pa.basename}")
+#   `hg pull #{pa}`
+# end
+
+
+=begin
+Local Variables:
+  mode:ruby
+  fill-column:70
+  indent-tabs-mode:nil
+  ruby-indent-level:2
+End:
+=end
+
+
