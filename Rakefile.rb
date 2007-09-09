@@ -15,8 +15,9 @@ task :google_sync => [:rdoc, :distribute]do
   ext.each do |e|
     desc = `hg head`.split("\n").grep(/summary/).to_s[/\w+:\s(.*)/, 1].strip
     pw = File.open(File.expand_path('~/Data/Secured/googlecode.pw')).readlines.join.strip
-    p `googlecode_upload.py --config-dir none -s '#{desc}' -p rutot -P #{pw} -u mictro #{file}.#{e}`
+    `googlecode_upload.py --config-dir none -s '#{desc}' -p rutot -P #{pw} -u mictro #{file}.#{e}`
   end
+  puts "synced to googlecode"
 end
 
 desc "creates rdoc"

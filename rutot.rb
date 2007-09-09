@@ -11,6 +11,12 @@ require "pp"
 
 $KCODE = 'u'
 
+class Array
+  def pick_one
+    self.sort_by{ rand }.first
+  end
+end
+
 class String
   unless defined?(ord)
     def ord
