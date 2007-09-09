@@ -49,7 +49,7 @@ end if __FILE__ == $0
 module Rutot
 
   
-  Version = %w'0 2 9'
+  Version = %w'0 3 1'
 
   VersionSuffix = 'testing'
   
