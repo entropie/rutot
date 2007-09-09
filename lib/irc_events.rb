@@ -3,9 +3,8 @@
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 
-
-
 module Rutot
+
   module Events
 
     State = Struct.new(:op, :voice)
@@ -52,7 +51,9 @@ module Rutot
       }
       ed
     end
+    
   end
+  
 end
 
 
