@@ -2,6 +2,7 @@
 #
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
+
 module Rutot
 
   class Plugins
@@ -37,7 +38,6 @@ module Rutot
         end
         rargs.strip.split(" ")
       end
-
       private :format_arguments
 
       def keywords
@@ -50,7 +50,6 @@ module Rutot
           @keywords.to_a
         end
       end
-
       
       def parse_args!
         args = format_arguments
@@ -95,8 +94,6 @@ module Rutot
       end
       
     end
-
-
     
     class Responder < Array
 
@@ -113,8 +110,8 @@ module Rutot
         self << rh
         rh
       end
-    end
 
+    end
 
     class Independent < Array
 
