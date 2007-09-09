@@ -27,6 +27,7 @@ desc "create bzip2 and tarball"
 task :distribute => [:rdoc] do
   sh "rm -rf pkg/#{VERS}"
   sh "mkdir -p pkg/#{VERS}"
+  sh "cp ~/bin/hgcommit bin/scripts"
   sh "cp -r {bin,doc,lib,Rakefile.rb} pkg/#{VERS}/"
 
   Dir.chdir('pkg') do |pwd|
