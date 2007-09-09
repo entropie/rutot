@@ -51,11 +51,15 @@ module Rutot
       @bot.loop
     end
     
-    def server; config.servername; end
-    def port  ; config.port;       end
+    def server
+      config.servername
+    end
+
+    def port
+      config.port
+    end
 
   end
-
   
 end
 
