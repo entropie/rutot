@@ -19,6 +19,7 @@ task :google_sync => [:rdoc, :distribute]do
   end
 end
 
+desc "creates rdoc"
 task :rdoc do
   system('rdoc -a -I gif -S -m Rutot -o doc -x "(bin|plugins)"')
 end
