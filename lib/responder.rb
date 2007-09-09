@@ -33,7 +33,7 @@ module Rutot
         select(mod)
       end
     end
-    
+
     def reset
       if @responder
         detach(@bot.conn, @bot)
@@ -48,7 +48,6 @@ module Rutot
       load_plugin_files!
       attach(@bot.conn, @bot)
     end
-
 
     def handle_independent_things!
       self.independent.each do |ind|
@@ -71,7 +70,6 @@ module Rutot
         end
       end
     end
-    
     
     def attach(con, bot)
       bot.channels.each do |chan|
@@ -108,13 +106,11 @@ module Rutot
       end
     end
 
-
     def parse_plugin_retval(pret)
       pret.to_s.to_irc_msg
     end
     private :parse_plugin_retval
     
-
     def detach(con, bot)
       load_plugin_files!
       self.responder.each do |plugin|
@@ -123,13 +119,11 @@ module Rutot
       end
     end
     
-
     def respond_on(type, name, handler, options = { }, &blk)
       options.extend(ParamHash).
         process!(:args => :optional, :arg_req => :optional)
       @responder.add(type, handler, options, &blk).name = name
     end
-
 
     def timed_response(intervall, name, options = { }, &blk)
       # @responder.add(:NULL, nil, options, &blk).name = "timed_#{name}"
@@ -145,7 +139,6 @@ module Rutot
       /#{if h == 1 then "^" else "" end}#{@prefix*h} ?(#{arg.to_s})(?:$|\s+)/
     end
 
-
     def prefix_or_nick(*args)
       args.inject([]) do |m, arg|
         rrgx = "^#{bot.nick}[:, ]+"
@@ -159,7 +152,6 @@ module Rutot
       rrgx += "(#{rgx})(?:$|\s+)"
       [Regexp.new(rrgx)]
     end
-
 
     def select(name)
       Dir["#{PluginDirectory}/*.rb"].#
@@ -179,6 +171,5 @@ module Rutot
     end
 
   end
-
 
 end
