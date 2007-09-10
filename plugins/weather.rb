@@ -8,24 +8,37 @@
 #
 #  Description:  show the weather for +str* (example 'tokyo','berlin germany'
 
+require 'enumerator'
 require 'open-uri'
 require 'cgi'
 require 'hpricot'
+require 'pp'
+
+WFields = ['Temperature','Wind','Pressure','Humidity','Conditions','Sunrise','Moon Rise','Visibility']
+WMessage = "Temperature is %i°C (Chill is %i°C) with a Pressure of %ihPa and a Humidity of %s, %s\nSunrise %s and Moon Rise at %s. Visibility %s."
 
 def weather(str)
   station = "http://mobile.wunderground.com/cgi-bin/findweather/getForecast?query=#{str}"
   doc = Hpricot(open(station))
 
-  results = doc.search('/html/body//b').map{|r| r.inner_html}
-  time, location, temperature, windchill, humidity, dewpoint, wind_direction, 
-  wind_speed, pressure, conditions, visibility, cloud_height, 
-  cloud_conditions = *results
+  results = doc.at("center")
+  header, location = (results/"td[@colspan='2']/b").map{ |a| a.inner_html}
 
-  time = Time.parse(time).strftime("%d.%m.%Y %H:%M")
-  temperature << "°C"
-  dewpoint    << "°C"
 
-  return("Weather in #{location} at #{time}: #{conditions}, #{temperature} - (Humidity is at #{humidity})")
+  ret = { }
+  (results/"td")[1..-1].each_slice(2) do |d, v|
+    ret[d.inner_html] = []
+    r = 
+      if (r =(v/"span")).empty?
+        ret[d.inner_html] << v.inner_html.gsub(/\s+/, ' ').strip.gsub(/<\/?b>/, '')
+      else
+        ret[d.inner_html] << r.map{ |r| (r/"b").inner_html.strip }
+      end
+    ret[d.inner_html] = ret[d.inner_html].flatten
+  end
+  ret = ret.select{ |n,v| WFields.include?(n)}.sort_by{ |n,v| WFields.index(n) || 100}.
+    map{ |n,v| v.kind_of?(Array) ? v.last : v}
+  "#{location} — #{header}\n" + WMessage % [*ret]
 end
 
 respond_on(:PRIVMSG, :weather, prefix_or_nick(:wheater, :w), :args => [:String]) do |h|
