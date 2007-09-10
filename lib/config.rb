@@ -5,7 +5,6 @@
 
 module Rutot
 
-
   class Channel
 
     attr_reader :name
