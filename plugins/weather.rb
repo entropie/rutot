@@ -4,10 +4,6 @@
 #
 
 
-#  weather.rb (c) October 2006 by manveru <manveru@weez-int.com>
-#
-#  Description:  show the weather for +str* (example 'tokyo','berlin germany'
-
 require 'enumerator'
 require 'open-uri'
 require 'cgi'
