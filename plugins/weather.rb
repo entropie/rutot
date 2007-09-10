@@ -3,18 +3,20 @@
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 
-
+require 'cgi'
 require 'enumerator'
 require 'open-uri'
 require 'cgi'
 require 'hpricot'
 require 'pp'
 
+
+
 WFields = ['Temperature','Wind','Pressure','Humidity','Conditions','Sunrise','Moon Rise','Visibility']
-WMessage = "Temperature is %i°C (Chill is %i°C) with a Pressure of %ihPa and a Humidity of %s, %s\nSunrise %s and Moon Rise at %s. Visibility %s."
+WMessage = "Temperature is %i°C (Chill is %i°C) with a Pressure of %ihPa and a Humidity of %s, %s\nSunrise at %s and Moon Rise at %s. Visibility %s."
 
 def weather(str)
-  station = "http://mobile.wunderground.com/cgi-bin/findweather/getForecast?query=#{str}"
+  station = "http://mobile.wunderground.com/cgi-bin/findweather/getForecast?query=#{CGI.escape(str)}"
   doc = Hpricot(open(station))
 
   results = doc.at("center")
@@ -37,10 +39,10 @@ def weather(str)
   "#{location} — #{header}\n" + WMessage % [*ret]
 end
 
-respond_on(:PRIVMSG, :weather, prefix_or_nick(:wheater, :w), :args => [:String]) do |h|
+respond_on(:PRIVMSG, :weather, prefix_or_nick(:wheater, :w), :args => [:Everything]) do |h|
   begin
     unless h.args.join.empty?
-      h.respond(weather(h.args.join))
+      h.respond(weather(h.args.flatten.join(' ')))
     else
       h.respond('Say to me where you lurk around, dood.')
     end
