@@ -22,6 +22,7 @@ end
 
 desc "creates rdoc"
 task :rdoc do
+  sh "rm -rf doc"
   system('rdoc -a -I gif -S -m Rutot -o doc -x "(bin|plugins)"')
 end
 
@@ -30,8 +31,9 @@ task :distribute => [:rdoc] do
   sh "rm -rf pkg/#{VERS}"
   sh "mkdir -p pkg/#{VERS}"
   sh "cp ~/bin/hgcommit bin/scripts"
-  sh "cp -r {bin,doc,lib,Rakefile.rb} pkg/#{VERS}/"
-
+  sh "cp -r {bin,doc,lib,Rakefile.rb,plugins,rutot.rb} pkg/#{VERS}/"
+  sh "mkdir pkg/#{VERS}/data"
+  sh "cp ~/.howm/2007/08/2007-08-17-205206.howm pkg/#{VERS}/TODO.howm"
   Dir.chdir('pkg') do |pwd|
     sh "tar -zcvf #{VERS}.tar.gz #{VERS}"
     sh "tar -jcvf #{VERS}.tar.bz2 #{VERS}"
