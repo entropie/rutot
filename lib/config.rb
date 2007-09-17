@@ -10,18 +10,18 @@ module Rutot
     attr_reader :name
     attr_reader :whitelist
     attr_reader :blacklist
-    attr_reader :plugins 
+    attr_reader :plugins
     attr_reader :independent
 
     attr_reader :responder
-    
+
     attr_accessor :last_msg_time
 
     attr_accessor :prefix
     attr_accessor :nicks
 
     attr_accessor :keywords
-    
+
     def modules(*mods)
       mods.each{ |m| @mods << m }
     end
@@ -37,7 +37,7 @@ module Rutot
     def independent(*mods)
       @independent.push(*mods)
     end
-    
+
     def initialize(name)
       @keywords = { }
       @mods = []
@@ -48,7 +48,7 @@ module Rutot
     end
 
   end
-  
+
   class Channels < Array
 
     attr_accessor :server
@@ -56,7 +56,7 @@ module Rutot
     def [](nam)
       self.select{ |n| n.name.to_sym == nam.to_sym}.shift
     end
-    
+
     def initialize(server)
       @server = server
     end
@@ -66,16 +66,16 @@ module Rutot
       chan.instance_eval(&blk) if block_given?
       self << chan
     end
-    
+
   end
-  
+
   class Config
 
     attr_reader   :configfile
     attr_reader   :nick, :mods, :configfile
 
     attr_accessor :plugins, :servername, :port, :channels, :base_mods
-    
+
     def self.read(file, handler)
       klass = ConfigModules.constants.map{ |cl|
         ConfigModules.const_get(cl)
@@ -90,11 +90,11 @@ module Rutot
     def base_mods
       @base_mods.select{ |bm| bm.kind_of?(Symbol)}
     end
-    
+
     def name(name)
       @nick = name
     end
-    
+
     def initialize(configfile, handler)
       @configfile, @handler, @mods, @base_mods = configfile, handler, [], []
     end
@@ -103,14 +103,14 @@ module Rutot
       plugins.map!
       self
     end
-    
+
     def mod(*mods)
       mods.each{ |m|
         @base_mods << m
       }
       @base_mods
     end
-    
+
     def Server(name, port = 6676, &blk)
       puts :CNF, "parsing section: Server(\"#{name}\")"
       self.plugins = Plugins.new(self)
@@ -122,7 +122,7 @@ module Rutot
     end
 
   end
-  
+
 end
 
 

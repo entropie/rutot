@@ -41,7 +41,7 @@ module Rutot
             end
           ret.save
         end
-        
+
       end
 
       class ChannelStats
@@ -67,8 +67,8 @@ module Rutot
         end
 
       end
-      
-      
+
+
       class Definition
         attr_accessor :text, String, :uniq => true
         belongs_to    :keyword_bundle, KeywordBundle
@@ -76,7 +76,7 @@ module Rutot
         def initialize(text = nil)
           @text = text.to_s
         end
-        
+
         def to_s
           return @text
         end
@@ -98,7 +98,7 @@ module Rutot
           }
           nil
         end
-        
+
         def delete_at(ind)
           get_at(ind).delete
         rescue
@@ -112,7 +112,7 @@ module Rutot
         rescue
           nil
         end
-        
+
         def to_ary
           ds = []
           ret = []
@@ -133,7 +133,7 @@ module Rutot
         def to_s
           @keyword
         end
-        
+
       end
 
       Og.setup(Config)

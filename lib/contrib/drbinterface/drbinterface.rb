@@ -15,7 +15,7 @@ class DRBInterface
   def new?
     @@new
   end
-  
+
   def initialize
     begin
       Thread.new {
@@ -41,7 +41,7 @@ class DRBInterface
   def empty?
     @@messages.empty?
   end
-  
+
   def message(msg)
     @@new = true
     @@messages[Time.now] = msg

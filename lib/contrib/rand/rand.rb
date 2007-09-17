@@ -4,7 +4,7 @@
 # Copyright (C) 2004  Ilmari Heikkinen
 #
 # Documentation:: Christian Neukirchen <mailto:chneukirchen@gmail.com>
-# 
+#
 
 
 module Enumerable
@@ -205,7 +205,7 @@ class String
   #   s.shuffle_chars!
   #   s    #=> "e lybRsuur"
   def shuffle_chars!
-    (0...size).each {|j| 
+    (0...size).each {|j|
       i = rand(size-j)
       self[j], self[j+i] = self[j+i], self[j]
     }
@@ -400,7 +400,7 @@ class RandHashTest < Test::Unit::TestCase  # :nodoc:
 
   def test_pick!
     h = ha
-    assert true, picker(h, ha.entries, :pick!) and h.empty? 
+    assert true, picker(h, ha.entries, :pick!) and h.empty?
   end
 
   def test_pick_key
@@ -486,14 +486,14 @@ class RandStringTest < Test::Unit::TestCase  # :nodoc:
     assert true, ss != s and ss.split(//).sort == s.split(//).sort
   end
 
-  pick_tests({ ""      => lambda{str.to_a}, 
-               :_char  => lambda{str.split(//)}, 
-               :_byte  => lambda{str.split(//).map{|c| c[0]}}, 
+  pick_tests({ ""      => lambda{str.to_a},
+               :_char  => lambda{str.split(//)},
+               :_byte  => lambda{str.split(//).map{|c| c[0]}},
                :_index => lambda{(0...str.size).to_a}
              })
 
-  pick_tests!({ :_char  => lambda{str.split(//)}, 
-                :_byte  => lambda{str.split(//).map{|c| c[0]}}, 
+  pick_tests!({ :_char  => lambda{str.split(//)},
+                :_byte  => lambda{str.split(//).map{|c| c[0]}},
                 :_index => lambda{(0...str.size).to_a}
               })
 end

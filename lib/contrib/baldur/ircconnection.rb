@@ -15,14 +15,14 @@ class IRCConnection
     attr_accessor :debuglevel
   end
 
-  def debuglevel 
+  def debuglevel
     IRCConnection.debuglevel
   end
-  
+
   def debuglevel=(newlevel)
     IRCConnection.debuglevel = newlevel
   end
-  
+
   self.debuglevel = DebugLevel.new(false, false)
 
   module ReplyCodes
@@ -742,7 +742,7 @@ class IRCConnection
     }
 
   end # }}}
-  
+
   def initialize()
     @events = Hash.new {|h,k| h[k] = {} }
     @codetable_names = ReplyCodes::RFC2812
@@ -764,7 +764,7 @@ class IRCConnection
 
   def call_events(msg)
     command = msg.command
-    catch (:event_ignore_other) do 
+    catch (:event_ignore_other) do
       n = 1
       @events[command].each do |key,event|
         next if key == :default
@@ -783,7 +783,7 @@ class IRCConnection
       $stderr.flush
     end
     begin
-      ret = catch(:event_done) do 
+      ret = catch(:event_done) do
         event.call(msg, self)
       end
       case ret
@@ -811,13 +811,13 @@ class IRCConnection
   def internal_to_command(str)
     if @codetable_numerics.has_key? str
       return @codetable_numerics[str]
-    end 
+    end
     return str
   end
   def command_to_internal(str)
     if @codetable_names.has_key? str
       return @codetable_names[str]
-    end 
+    end
     return str
   end
 
@@ -842,7 +842,7 @@ class IRCConnection
       @conn.write a.chomp + "\r\n"
     end
   end
-  
+
   def send(*args)
     args.each do |line|
       send_throttle(line)
@@ -858,7 +858,7 @@ class IRCConnection
              (\:(\S+) \x20)? #prefix
              (\d{3}|[a-z]+)  #command
              (\x20(.*))?     #params
-             \r$/ix 
+             \r$/ix
     prefix, rawcommand, rawparams = $2, $3, $5
     params = []
     if rawparams =~ /:/

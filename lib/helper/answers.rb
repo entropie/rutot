@@ -36,7 +36,7 @@ module Rutot
         s << " " << m.to_s.last
         s
       end
-      
+
       def method_missing(m, *a, &b)
         case m
         when :prefix:   @prefix.push(*a.flatten)
@@ -52,7 +52,7 @@ module Rutot
         end
       end
     end
-    
+
     attr_reader :base_msg
     attr_reader :message
 
@@ -77,11 +77,11 @@ module Rutot
         v.last.to_s(self)
       end
     end
-    
+
     def make
-      @variables.pick.last.to_s(self) 
+      @variables.pick.last.to_s(self)
     end
-    
+
     def to_s
       [@message[0..-3].to_s, @message.last(2).first]
     end
@@ -105,7 +105,7 @@ a = Rutot::Answers.new do
     content_2 %w'otze'
     attach    %w'2:frotze'
   end
-  
+
   variables 'es' do
     prefix    %w'eine'
     content_1 %w'schande sheisse'

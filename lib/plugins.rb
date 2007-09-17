@@ -6,7 +6,7 @@
 module Rutot
 
   include Helper
-  
+
   class Plugin
     attr_reader :channel, :name
     def initialize(file)
@@ -16,7 +16,7 @@ module Rutot
       @channel = chan
     end
   end
-  
+
   class Plugins
 
     class ReplyBox
@@ -55,7 +55,7 @@ module Rutot
         else
           self.bot.channels
         end
-      
+
       channels.each do |chan|
         self.bot.base_mods.each do |m|
           puts :PLG, "#{chan.name}: mapping defaultplugin: #{m}"
@@ -70,7 +70,7 @@ module Rutot
         end
       end
     end
-    
+
   end
 
 end

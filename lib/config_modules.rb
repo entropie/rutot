@@ -14,7 +14,7 @@ module Rutot
         attr_reader :daddy
         attr_reader :myself
         attr_reader :prefix
-        
+
         def master(master)
           @daddy = master
         end
@@ -25,13 +25,13 @@ module Rutot
         end
 
         alias :bot_prefix :prefix
-        
+
         def myself(arg = nil)
           @myself = arg if arg
           @myself
         end
       end
-      
+
       module Server
         attr_reader :realname, :ident
 
@@ -39,7 +39,7 @@ module Rutot
           @ident = name if name
           @ident
         end
-        
+
         def real_name(name = nil)
           @realname = nil if name
           @realname = name
@@ -52,17 +52,17 @@ module Rutot
           @freenode_password = password if password
           @freenode_password
         end
-        
+
       end
 
       module Channels
-        
+
         attr_reader :channels, :home_channel
 
         def home(chan)
           @home_channel = chan
         end
-        
+
         def join(*args, &blk)
           @channels = Rutot::Channels.new(self)
           @channels.instance_eval(&blk)
@@ -74,8 +74,8 @@ module Rutot
           @channels << name
         end
       end
-      
+
     end
-    
+
   end
 end

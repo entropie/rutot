@@ -6,7 +6,7 @@
 module Rutot
 
   class Connections < Array
-    
+
     def <<(cntccls)
       con = Connection.new(cntccls)
       puts :CON, "connection handle `%s@%s´ saved" % [con.config.nick, con.config.servername]
@@ -29,15 +29,15 @@ module Rutot
         connection.connected = true
       end
     end
-    
+
   end
-  
+
   class Connection
 
     attr_accessor :config, :connected, :bot
 
     include Events
-    
+
     def initialize(config)
       @config, @connected = config, false
     end
@@ -50,7 +50,7 @@ module Rutot
       @bot.connect
       @bot.loop
     end
-    
+
     def server
       config.servername
     end
@@ -60,7 +60,7 @@ module Rutot
     end
 
   end
-  
+
 end
 
 

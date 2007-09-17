@@ -8,9 +8,9 @@ module Rutot
   module Contribs
 
     @@contribs ||= { }
-    
+
     module Box; end
-    
+
     ContribDirectory = File.dirname(__FILE__) + "/contrib"
 
     def self.contribs
@@ -22,7 +22,7 @@ module Rutot
         puts :CNT, "choosing contrib from cache"
         return @@contribs[which.to_sym]
       end
-      
+
       puts :CNT, "trying to load `#{which}´"
       contribdir = File.join(ContribDirectory, which.to_s)
       newbox = Module.new{ include Box }

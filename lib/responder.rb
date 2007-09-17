@@ -12,7 +12,7 @@ end
 module Rutot
 
   class Plugins
-    
+
     PluginDirectory = File.join(File.dirname(__FILE__), '..', 'plugins')
 
     attr_reader :responder
@@ -23,8 +23,8 @@ module Rutot
     attr_accessor :namespace_name
 
     attr_accessor :responder_names
-    
-    
+
+
     def initialize(bot)
       @bot, @independent = bot, Independent.new(bot)
       reset
@@ -74,7 +74,7 @@ module Rutot
         end
       end
     end
-    
+
     def attach(con, bot)
       bot.channels.each do |chan|
         self.responder.each do |plugin|
@@ -88,7 +88,7 @@ module Rutot
             plugin.channel = msg.params.first
             plugin.msg = msg
             plugin.con = con
-            
+
             tchan = bot.config.channels[plugin.channel]
             if(plugin && tchan &&
                tchan.plugins.include?(plugin.global_name) &&
@@ -108,7 +108,7 @@ module Rutot
       pret.to_s.to_irc_msg
     end
     private :parse_plugin_retval
-    
+
     def detach(con, bot)
       load_plugin_files!
       self.responder.each do |plugin|
@@ -116,7 +116,7 @@ module Rutot
         con.remove_event(plugin.type, plugin.name)
       end
     end
-    
+
     def respond_on(type, name, handler, options = { }, &blk)
       options.extend(ParamHash).
         process!(:args => :optional, :arg_req => :optional)
@@ -153,7 +153,7 @@ module Rutot
     end
     alias :pon :prefix_or_nick
 
-    
+
     def prefix_or_nick_r(rgx, arg)
       rrgx = "^#{bot.nick}[:, ]+"
       rrgx += "(#{rgx})(?:$|\s+)"

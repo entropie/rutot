@@ -15,7 +15,7 @@ class IRCClient
   end
 
   def connect
-    @conn.add_event(:PING, :respond_to_ping) do |msg, conn| 
+    @conn.add_event(:PING, :respond_to_ping) do |msg, conn|
       pong msg.rawparams
       :success
     end
@@ -25,7 +25,7 @@ class IRCClient
         suffix = "-"
       elsif suffix == "-"
         suffix = "-1"
-      else 
+      else
         suffix = "-#{suffix[/\d+/].to_i + 1}"
       end
       set_nick @nick + suffix
@@ -55,7 +55,7 @@ class IRCClient
       @conn.send("JOIN #{channel}")
     end
   end
-  
+
 
   def part(channels, str="")
     channels = [channels] if channels.is_a? String
@@ -65,37 +65,37 @@ class IRCClient
     end
   end
 
-  
+
   def set_nick(nickname)
     self.send(:nickchange_hook, nickname) if self.respond_to?(:nickchange_hook)
     @conn.send("NICK #{nickname}")
   end
-  
+
 
   def raw(str)
     @conn.send(raw)
   end
-  
+
 
   def whois(str)
     @conn.send("WHOIS #{str}")
   end
-  
+
 
   def set_user(ident, realname)
     @conn.send("USER #{ident} 5 0 :#{realname}")
   end
-  
+
 
   def mode(target, mode)
     @conn.send("MODE #{target} #{mode}")
   end
-  
+
 
   def pong(params="")
     @conn.send("PONG #{params}".strip)
   end
-  
+
 
   def msg(target, *args)
     args.flatten.each do |line|
@@ -103,27 +103,27 @@ class IRCClient
       @conn.send("PRIVMSG #{target} :#{line}")
     end
   end
-  
+
 
   def notice(target, *args)
     args.flatten.each do |line|
       @conn.send("NOTICE #{target} :#{line}")
     end
   end
-  
+
 
   def emote(target, *args)
     args.flatten.each do |line|
       ctcp(target, :ACTION, line)
     end
   end
-  
+
 
   def ctcp(target, ctcp, content="")
     line = "#{ctcp} #{content}".strip
     @conn.send("PRIVMSG #{target} :\x01#{line}\x01")
   end
-  
+
 
   def ping(str=nil)
     line = "PING"
@@ -133,13 +133,13 @@ class IRCClient
     @conn.send(line)
   end
 
-  
+
   def quit(str="")
     self.send(:quit_hook) if self.respond_to?(:quit_hook)
     @conn.send("QUIT :#{str}")
     @conn.disconnect
   end
-  
+
 
   def loop(&block)
     if block_given?
@@ -148,5 +148,5 @@ class IRCClient
       @conn.loop {}
     end
   end
-  
+
 end

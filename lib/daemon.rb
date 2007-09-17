@@ -10,7 +10,7 @@ module Rutot
     include Contribs[:baldur]
     include Helper
     include KeywordArguments
-    
+
     DefaultOptions = {
       :config_file => File.expand_path('~/.rutotrc.rb')
     }
@@ -21,7 +21,7 @@ module Rutot
     def <<(connection)
       @connections << connection
     end
-    
+
     def initialize
       @connections = Connections.new
     end
@@ -29,10 +29,10 @@ module Rutot
     def self.run?
       false
     end
-    
+
     def self.start(options = { })
       options.extend(ParamHash).process!(:config_file => :optional)
-      
+
       options[:config_file] ||= DefaultOptions[:config_file]
       daemon = self.new
       bot = __run__(options, daemon)
@@ -49,7 +49,7 @@ module Rutot
     end
 
   end
-  
+
 end
 
 

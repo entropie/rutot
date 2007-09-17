@@ -26,7 +26,7 @@ module RTV
   end
   class Show
     attr_accessor :channel, :name, :time, :date, :desc, :showview, :options
-    
+
     Filler = "\t"
 
     def to_s *lastshow
@@ -41,7 +41,7 @@ module RTV
         self.to_a.zip(lastshow.to_a).map{|x,y| (x == y) ? (' ' * x.to_s.size) : x}.reject{|x| x.empty?}.join(Filler)
       end
     end
-    
+
     def to_a
       tmp = [@channel, @date, @time, @name]
       tmp << @desc if @options[:desc]
@@ -50,12 +50,12 @@ module RTV
   end
   class Fetcher
     attr_accessor :options, :config
-    
+
     def initialize
       @options = {}
       @shows = Program.new
     end
-    
+
     def fetch
       while search_results?(doc = get_hdoc)
         extract_shows doc
@@ -65,7 +65,7 @@ module RTV
       puts if $DEBUG
       return @shows
     end
-    
+
     def extract_shows doc
       if @options[:format] == 'search'
         daten = (doc/"div[@id='titel-uebersicht']")
@@ -86,7 +86,7 @@ module RTV
             show.date = datum.innerText[/^\D*(.+) Suchergebnis/, 1]
             add_show show
           end
-        end        
+        end
       else
         zeiten = (doc/"span.tv-sendung-uhrzeit")
         zeiten.each do |zeit|
@@ -100,12 +100,12 @@ module RTV
         end
       end
     end
-    
+
     private
     def add_show show
       @shows << show
     end
-    
+
     def get_hdoc
       begin
         uri = convert_to_url("http://www.klack.de/") + '?' + hsh_to_rqst(@options)
@@ -113,21 +113,21 @@ module RTV
         doc = Hpricot(open(uri))
       rescue
         puts "No Network Connection!"
-      end      
+      end
     end
-    
+
     def search_results? doc
       (doc/"td.noresult").empty?
     end
-    
+
     def hsh_to_rqst hsh
       hsh.to_a.map{|x| x.map{|y| CGI.escape(y.to_s)}.join('=')}.join('&')
     end
-    
+
     def time_to_name zeit
       zeit.parent.next_sibling.next_sibling.at("a.tv-sendung-titel").innerText
     end
-    
+
     def time_to_channel zeit
       zeit.parent.parent.at("span.tv-sendung-info/a").attributes["href"][/channelId=([^&]+)/, 1].downcase
     end
@@ -138,18 +138,18 @@ module RTV
       showview = desc_showv[/\s+Showview ([0-9-]+)/, 1]
       [desc, showview]
     end
-    
+
     def convert_to_url str
       # entferne alle störenden Buchstaben und erstelle die URL
       url = Base64.decode64("aHR0cDovL3d3dy50dnRvZGF5LmRlL3Byb2dyYW0yMDA3")
     end
   end
-  
+
   class Presenter
     Source_charset = 'ISO-8859-1'
-    
+
     attr_accessor :config
-    
+
     def initialize charset = 'UTF-8'
       @target_charset = charset
     end
@@ -165,7 +165,7 @@ module RTV
             return if (@config[:senderlimit] -= 1) < 1
 
             puts Iconv.iconv(@target_charset, Source_charset, show.to_s(lastshow))
-            
+
             break if @config[:eine_pro_sender]
 	    lastshow = show
           end
@@ -173,10 +173,10 @@ module RTV
       end
     end
   end
-  
+
   class Switcher
     attr_accessor :config
-    
+
     Usage = 'RTV - a command line ruby tv guide
 
 USAGE
@@ -207,57 +207,57 @@ EXAMPLES
 
         Beliebige sinnvolle Kombinationen in beliebiger Reihenfolge sind möglich:
         tv pro7 -d 20 11.07. sat1 - Alle Sendungen auf Pro7 und Sat.1 um 20 Uhr am 11.07. mit Beschreibung'
-    
+
     def initialize
       @uri_options = {}
     end
-    
+
     def uri_options args
       set_defaults
-      
+
       tmp_channel = @config[:senderfilter]
       @config[:senderfilter] = []
-      
+
       args.each do |arg|
         case arg.downcase
-          
+
           # Konfigurationenmodus
         when /(\w+):(\w+)/
           @config.update YAML.load("--- :" + $1 + ": " + $2)
-          
+
           # Hilfemodus
         when "help"
           puts Usage
-          
+
           # Beschreibungmodus
         when "-d"
           @config[:desc] = true
-          
+
           # Datummodus
         when /^\d{1,2}\.\d{1,2}\.$/
           @uri_options[:date] = arg + Time.now.year.to_s
-          
+
           # Stundenmodus
         when /^\d{1,2}(?:\d{2})?$/
           @uri_options[:time] = arg
-          
+
           # Channelname oder -alias
         when *Channel
           @config[:senderfilter] << arg.downcase
-          
+
           # Suchmodus
         else
           @uri_options.update({:search => arg, :format => 'search', :time => 'all', :date => 'all', :slotIndex => 'all'})
           @config[:senderfilter] = Channel
         end
       end
-      
+
       # when channels are specified, use them only
       @config[:senderfilter] = tmp_channel if @config[:senderfilter].empty?
 
       @uri_options
     end
-    
+
     private
     def set_defaults
       # Haupt- und Regionalsender

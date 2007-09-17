@@ -135,7 +135,7 @@ class Insult
           ]
 
   ##
-  # Amounts 
+  # Amounts
   ##
   @@amt = [
            "accumulation",
@@ -207,7 +207,7 @@ class Insult
             "cold sores",
             "anal warts",
            ]
-  
+
   def generate_insult
     adj = @@adj.pick_one
     adj2 = ""

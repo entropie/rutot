@@ -13,7 +13,7 @@ module Rutot
       attr_accessor :bot, :msg, :con, :channel
 
       attr_accessor :global_name
-      
+
       def initialize(type, keywords, options, &blk)
         @name = "#{type}:#{keywords}"
         @respond_msg = []
@@ -28,7 +28,7 @@ module Rutot
       def respond(*msg)
         (@respond_msg ||= []) << msg.join("\n")
       end
-      
+
       def args=(args)
         @args = args
       end
@@ -56,7 +56,7 @@ module Rutot
           @keywords.to_a
         end
       end
-      
+
       def parse_args!
         args = format_arguments
         if @options[:args]
@@ -69,7 +69,7 @@ module Rutot
           if @options[:args].size == 1 and @options[:args].first == :Everything
             return @args << args
           end
-          
+
           @options[:args].each_with_index do |a, i|
             @args <<
               case options[:args][i]
@@ -89,7 +89,7 @@ module Rutot
       def clear!
         @respond_msg, @msg, @con, @args, @raw = [], nil, nil, [], []
       end
-      
+
       def call(*args)
         @args = args
         @raw  = @args.dup
@@ -98,18 +98,18 @@ module Rutot
         self.clear!
         ret
       end
-      
+
     end
-    
+
     class Responder < Array
 
       attr_reader :bot
-      
+
       def initialize(bot)
         super()
         @bot = bot
       end
-      
+
       def add(type, handler, options, &blk)
         rh = RespondHandle.new(type, handler, options, &blk)
         rh.bot = bot
@@ -122,11 +122,11 @@ module Rutot
     class Independent < Array
 
       class Sprog < RespondHandle
-        
+
         attr_reader :name, :interval, :handler
 
         attr_accessor :last, :bot
-        
+
         def initialize(name, interval, &blk)
           @name, @interval = name, interval
           @handler = blk
@@ -153,16 +153,16 @@ module Rutot
         end
       end
 
-      
+
       def select(responder)
         responder.select{ |r| r.name == name}
       end
-      
+
       def initialize(bot)
         super()
         @bot = bot
       end
-      
+
       def add_timed(interval, name, options = { }, &blk)
         sprog = Sprog.new(name, interval, &blk)
         sprog.bot = @bot

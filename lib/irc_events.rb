@@ -8,11 +8,11 @@ module Rutot
   module Events
 
     State = Struct.new(:op, :voice)
-    
+
     EventDirectory = File.dirname(__FILE__) + "/handler/"
 
     EventPrefix = ','
-    
+
     class EventDispatcher
 
       attr_accessor :bot
@@ -20,9 +20,9 @@ module Rutot
       def initialize(bot)
         @bot = bot
       end
-      
+
     end
-    
+
     def self.map!
       puts :EDI, "mapping plugin modules for `#{bot.nick}´"
       bot.channels.each do |chan|
@@ -37,7 +37,7 @@ module Rutot
 
       puts :EDI, "preparing events for `#{bot.nick}´"
       ed = EventDispatcher.new(bot)
-      
+
       Events::EventHandler.constants.
         map { |c| Events::EventHandler.const_get(c) }.
         sort_by{ |c| c::ORDER }.
@@ -51,9 +51,9 @@ module Rutot
       }
       ed
     end
-    
+
   end
-  
+
 end
 
 

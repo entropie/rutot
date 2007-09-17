@@ -45,7 +45,7 @@ module Rutot
     def quit_hook
       p :QHK
     end
-    
+
     def initialize(config)
       @serverport      = config.port
       @serverhost      = config.servername
@@ -67,7 +67,7 @@ module Rutot
 
       @conn.add_event :RPL_ENDOFMOTD, :join_channels do |msg, conn|
         join @channels.map{ |c| c.name}
-        conn.remove_event :RPL_ENDOFMOTD, :join_channels 
+        conn.remove_event :RPL_ENDOFMOTD, :join_channels
         :success
       end
 
@@ -77,7 +77,7 @@ module Rutot
         :success
       end
 
-      
+
       @last_ping_time = Time.now
       @last_pong_time = Time.now
 
@@ -151,7 +151,7 @@ module Rutot
     rescue
       nil
     end
-    
+
   end
 
 

@@ -8,7 +8,7 @@ module Rutot
   class MessageSpooler < Array
 
     MaxLines = 4
-    
+
     # Contents of @mrore
     Element = Struct.new(:target, :lines)
 
@@ -16,7 +16,7 @@ module Rutot
     attr_reader :blocked
     attr_reader :quiet
     attr_reader :quiet_list
-    
+
     def initialize(bot)
       @quiet_list = []
       @blocked = false
@@ -145,7 +145,7 @@ module Rutot
         sleep 0.1
       end
     end
-    
+
   end
 end
 

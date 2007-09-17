@@ -10,9 +10,9 @@ module Rutot
       module Default
 
         include Rutot::Helper::Database
-        
+
         ORDER = 0
-        
+
         def privmsg_default
           @bot.conn.add_event(:PRIVMSG, :default) do |msg, conn|
             next unless msg.params.first !~ /#/
@@ -81,7 +81,7 @@ module Rutot
                 entry = sublist.delete nick.dc
               end
               if chan
-                @bot.update_nicklist(chan) 
+                @bot.update_nicklist(chan)
                 SeenList.add_or_update(chan, nick.dc, "[Quit] "+msg.params.last)
               end
               :success
@@ -94,7 +94,7 @@ module Rutot
         def mode_rescan_modes
           @bot.conn.add_event(:MODE, :rescan_modes) do |msg, conn|
             channel = msg.params.first
-            next if channel[0] != ?# 
+            next if channel[0] != ?#
             possibletargets = msg.params[2..-1]
             possibletargets.each do |target|
               next if target =~ /[#!@+]/
@@ -105,7 +105,7 @@ module Rutot
             :success
           end
         end
-        
+
         def nick_move_name_in_nicklist
           @bot.conn.add_event(:NICK, :move_name_in_nicklist) do |msg, conn|
             nick = msg.prefix[/[^:!]+/]
@@ -120,7 +120,7 @@ module Rutot
           end
 
         end
-        
+
       end
     end
   end

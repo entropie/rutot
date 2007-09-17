@@ -9,7 +9,7 @@ module Rutot
 
     module Common
 
-      
+
       require 'hpricot'
       require 'open-uri'
       require 'uri'
@@ -17,12 +17,12 @@ module Rutot
 
       Fortunes = [:drugs, :zippy, :futurama, :tao, 'bofh-excuses',
                   :wisdom, :fortunes]
-      
+
 
       def hlp_fbk(kw)
         Database::KeywordBundle.find_by_keyword(kw)
       end
-      
+
 
       def hlp_replybox(m)
         ReplyBox.send(m)
@@ -34,7 +34,7 @@ module Rutot
         `fortune -#{opts.join(' -')} #{w.join(' ')}`
       end
 
-      
+
       def hlp_wikipedia(str, lang = 'en')
         str = str.split.map{|a| a.capitalize}.join('_')
         url = "http://#{lang}.wikipedia.org/wiki/#{str}"
@@ -44,7 +44,7 @@ module Rutot
         Text::Format.new.format_one_paragraph("#{url}  " + text)
       end
 
-      
+
       def hlp_google(api = File.open(File.expand_path("~/Data/Secured/google.api")).readlines.join.strip)
         require 'google/api/web'
         Google::API::Web.new(api)
@@ -78,11 +78,11 @@ module Rutot
           response.error!
         end
       end
-      
+
     end
-    
+
   end
-  
+
 end
 
 
