@@ -7,7 +7,7 @@ def cl_title(t)
   t.gsub(/<.*>(.*)<.*>/, '\1')
 end
 
-respond_on(:PRIVMSG, :kwg, /^#{bot_prefix}\w+\?(?!\s)/) do |h|
+respond_on(:PRIVMSG, :kwg, /^#{bot_prefix_regex}\w+\?(?!\s)/) do |h|
   kw = h.raw.join[1..-2]
   if kwn = hlp_fbk(kw)
     h.respond(kwn.to_ary)
@@ -43,7 +43,7 @@ respond_on(:PRIVMSG, :remove, prefix_or_nick(:remove, :rm, :forget), :args => [:
   end
 end
 
-respond_on(:PRIVMSG, :kws, /#{bot_prefix}\w+ is (?!also)/) do |h|
+respond_on(:PRIVMSG, :kws, /#{bot_prefix_regex}\w+ is (?!also)/) do |h|
   begin
     kw, t, *d = h.raw.join.split
     kw, d = kw[1..-1], d.join(' ')
@@ -59,7 +59,7 @@ respond_on(:PRIVMSG, :kws, /#{bot_prefix}\w+ is (?!also)/) do |h|
 end
 
 
-respond_on(:PRIVMSG, :kwsa, /#{bot_prefix}\w+ is also/) do |h|
+respond_on(:PRIVMSG, :kwsa, /#{bot_prefix_regex}\w+ is also/) do |h|
   begin
     kw, t, ot, *d = h.raw.join.split
     kw, d = kw[1..-1], d.join(' ')

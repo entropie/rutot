@@ -45,37 +45,58 @@ class IRCClient
     set_user @ident, @realname
     set_nick @nick
   end
+
+
+
   def join(channels)
     channels = [channels] if channels.is_a? String
     channels.each do |channel|
+      self.send(:join_hook, channel) if self.respond_to?(:join_hook)
       @conn.send("JOIN #{channel}")
     end
   end
   
+
+  def part(channels, str="")
+    channels = [channels] if channels.is_a? String
+    channels.each do |channel|
+      self.send(:part_hook, channel) if self.respond_to?(:part_hook)
+      @conn.send("PART #{channel} : #{str}")
+    end
+  end
+
+  
   def set_nick(nickname)
+    self.send(:nickchange_hook, nickname) if self.respond_to?(:nickchange_hook)
     @conn.send("NICK #{nickname}")
   end
   
+
   def raw(str)
     @conn.send(raw)
   end
   
+
   def whois(str)
     @conn.send("WHOIS #{str}")
   end
   
+
   def set_user(ident, realname)
     @conn.send("USER #{ident} 5 0 :#{realname}")
   end
   
+
   def mode(target, mode)
     @conn.send("MODE #{target} #{mode}")
   end
   
+
   def pong(params="")
     @conn.send("PONG #{params}".strip)
   end
   
+
   def msg(target, *args)
     args.flatten.each do |line|
       puts :SND, "#{target}  #{line}"
@@ -83,23 +104,27 @@ class IRCClient
     end
   end
   
+
   def notice(target, *args)
     args.flatten.each do |line|
       @conn.send("NOTICE #{target} :#{line}")
     end
   end
   
+
   def emote(target, *args)
     args.flatten.each do |line|
       ctcp(target, :ACTION, line)
     end
   end
   
+
   def ctcp(target, ctcp, content="")
     line = "#{ctcp} #{content}".strip
     @conn.send("PRIVMSG #{target} :\x01#{line}\x01")
   end
   
+
   def ping(str=nil)
     line = "PING"
     if str
@@ -108,15 +133,14 @@ class IRCClient
     @conn.send(line)
   end
 
-  def part(chan, str="")
-    @conn.send("PART #{chan} : #{str}")
-  end
   
   def quit(str="")
+    self.send(:quit_hook) if self.respond_to?(:quit_hook)
     @conn.send("QUIT :#{str}")
     @conn.disconnect
   end
   
+
   def loop(&block)
     if block_given?
       @conn.loop &block

@@ -7,7 +7,7 @@ include :insult
 
 respond_on(:PRIVMSG, :insult, prefix_or_nick(:insult, :i), :args => [:Everything], :args_req => true) do |h|
   begin 
-    h.respond("%s is %s." % [h.args.join(' '), Insult.new.generate_insult])
+    h.respond(("%s is %s!" % [h.args.join(' '), Insult.new.generate_insult]).capitalize)
   rescue
     h.respond(ReplyBox.SRY)
   end

@@ -23,6 +23,29 @@ module Rutot
     attr_reader   :ident
     attr_reader   :realname
 
+    def join_hook(channel)
+      if config.channels[channel]
+      else
+        chan = Channel.new(channel)
+        chan.modules(*config.base_mods)
+        config.plugins.map!(chan)
+        config.channels << chan
+        plugins.reload
+      end
+    end
+
+    def part_hook(channel)
+      channels.delete(channel)
+    end
+
+    def nickchange_hook(nick)
+      #p :NHK, nick
+    end
+
+    def quit_hook
+      p :QHK
+    end
+    
     def initialize(config)
       @serverport      = config.port
       @serverhost      = config.servername

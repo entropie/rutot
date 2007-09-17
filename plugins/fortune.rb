@@ -9,7 +9,7 @@ respond_on(:PRIVMSG, :excuse, prefix_or_nick(:excuse)) do |h|
 end
 
 
-respond_on(:PRIVMSG, :fortune, prefix_or_nick(:fortune), :args => [:String]) do |h|
+respond_on(:PRIVMSG, :fortune, prefix_or_nick(:fortune, :quote), :args => [:String]) do |h|
   begin
     s =
       if h.args.empty? then '' else

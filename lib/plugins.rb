@@ -20,6 +20,7 @@ module Rutot
   class Plugins
 
     class ReplyBox
+
       Replies = {
         :k =>           [:aight, :k, :done, :mhmk, :yup, :klar],
         :YO =>          ["YEAH!", 'Yo.', 'Definitely yes.', 'Sure.', 'You really don’t want to know it.'],
@@ -46,11 +47,18 @@ module Rutot
     def include(pl)
       self.class.send(:include, Contribs[pl])
     end
-    
-    def map!
-      self.bot.channels.each do |chan|
+
+    def map!(nchan = nil)
+      channels =
+        if nchan
+          [nchan]
+        else
+          self.bot.channels
+        end
+      
+      channels.each do |chan|
         self.bot.base_mods.each do |m|
-          puts :PLG, "#{chan.name}: mapping defaultplugin #{m}"
+          puts :PLG, "#{chan.name}: mapping defaultplugin: #{m}"
           chan.plugins << m unless chan.plugins.include?(m)
         end
 

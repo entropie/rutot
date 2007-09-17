@@ -13,18 +13,18 @@ respond_on(:PRIVMSG, :google, prefix_or_nick(:google, :search, :g), :args => [:E
   begin
     query = google.search(a=h.args.join(' '))
     r = query.results.first
-    h.respond "[google] \"%s\": %s (approx: %i results)" % [cl_title(r.title), r.url, query.result_count]
+    h.respond "[G] \"%s\": %s (approx: %i results)" % [cl_title(r.title), r.url, query.result_count]
   rescue
-    h.respond "[google] \"%s\" — No Matches" % a
+    h.respond "[G] \"%s\" — No Matches" % a
   end
 end
 
 respond_on(:PRIVMSG, :gspell, prefix_or_nick(:gspell), :args => [:Everything], :arg_req => true) do |h|
   cp = google.spell(a=h.args.join(' '))
   if cp
-    h.respond("[gspell]  %s: %s" % [a, cp])
+    h.respond("[GS]  %s: %s" % [a, cp])
   else
-    h.respond "[gspell]  %s is spelled right." % a
+    h.respond "[GS]  %s is spelled right." % a
   end
 end
 

@@ -12,6 +12,8 @@ module Rutot
       attr_reader   :type, :keywords, :options, :handler, :respond_msg, :name, :raw
       attr_accessor :bot, :msg, :con, :channel
 
+      attr_accessor :global_name
+      
       def initialize(type, keywords, options, &blk)
         @name = "#{type}:#{keywords}"
         @respond_msg = []
@@ -27,9 +29,13 @@ module Rutot
         (@respond_msg ||= []) << msg.join("\n")
       end
       
-      def args=(args); @args = args; end
+      def args=(args)
+        @args = args
+      end
 
-      def args; @args; end
+      def args
+        @args
+      end
 
       def format_arguments
         rargs = @args.dup.join

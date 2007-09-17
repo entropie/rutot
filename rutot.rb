@@ -3,6 +3,8 @@
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 
+
+PWD = File.expand_path(File.dirname(__FILE__))
 Dir.chdir('/home/mit/Source/rutot/')
 require "rubygems"
 require "text/format"
@@ -55,12 +57,12 @@ end if __FILE__ == $0
 module Rutot
 
   
-  Version = %w'0 3 3'
+  Version = %w'0 3 5'
 
   VersionSuffix = 'testing'
   
   def self.version
-    "#{self}-" + Version.join('.') + "-" + VersionSuffix
+    "#{self}-" + Version.join('.') + (if VersionSuffix.nil? then '' else ("-" + VersionSuffix) end)
   end
 
   def self.start
@@ -75,14 +77,12 @@ module Rutot
 end
 
 begin
-  p 1
   #
   # Rutot starts the friendly Rutlov bot.
   #
   puts "Starting  #{Rutot.version}  at #{Time.now}."
   Kernel.puts
   r = Rutot.start
-
 end if __FILE__ == $0
 
 

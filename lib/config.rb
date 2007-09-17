@@ -12,11 +12,15 @@ module Rutot
     attr_reader :blacklist
     attr_reader :plugins 
     attr_reader :independent
+
+    attr_reader :responder
     
     attr_accessor :last_msg_time
 
     attr_accessor :prefix
     attr_accessor :nicks
+
+    attr_accessor :keywords
     
     def modules(*mods)
       mods.each{ |m| @mods << m }
@@ -35,11 +39,12 @@ module Rutot
     end
     
     def initialize(name)
+      @keywords = { }
       @mods = []
       @nicks = { }
       @last_msg_time = Time.now
-      @plugins, @independent, @name, @whitelist, @blacklist =
-        [], [], name, [], []
+      @responder, @plugins, @independent, @name, @whitelist, @blacklist =
+        [], [], [], name, [], []
     end
 
   end
@@ -55,7 +60,7 @@ module Rutot
     def initialize(server)
       @server = server
     end
-    
+
     def channel(name, &blk)
       chan = Channel.new(name)
       chan.instance_eval(&blk) if block_given?

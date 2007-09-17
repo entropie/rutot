@@ -19,6 +19,11 @@ module Rutot
     attr_reader :bot
 
     attr_reader :independent
+
+    attr_accessor :namespace_name
+
+    attr_accessor :responder_names
+    
     
     def initialize(bot)
       @bot, @independent = bot, Independent.new(bot)
@@ -39,6 +44,7 @@ module Rutot
         detach(@bot.conn, @bot)
         @responder.clear
       end
+      @responder_names = { }
       @independent = Independent.new(bot)
       @responder = Responder.new(bot)
     end
@@ -59,8 +65,6 @@ module Rutot
               if ind.last[c.name] + ind.interval <= Time.now
                 bot.spooler.push(c.name, parse_plugin_retval(ind.call))
                 ind.last[c.name] = Time.now
-              else
-                # nothing
               end
             rescue
               ind.last[c.name] = Time.now
@@ -74,8 +78,9 @@ module Rutot
     def attach(con, bot)
       bot.channels.each do |chan|
         self.responder.each do |plugin|
-          
-          puts :PLG, "#{bot.nick}:@#{chan.name} ATTACHING plugin: `#{plugin.name}´"
+          next unless chan.plugins.include?(plugin.global_name)
+          puts :PLG, "#{bot.nick}:@#{chan.name} ATTACHING keyword: `#{plugin.name}´"
+
           con.add_event(plugin.type, plugin.name) do |msg, con|
             message = msg.params.last
             target = msg.params.first
@@ -85,18 +90,11 @@ module Rutot
             plugin.con = con
             
             tchan = bot.config.channels[plugin.channel]
-
-            if(plugin && tchan && tchan.plugins.include?(plugin.name))
-              if plugin.keywords.any?{ |a| message =~ a }
-                Thread.new do
-                  puts :PLG, "#{message} matches #{plugin.name}"
-                  ret = parse_plugin_retval(plugin.call(message))
-                  bot.spooler.push(target, *ret)
-                end
-              end
-            elsif plugin.keywords.any?{ |a| message =~ a }
+            if(plugin && tchan &&
+               tchan.plugins.include?(plugin.global_name) &&
+               plugin.keywords.any?{ |k| k =~ message})
               Thread.new do
-                puts :PLG, "#{message} matches #{plugin.name}"
+                puts :PLG, "> '#{message}' matches #{plugin.name}"
                 ret = parse_plugin_retval(plugin.call(message))
                 bot.spooler.push(target, *ret)
               end
@@ -122,11 +120,14 @@ module Rutot
     def respond_on(type, name, handler, options = { }, &blk)
       options.extend(ParamHash).
         process!(:args => :optional, :arg_req => :optional)
-      @responder.add(type, handler, options, &blk).name = name
+      res = @responder.add(type, handler, options, &blk)
+      res.global_name = namespace_name
+      (self.responder_names[namespace_name] ||= []) << name
+      res.name = name
+      res
     end
 
     def timed_response(intervall, name, options = { }, &blk)
-      # @responder.add(:NULL, nil, options, &blk).name = "timed_#{name}"
       @independent.add_timed(intervall, name, options, &blk)
     end
 
@@ -134,9 +135,13 @@ module Rutot
       bot.config.prefix
     end
 
+    def bot_prefix_regex
+      Regexp.escape(bot_prefix || Events::EventPrefix)
+    end
+
     def prefix(arg, h = 1)
-      @prefix ||= Events::EventPrefix
-      /#{if h == 1 then "^" else "" end}#{@prefix*h} ?(#{arg.to_s})(?:$|\s+)/
+      prefix ||= Regexp.escape(bot_prefix || Events::EventPrefix)
+      /#{if h == 1 then "^" else "" end}#{prefix*h} ?(#{arg.to_s})(?:$|\s+)/
     end
 
     def prefix_or_nick(*args)
@@ -146,7 +151,9 @@ module Rutot
         m << [prefix(arg), prefix(arg, 2), Regexp.new(rrgx)]
       end.flatten
     end
+    alias :pon :prefix_or_nick
 
+    
     def prefix_or_nick_r(rgx, arg)
       rrgx = "^#{bot.nick}[:, ]+"
       rrgx += "(#{rgx})(?:$|\s+)"
@@ -154,7 +161,7 @@ module Rutot
     end
 
     def select(name)
-      Dir["#{PluginDirectory}/*.rb"].#
+      Dir["#{PluginDirectory}/*.rb"].
         grep(/#{name}\.rb$/).each { |pluginfile|
         puts :PLG, "loading #{pluginfile}"
         self.load(pluginfile)
@@ -167,6 +174,7 @@ module Rutot
       b.extend(Helper::Common)
       b.extend(Helper::Database)
       bind = b.send(:binding)
+      b.namespace_name = File.basename(plugin)[0..-4].to_sym
       eval(File.open(plugin).readlines.join, bind)
     end
 
