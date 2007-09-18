@@ -7,6 +7,8 @@
 require "yaml"
 
 require 'open-uri'
+include :rafb
+
 
 chans = ["#ackro", "#test", '#emacs', '#ruby']
 
@@ -88,6 +90,12 @@ def make_graph(uri)
   `cp /tmp/rutot_graph.png #{g2}`
   puts "done making graphs."
   return ['http://ackro.ath.cx/~mit/rutot_graph.png', "http://ackro.ath.cx/~mit/rutot_graph_#{t}.png"]
+end
+
+respond_on(:PRIVMSG, :pastestats, prefix_or_nick(:pastestats)) do |h|
+  h.respond(Rafb.new(h.bot.nick, 'freenode channel/usermap (YAML format)',
+           File.open('/home/mit/Tmp/irc_map.yaml').
+           readlines.join).paste)
 end
 
 respond_on(:PRIVMSG, :gstats, prefix_or_nick(:makestats), :args => [:Everything]) do |h|
