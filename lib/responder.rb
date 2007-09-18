@@ -16,6 +16,7 @@ module Rutot
     PluginDirectory = File.join(File.dirname(__FILE__), '..', 'plugins')
 
     attr_reader :responder
+
     attr_reader :bot
 
     attr_reader :independent

@@ -17,7 +17,6 @@ module Rutot
 
     attr_accessor :connections
 
-
     def <<(connection)
       @connections << connection
     end

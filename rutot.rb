@@ -57,7 +57,7 @@ end if __FILE__ == $0
 module Rutot
 
   
-  Version = %w'0 3 5'
+  Version = %w'0 3 7'
 
   VersionSuffix = 'testing'
   
@@ -65,9 +65,9 @@ module Rutot
     "#{self}-" + Version.join('.') + (if VersionSuffix.nil? then '' else ("-" + VersionSuffix) end)
   end
 
-  def self.start
+  def self.start(config = nil)
     unless Daemon.run?
-      @daemon = Daemon.start
+      @daemon = Daemon.start(config)
       @daemon
     else
       raise "daemon already running, #{daemon}}"
@@ -81,8 +81,8 @@ begin
   # Rutot starts the friendly Rutlov bot.
   #
   puts "Starting  #{Rutot.version}  at #{Time.now}."
-  Kernel.puts
-  r = Rutot.start
+  cfg = if ARGV.empty? then nil else ARGV.first end
+  r = Rutot.start(:config_file => cfg)
 end if __FILE__ == $0
 
 

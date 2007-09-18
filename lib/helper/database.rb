@@ -13,6 +13,7 @@ module Rutot
 
       Config = {
         #:destroy => true,
+        :evolve => true,
         :store => :sqlite,
         :name => 'keywords'
       }
@@ -20,10 +21,12 @@ module Rutot
       $DBG = true if $DEBUG
 
       class SeenList
+
         attr_accessor :channel, String
         attr_accessor :nick,    String
         attr_accessor :msg,     String
         attr_accessor :time,    Time
+        
         def initialize(chan, nick)
           @channel, @nick, @msg, @time = chan, nick, '', Time.now
         end
@@ -45,10 +48,13 @@ module Rutot
       end
 
       class ChannelStats
+
         attr_accessor :channel, :uniq => true
+
         attr_accessor :snapshot_date, Time, :uniq => true
 
         has_many      :channels, ChannelStat
+
         def initialize(channel = nil)
           @channel = channel
           @snapshot_date = Time.now

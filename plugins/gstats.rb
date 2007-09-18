@@ -5,10 +5,9 @@
 #
 
 require "yaml"
-
 require 'open-uri'
-include :rafb
 
+include :rafb
 
 chans = ["#ackro", "#test", '#emacs', '#ruby']
 
