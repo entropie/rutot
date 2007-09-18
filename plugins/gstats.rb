@@ -1,5 +1,5 @@
 #
-#
+# $Id$
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 # Author:  Christian Neukirchen <chneukirchen@gmail.com>
 #

@@ -1,3 +1,8 @@
+#
+# $Id$
+# Author:  Michael 'entropie' Trommer <mictro@gmail.com>
+# Author:  FIXME
+#
 
 class Insult
 

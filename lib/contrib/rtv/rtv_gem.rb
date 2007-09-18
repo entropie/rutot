@@ -1,4 +1,8 @@
-#!/usr/bin/env ruby
+#
+# $Id$
+# Author:  Robert Retzbach <rretzbach@gmail.com>
+# Author:  Christian Neukirchen <chneukirchen@gmail.com>
+#
 
 require 'rubygems'
 require 'hpricot'

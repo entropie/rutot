@@ -1,4 +1,6 @@
 #
+#
+#
 # = rand.rb -- library for picking random elements and shuffling
 #
 # Copyright (C) 2004  Ilmari Heikkinen

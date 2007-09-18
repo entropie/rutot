@@ -72,8 +72,8 @@ end
 
 desc "remove those annoying spaces at the end of lines"
 task 'fix-end-spaces' do
-  Dir['{lib,test}/**/*.rb'].each do |file|
-    next if file =~ /_darcs/
+  Dir['{lib,plugins/bina}/**/*.rb'].each do |file|
+    next if file =~ /\.hg/
     lines = File.readlines(file)
     new = lines.dup
     lines.each_with_index do |line, i|
@@ -91,5 +91,40 @@ task 'fix-end-spaces' do
         end
       end
     end
+  end
+end
+
+desc "remove those annoying spaces at the end of lines"
+task 'make-id-header' do
+  cf = `hg head`.split("\n").first.
+    scan(/changeset:\s+(\d+):/).flatten.first.to_i
+
+  Dir['{lib,plugins,bin}/**/*.rb'].each do |file|
+    next if file =~ /\.hg/
+    fid = (hgl = `hg log #{file}`.split("\n")).first.
+      scan(/changeset:\s+(\d+):/).flatten.first.to_i
+    usr = hgl.grep(/user:\s+".+"/).first.to_s[14..-2]
+    
+    lines = File.readlines(file)
+    new = lines.dup
+
+    lines.each_with_index do |line, i|
+      next if i != 1
+      if line == "#\n" or line =~ /# \$Id:.*[^\$]/
+          new[i] = "# $Id: #{fid} #{usr}: %s" % `hg log #{file}`.split("\n")[0..5].
+          grep(/summary/).flatten.first[13..-1]
+        puts ">   %s\n   '#{new[i]}'" % file
+      else
+        puts "not for\t #{file}"
+      end
+    end
+
+    # unless new == lines
+    #   File.open(file, 'w+') do |f|
+    #     new.each do |line|
+    #       f.puts(line)
+    #     end
+    #   end
+    # end
   end
 end
