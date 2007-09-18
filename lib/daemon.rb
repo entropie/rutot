@@ -32,8 +32,9 @@ module Rutot
 
     def self.start(options = { })
       options.extend(ParamHash).process!(:config_file => :optional)
-
       options[:config_file] ||= DefaultOptions[:config_file]
+      puts :DMN, "config: #{options[:config_file]}"
+      sleep 3
       daemon = self.new
       bot = __run__(options, daemon)
       daemon.connections = Connections.connect_all(daemon, bot)
