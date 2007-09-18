@@ -99,7 +99,7 @@ task 'make-id-header' do
   cf = `hg head`.split("\n").first.
     scan(/changeset:\s+(\d+):/).flatten.first.to_i
 
-  Dir['{lib,plugins,bin}/**/*.rb'].each do |file|
+  (Dir['{lib,plugins,bin}/**/*.rb'] << "rutot.rb").each do |file|
     next if file =~ /\.hg/
     fid = (hgl = `hg log #{file}`.split("\n")).first.
       scan(/changeset:\s+(\d+):/).flatten.first.to_i
@@ -110,8 +110,8 @@ task 'make-id-header' do
 
     lines.each_with_index do |line, i|
       next if i != 1
-      if line == "#\n" or line =~ /# \$Id:.*[^\$]/
-          new[i] = "# $Id: #{fid} #{usr}: %s" % `hg log #{file}`.split("\n")[0..5].
+      if line == "#\n" or line =~ /^# \$Id/
+          new[i] = "# $Id: #{fid} #{usr}: %s$" % `hg log #{file}`.split("\n")[0..5].
           grep(/summary/).flatten.first[13..-1]
         puts ">   %s\n   '#{new[i]}'" % file
       else

@@ -1,5 +1,5 @@
 #
-#
+# $Id: 94 Michael Trommer <mictro@gmail.com>: uri fixed, gstats quiet fixed$
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 

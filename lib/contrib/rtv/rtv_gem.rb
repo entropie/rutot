@@ -1,5 +1,5 @@
 #
-# $Id$
+# $Id: 132 Michael Trommer <mictro@gmail.com>: source cleaned$
 # Author:  Robert Retzbach <rretzbach@gmail.com>
 # Author:  Christian Neukirchen <chneukirchen@gmail.com>
 #

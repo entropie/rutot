@@ -1,5 +1,5 @@
 #
-#
+# $Id: 128 Michael Trommer <mictro@gmail.com>: lib/contrib/rafb: added contrib to make pastes more simple$
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 

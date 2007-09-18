@@ -1,5 +1,5 @@
 #
-#
+# $Id: 132 Michael Trommer <mictro@gmail.com>: source cleaned$
 #
 # = rand.rb -- library for picking random elements and shuffling
 #

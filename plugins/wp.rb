@@ -1,5 +1,5 @@
 #
-#
+# $Id: 92 Michael Trommer <mictro@gmail.com>: plugins/w.rb:  wp lang/argument handling fixed.$
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 

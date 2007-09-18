@@ -1,5 +1,5 @@
 #
-#
+# $Id: 88 Michael Trommer <mictro@gmail.com>: message are recorded during ,quiet and saved in ,more$
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 

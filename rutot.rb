@@ -1,11 +1,12 @@
 #
-#
+# $Id: 130 Michael Trommer <mictro@gmail.com>: version and small cleanups$
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 
 
 PWD = File.expand_path(File.dirname(__FILE__))
 Dir.chdir('/home/mit/Source/rutot/')
+
 require "rubygems"
 require "text/format"
 

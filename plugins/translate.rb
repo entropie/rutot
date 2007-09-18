@@ -1,5 +1,5 @@
 #
-#
+# $Id: 96 Michael Trommer <mictro@gmail.com>: ircconnection raises because IRCConnection#parse_line returns nil sometimes -- fixed$
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 

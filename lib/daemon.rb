@@ -1,5 +1,5 @@
 #
-#
+# $Id: 130 Michael Trommer <mictro@gmail.com>: version and small cleanups$
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 
