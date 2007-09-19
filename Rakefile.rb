@@ -20,10 +20,9 @@ task :google_sync => [:rdoc, :distribute]do
   puts "synced to googlecode"
 end
 
-desc "creates rdoc"
 task :rdoc do
-  sh "rm -rf doc"
-  system('rdoc -a -I gif -S -m Rutot -o doc -x "(bin|plugins)"')
+  system("rm -rf ~/public_html/doc/rutotdoc/rdoc/")
+  system('rdoc -T rubyavailable -a -I gif -S -m Rutot -o ~/public_html/doc/rutotdoc/rdoc/ -x "(bin|plugins)"')
 end
 
 desc "create bzip2 and tarball"

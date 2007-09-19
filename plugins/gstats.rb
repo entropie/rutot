@@ -93,8 +93,8 @@ end
 
 respond_on(:PRIVMSG, :pastestats, prefix_or_nick(:pastestats)) do |h|
   h.respond(Rafb.new(h.bot.nick, 'freenode channel/usermap (YAML format)',
-           File.open('/home/mit/Tmp/irc_map.yaml').
-           readlines.join).paste)
+                     File.open('/home/mit/Tmp/irc_map.yaml').
+                     readlines.join).paste)
 end
 
 respond_on(:PRIVMSG, :gstats, prefix_or_nick(:makestats), :args => [:Everything]) do |h|
