@@ -13,7 +13,8 @@ respond_on(:PRIVMSG, :google, prefix_or_nick(:google, :search, :g), :args => [:E
   begin
     query = google.search(a=h.args.join(' '))
     r = query.results.first
-    h.respond "[G] \"%s\": %s (approx: %i results)" % [cl_title(r.title), r.url, query.result_count]
+    nu = if r.url.to_s.size > 60 then hlp_tinyurl(r.url) else r.url end
+    h.respond "[G] \"%s\": %s (approx: %i results)" % [cl_title(r.title), nu, query.result_count]
   rescue
     h.respond "[G] \"%s\" — No Matches" % a
   end

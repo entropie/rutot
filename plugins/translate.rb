@@ -3,11 +3,17 @@
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 
-respond_on(:PRIVMSG, :translate, prefix_or_nick(:translate, :t, :t8), :args => [:String, :String, :Everything], :arg_req => true) do |h|
+respond_on(:PRIVMSG, :translate, prefix_or_nick(:translate, :t, :t8, :tr), :args => [:String, :String, :Everything], :arg_req => true) do |h|
   begin
     trans_prg = "translate -f #{f=h.args.shift} -t #{t=h.args.shift}"
     trans_string = h.args.shift.gsub("\"", '')
-    h.respond("[Translation #{f}:#{t}]  " + `echo "#{trans_string}" | #{trans_prg}`.to_s)
+    tstr = `echo "#{trans_string}" | #{trans_prg}`.to_s
+    if $?.success?
+      h.respond("[Translation #{f}:#{t}]  " + tstr)
+    else
+      raise "sucks"
+    end
+
   rescue
     h.respond ReplyBox.SRY
   end
