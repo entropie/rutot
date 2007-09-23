@@ -1,5 +1,5 @@
 #
-# $Id: 109 Michael Trommer <mictro@gmail.com>: ri plugin and plugins from rbot: thefightcrime, insult$
+# $Id: 133 Michael Trommer <mictro@gmail.com>: $ header added$
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 

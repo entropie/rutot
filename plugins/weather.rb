@@ -1,5 +1,5 @@
 #
-# $Id: 123 Michael Trommer <mictro@gmail.com>: plugins/weather.rb: grep all args, and escape query-string$
+# $Id: 133 Michael Trommer <mictro@gmail.com>: $ header added$
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 

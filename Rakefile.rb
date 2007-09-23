@@ -118,12 +118,12 @@ task 'make-id-header' do
       end
     end
 
-    # unless new == lines
-    #   File.open(file, 'w+') do |f|
-    #     new.each do |line|
-    #       f.puts(line)
-    #     end
-    #   end
-    # end
+    unless new == lines
+      File.open(file, 'w+') do |f|
+        new.each do |line|
+          f.puts(line)
+        end
+      end
+    end
   end
 end

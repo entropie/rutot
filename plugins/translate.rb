@@ -1,5 +1,5 @@
 #
-# $Id: 96 Michael Trommer <mictro@gmail.com>: ircconnection raises because IRCConnection#parse_line returns nil sometimes -- fixed$
+# $Id: 135 Michael Trommer <mictro@gmail.com>: google uses tinyurl if url is > 60, and translate catches 0$
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 

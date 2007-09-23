@@ -1,5 +1,5 @@
 #
-# $Id: 97 Michael Trommer <mictro@gmail.com>: tryruby utf-8 fixed; weather plugin added; ='u' for entire app; kthxby$
+# $Id: 133 Michael Trommer <mictro@gmail.com>: $ header added$
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 

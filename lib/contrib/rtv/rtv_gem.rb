@@ -1,5 +1,5 @@
 #
-# $Id: 132 Michael Trommer <mictro@gmail.com>: source cleaned$
+# $Id: 133 Michael Trommer <mictro@gmail.com>: $ header added$
 # Author:  Robert Retzbach <rretzbach@gmail.com>
 # Author:  Christian Neukirchen <chneukirchen@gmail.com>
 #

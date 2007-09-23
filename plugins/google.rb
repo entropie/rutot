@@ -1,5 +1,5 @@
 #
-# $Id: 124 Michael Trommer <mictro@gmail.com>: mostly plugin base$
+# $Id: 135 Michael Trommer <mictro@gmail.com>: google uses tinyurl if url is > 60, and translate catches 0$
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 

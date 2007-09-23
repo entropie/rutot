@@ -1,5 +1,5 @@
 #
-# $Id: 132 Michael Trommer <mictro@gmail.com>: source cleaned$
+# $Id: 133 Michael Trommer <mictro@gmail.com>: $ header added$
 #
 # = rand.rb -- library for picking random elements and shuffling
 #

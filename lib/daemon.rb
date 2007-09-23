@@ -1,5 +1,5 @@
 #
-# $Id: 130 Michael Trommer <mictro@gmail.com>: version and small cleanups$
+# $Id: 133 Michael Trommer <mictro@gmail.com>: $ header added$
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 

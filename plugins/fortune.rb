@@ -1,5 +1,5 @@
 #
-# $Id: 124 Michael Trommer <mictro@gmail.com>: mostly plugin base$
+# $Id: 133 Michael Trommer <mictro@gmail.com>: $ header added$
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 

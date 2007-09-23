@@ -1,5 +1,5 @@
 #
-# $Id: 132 Michael Trommer <mictro@gmail.com>: source cleaned$
+# $Id: 134 Michael Trommer <mictro@gmail.com>: rakefile updated$
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 # Author:  Christian Neukirchen <chneukirchen@gmail.com>
 #
