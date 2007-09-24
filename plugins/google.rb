@@ -9,7 +9,7 @@ def cl_title(t)
   t.gsub(/<.*>(.*)<.*>/, '\1')
 end
 
-respond_on(:PRIVMSG, :google, prefix_or_nick(:google, :search, :g), :args => [:Everything], :arg_req => true) do |h|
+respond_on(:PRIVMSG, :google, prefix_or_nick(:google, :g), :args => [:Everything], :arg_req => true) do |h|
   begin
     query = google.search(a=h.args.join(' '))
     r = query.results.first

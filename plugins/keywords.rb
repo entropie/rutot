@@ -7,31 +7,60 @@ def cl_title(t)
   t.gsub(/<.*>(.*)<.*>/, '\1')
 end
 
-respond_on(:PRIVMSG, :kwg, /^#{bot_prefix_regex}\w+\?(?!\s)/) do |h|
-  kw = h.raw.join[1..-2]
-  if kwn = hlp_fbk(kw)
-    h.respond(kwn.to_ary)
-  else
-    begin
-      google = hlp_google
-      query = google.search(kw)
-      r = query.results.first
-      h.respond "[google] \"%s\": %s (approx: %i results)" %
-        [cl_title(r.title), r.url, query.result_count]
-    rescue
-      p $!
+
+respond_on(:PRIVMSG, :kwsearch, prefix_or_nick(:kwsearch, :s, :search), :args => [:Everything]) do |h|
+  kw = h.args.flatten.shift
+  begin
+    if kwn = Database::KeywordBundle.
+        find(:sql => "SELECT * FROM #{Database::KeywordBundle.table} WHERE keyword LIKE \"%#{kw}%\"")
+      ret = kwn.map{ |k| k.keyword}.join(', ')
+      h.respond("You may want to try: %s." % ret)
     end
+  rescue
+    p $!
+    pp $!.backtrace
   end
 end
 
-respond_on(:PRIVMSG, :remove, prefix_or_nick(:remove, :rm, :forget), :args => [:String, :String], :arg_req => true) do |h|
+
+respond_on(:PRIVMSG, :kwd, kwdr=/#{bot.nick}[:, ]+([\w\s_\-]+)\?/) do |h|
+  h.raw.to_s =~ kwdr
+  kw = $1
+  if kwn = hlp_fbk(kw)
+    h.respond(kwn.to_ary)
+  else
+    h.respond(ReplyBox.NO)
+  end
+end
+
+respond_on(:PRIVMSG, :kwg, kwgr= /#{bot_prefix_regex}([\w\s_\-]+)\?$/) do |h|
+  h.raw.to_s =~ kwgr
+  kw = $1
+  if kwn = hlp_fbk(kw)
+    h.respond(kwn.to_ary)
+  else
+    # begin
+    #   google = hlp_google
+    #   query = google.search(kw)
+    #   r = query.results.first
+    #   h.respond "[google] \"%s\": %s (approx: %i results)" %
+    #     [cl_title(r.title), r.url, query.result_count]
+    # rescue
+    #   p $!
+    # end
+  end
+end
+
+respond_on(:PRIVMSG, :remove, prefix_or_nick(:remove, :rm, :forget), :args => [:Everything], :arg_req => true) do |h|
   begin
-    kw = hlp_fbk(h.args.first)
+    args = h.args.flatten
+    args = (if args.last =~ /^\d+$/ then args[0..-2] else args end)
+    kw = hlp_fbk(args.join(' '))
     raise "Nothing known about #{h.args.first}" unless kw
     str =
-      if h.args.last =~ /^\d+/ and kw.get_at(h.args.last.to_i)
-        kw.delete_at(h.args.last.to_i) 
-        "Removed entry #{h.args.last} of #{kw.keyword}."
+      if h.args.last.last =~ /^\d+/ and kw.get_at(i=h.args.last.last.to_i)
+        kw.delete_at(i) 
+        "Removed entry #{i} of #{kw.keyword}."
       else
         # FIXME: add backup
         kw.delete
@@ -43,10 +72,11 @@ respond_on(:PRIVMSG, :remove, prefix_or_nick(:remove, :rm, :forget), :args => [:
   end
 end
 
-respond_on(:PRIVMSG, :kws, /#{bot_prefix_regex}\w+ is (?!also)/) do |h|
+respond_on(:PRIVMSG, :kws, kwsr=/#{bot_prefix_regex}([\w\s_\-]+) is (?!also)(.*)$/) do |h|
   begin
-    kw, t, *d = h.raw.join.split
-    kw, d = kw[1..-1], d.join(' ')
+    h.raw.to_s =~ kwsr
+    kw, d = $1, $2
+    p kw,d
     raise "exist already" if hlp_fbk(kw)
     if kw.size > 0 and d.size > 0
       kwb = Database::KeywordBundle.create(kw)
@@ -59,10 +89,10 @@ respond_on(:PRIVMSG, :kws, /#{bot_prefix_regex}\w+ is (?!also)/) do |h|
 end
 
 
-respond_on(:PRIVMSG, :kwsa, /#{bot_prefix_regex}\w+ is also/) do |h|
+respond_on(:PRIVMSG, :kwsa, kwsar=/#{bot_prefix_regex}([\w\s_\-]+) is also(.*)$/) do |h|
   begin
-    kw, t, ot, *d = h.raw.join.split
-    kw, d = kw[1..-1], d.join(' ')
+    h.raw.to_s =~ kwsar
+    kw, d = $1, $2
     raise "not exist" unless kwb = hlp_fbk(kw)
     kwb.definitions << ndef = Database::Definition.create(d)
     h.respond(ReplyBox.k)
