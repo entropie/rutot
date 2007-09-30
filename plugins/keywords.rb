@@ -38,16 +38,6 @@ respond_on(:PRIVMSG, :kwg, kwgr= /#{bot_prefix_regex}([\w\s_\-]+)\?$/) do |h|
   kw = $1
   if kwn = hlp_fbk(kw)
     h.respond(kwn.to_ary)
-  else
-    # begin
-    #   google = hlp_google
-    #   query = google.search(kw)
-    #   r = query.results.first
-    #   h.respond "[google] \"%s\": %s (approx: %i results)" %
-    #     [cl_title(r.title), r.url, query.result_count]
-    # rescue
-    #   p $!
-    # end
   end
 end
 
@@ -72,15 +62,14 @@ respond_on(:PRIVMSG, :remove, prefix_or_nick(:remove, :rm, :forget), :args => [:
   end
 end
 
-respond_on(:PRIVMSG, :kws, kwsr=/#{bot_prefix_regex}([\w\s_\-]+) is (?!also)(.*)$/) do |h|
+respond_on(:PRIVMSG, :kws, kwsr=/^#{bot_prefix_regex}(\w[\w\s_\-]+) is (?!also)(.*)$/) do |h|
   begin
     h.raw.to_s =~ kwsr
     kw, d = $1, $2
-    p kw,d
     raise "exist already" if hlp_fbk(kw)
     if kw.size > 0 and d.size > 0
-      kwb = Database::KeywordBundle.create(kw)
-      kwb.definitions << ndef = Database::Definition.create(d)
+      kwb = Database::KeywordBundle.create(kw.strip)
+      kwb.definitions << ndef = Database::Definition.create(d.strip)
       h.respond(ReplyBox.k)
     end
   rescue
@@ -94,7 +83,7 @@ respond_on(:PRIVMSG, :kwsa, kwsar=/#{bot_prefix_regex}([\w\s_\-]+) is also(.*)$/
     h.raw.to_s =~ kwsar
     kw, d = $1, $2
     raise "not exist" unless kwb = hlp_fbk(kw)
-    kwb.definitions << ndef = Database::Definition.create(d)
+    kwb.definitions << ndef = Database::Definition.create(d.strip)
     h.respond(ReplyBox.k)
   rescue
     h.respond(ReplyBox.SRY)
