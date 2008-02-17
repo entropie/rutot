@@ -5,7 +5,7 @@
 
 
 PWD = File.expand_path(File.dirname(__FILE__))
-Dir.chdir('/home/mit/Source/rutot/')
+Dir.chdir(File.expand_path('~/Source/rutot/'))
 
 require "rubygems"
 require "text/format"

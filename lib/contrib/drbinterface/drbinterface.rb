@@ -4,6 +4,7 @@
 #
 
 require 'drb'
+require 'drb/acl'
 
 class DRBInterface
 
@@ -12,11 +13,17 @@ class DRBInterface
 
   attr_reader :new
 
+  ACLS =
+    ACL.new(%w(deny all
+      allow 10.0.187.*
+      allow localhost))
+  
   def new?
     @@new
   end
 
   def initialize
+    DRb.install_acl(ACLS)
     begin
       Thread.new {
         begin
