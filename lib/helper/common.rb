@@ -36,7 +36,7 @@ module Rutot
 
 
       def hlp_wikipedia(str, lang = 'en')
-        str = str.split.map{|a| a.capitalize}.join('_')
+        #str = str.split.map{|a| a.capitalize}.join('_')
         url = "http://#{lang}.wikipedia.org/wiki/#{str}"
         h = Hpricot(open(url))
         text = h.at(:p).inner_text.gsub(/\n/, ' ')

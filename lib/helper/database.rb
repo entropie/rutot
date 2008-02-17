@@ -47,6 +47,14 @@ module Rutot
 
       end
 
+      # class Ignore
+      #   attr_accessor :name, :uniq => true
+
+      #   def initialize(name)
+      #     @name = name
+      #   end
+      # end
+      
       class ChannelStats
 
         attr_accessor :channel, :uniq => true

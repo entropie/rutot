@@ -88,7 +88,7 @@ def make_graph(uri)
   `cp /tmp/rutot_graph.png /home/mit/public_html/`
   `cp /tmp/rutot_graph.png #{g2}`
   puts "done making graphs."
-  return ['http://ackro.ath.cx/~mit/rutot_graph.png', "http://ackro.ath.cx/~mit/rutot_graph_#{t}.png"]
+  return ['http://www1.ackro.ath.cx/~mit/rutot_graph.png', "http://ackro.ath.cx/~mit/rutot_graph_#{t}.png"]
 end
 
 respond_on(:PRIVMSG, :pastestats, prefix_or_nick(:pastestats)) do |h|
@@ -101,8 +101,8 @@ respond_on(:PRIVMSG, :gstats, prefix_or_nick(:makestats), :args => [:Everything]
   retthingy = { }
   nickc = 0
   begin
-    chans = hlp_fbk('statschannel').definitions.map{ |sc| sc.text}
-    #chans = ['#ackro', '#ruby-de']
+    #chans = hlp_fbk('statschannel').definitions.map{ |sc| sc.text}
+    chans = ['#ackro', '#ruby-de']
     chans.each do |chan|
       ich = chan
       idf = bot.channels.map{ |c| c.name }.include?(ich)
@@ -135,8 +135,8 @@ respond_on(:PRIVMSG, :gstats, prefix_or_nick(:makestats), :args => [:Everything]
     uri = "#{uri = `cat ~/Tmp/irc_map.yaml | rafb.rb`}".gsub(/"/, '').strip
     graph = make_graph(uri)
     if h.args.flatten.join.strip == 'polis'
-      fb = "[:img]\n#{graph.last}\n[:img_end]\n\n"
-      `echo "#{fb}" | ackro po way pipe to image`
+      fb = "[img_start]\n#{graph.last}\n[img_end]\n\n[tags_start]rutot irc stats[tags_end]\n\n[desc_start]channel <=> user map[desc_end]}"
+      `echo "#{fb}" | backbite polis po to image pipe`
       h.respond("Postet to polis.\n")
     end
     h.respond(str=("Wrote %i nicks from %i channels.  #{uri} — #{graph.first}" % [nickc, chans.size]))

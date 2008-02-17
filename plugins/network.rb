@@ -5,7 +5,7 @@
 
 respond_on(:PRIVMSG, :host, prefix_or_nick(:host), :args => [:String], :args_req => true) do |h|
   begin
-    h.respond(`host #{h.args.to_s}`)
+    h.respond(`host #{h.args.to_s.shellescape}`)
   rescue
     h.respond ReplyBox.SRY
   end

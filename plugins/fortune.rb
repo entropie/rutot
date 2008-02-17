@@ -14,7 +14,7 @@ respond_on(:PRIVMSG, :fortune, prefix_or_nick(:fortune, :quote), :args => [:Stri
     s =
       if h.args.empty? then '' else
         if h.args.first =~ /^[a-zA-Z0-9\-]+$/
-          "80% #{h.args.first}"
+          "80% #{h.args.first.shellescape}"
         else ''
         end
       end

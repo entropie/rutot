@@ -42,6 +42,7 @@ begin
   require "lib/helper/paramhash"
   require "lib/helper/common"
   require "lib/helper/database"
+  require "lib/helper/shellwords"  
   require "lib/responder"
   require "lib/responder_methods"
   require "lib/plugins"

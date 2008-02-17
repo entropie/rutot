@@ -9,7 +9,7 @@ module Rutot
 
     MaxLines = 4
 
-    # Contents of @mrore
+    # Contents of @more
     Element = Struct.new(:target, :lines)
 
     attr_reader :bot

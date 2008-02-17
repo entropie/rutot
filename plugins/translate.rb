@@ -4,20 +4,20 @@
 #
 
 respond_on(:PRIVMSG, :translate, prefix_or_nick(:translate, :t, :t8, :tr), :args => [:String, :String, :Everything], :arg_req => true) do |h|
-  # begin
-  #   trans_prg = "translate -f #{f=h.args.shift} -t #{t=h.args.shift}"
-  #   trans_string = h.args.shift.gsub("\"", '')
-  #   tstr = `echo "#{trans_string}" | #{trans_prg}`.to_s
-  #   if $?.success?
-  #     h.respond("[Translation #{f}:#{t}]  " + tstr)
-  #   else
-  #     raise "sucks"
-  #   end
+  begin
+    trans_prg = "translate -f #{f=h.args.shift.shellescape} -t #{t=h.args.shift.shellescape}"
+    trans_string = h.args.shift.gsub("\"", '')
+    tstr = `echo "#{trans_string}" | #{trans_prg}`.to_s
+    if $?.success?
+      h.respond("[Translation #{f}:#{t}]  " + tstr)
+    else
+      raise "sucks"
+    end
 
-  # rescue
-  #   h.respond ReplyBox.SRY
-  # end
-end#
+  rescue
+    h.respond ReplyBox.SRY
+  end
+end
 
 
 =begin
