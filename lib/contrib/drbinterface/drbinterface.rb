@@ -8,7 +8,7 @@ require 'drb/acl'
 
 class DRBInterface
 
-  Host = 'localhost'
+  Host = 'tie'
   Port = 7666
 
   attr_reader :new

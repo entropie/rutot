@@ -92,19 +92,19 @@ module Rutot
 
             tchan = bot.config.channels[plugin.channel]
 
-            ignorelist =
-              begin
-                self.extend(Helper::Common).
-                  hlp_fbk('ignorelist').definitions.map{ |id| id.to_s }
-              rescue
-                []
-              end
+            # ignorelist =
+            #   begin
+            #     self.extend(Helper::Common).
+            #       hlp_fbk('ignorelist').definitions.map{ |id| id.to_s }
+            #   rescue
+            #     []
+            #   end
             
             sender = msg.prefix.split('!').first
             
             if(plugin && tchan &&
                tchan.plugins.include?(plugin.global_name) &&
-               plugin.keywords.any?{ |k| k =~ message} and not ignorelist.include?(sender))
+               plugin.keywords.any?{ |k| k =~ message}) # and not ignorelist.include?(sender))
               Thread.new do
                 puts :PLG, "> '#{message}' matches #{plugin.name}"
                 ret = parse_plugin_retval(plugin.call(message))

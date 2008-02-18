@@ -20,7 +20,10 @@ module Rutot
 
 
       def hlp_fbk(kw)
+        p kw
         Database::KeywordBundle.find_by_keyword(kw)
+      rescue
+        ''
       end
 
 

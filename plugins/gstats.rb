@@ -102,7 +102,7 @@ respond_on(:PRIVMSG, :gstats, prefix_or_nick(:makestats), :args => [:Everything]
   nickc = 0
   begin
     chans = hlp_fbk('statschannel').definitions.map{ |sc| sc.text}
-    #chans = ['#ackro', '#ruby-de']
+    chans = ['#ackro', '#ruby-de', '#ruby', '#emacs', '#ruby-lang']
     chans.each do |chan|
       ich = chan
       idf = bot.channels.map{ |c| c.name }.include?(ich)
@@ -121,18 +121,18 @@ respond_on(:PRIVMSG, :gstats, prefix_or_nick(:makestats), :args => [:Everything]
       retthingy[ich] = nl.keys
       nickc += nl.size
       unless idf
-        h.bot.part(ich, 'I’d try to map the user of various irc channels.  Infos in #ackro.')
+        h.bot.part(ich, '') #I’d try to map the user of various irc channels.  Infos in #ackro.')
         h.bot.spooler.talk!(ich)
       else
         h.bot.spooler.channel_more(ich)
       end
     end
     
-    File.open(File.expand_path('~/Tmp/irc_map.yaml'), 'w+') do |yamlfile|
+    File.open(File.expand_path('/tmp/irc_map.yaml'), 'w+') do |yamlfile|
       yamlfile.write(YAML::dump(retthingy))
     end
     
-    uri = "#{uri = `cat ~/Tmp/irc_map.yaml | rafb.rb`}".gsub(/"/, '').strip
+    uri = "#{uri = `cat /tmp/irc_map.yaml | rafb.rb`}".gsub(/"/, '').strip
     graph = make_graph(uri)
     if h.args.flatten.join.strip == 'polis'
       fb = "[img_start]\n#{graph.last}\n[img_end]\n\n[tags_start]rutot irc stats[tags_end]\n\n[desc_start]channel <=> user map[desc_end]}"
