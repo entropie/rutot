@@ -84,16 +84,16 @@ def make_graph(uri)
   puts "making graphs..."
   `fdp /tmp/rutot_graph -o /tmp/rutot_graph_out.dot`
   `fdp -Tpng /tmp/rutot_graph_out.dot -o /tmp/rutot_graph.png`
-  g2 = "/home/mit/public_html/rutot_graph_#{t=Time.now.to_i}.png"
-  `cp /tmp/rutot_graph.png /home/mit/public_html/`
+  g2 = "/home/rubilit/public_html/rutot_graph_#{t=Time.now.to_i}.png"
+  `cp /tmp/rutot_graph.png /home/rubilit/public_html/`
   `cp /tmp/rutot_graph.png #{g2}`
   puts "done making graphs."
-  return ['http://www1.ackro.ath.cx/~mit/rutot_graph.png', "http://ackro.ath.cx/~mit/rutot_graph_#{t}.png"]
+  return ['http://www.ackro.ath.cx/~rubilit/rutot_graph.png', "http://ackro.ath.cx/~rubilit/rutot_graph_#{t}.png"]
 end
 
 respond_on(:PRIVMSG, :pastestats, prefix_or_nick(:pastestats)) do |h|
   h.respond(Rafb.new(h.bot.nick, 'freenode channel/usermap (YAML format)',
-                     File.open('/home/mit/Tmp/irc_map.yaml').
+                     File.open('/tmp/irc_map.yaml').
                      readlines.join).paste)
 end
 
@@ -101,8 +101,8 @@ respond_on(:PRIVMSG, :gstats, prefix_or_nick(:makestats), :args => [:Everything]
   retthingy = { }
   nickc = 0
   begin
-    #chans = hlp_fbk('statschannel').definitions.map{ |sc| sc.text}
-    chans = ['#ackro', '#ruby-de']
+    chans = hlp_fbk('statschannel').definitions.map{ |sc| sc.text}
+    #chans = ['#ackro', '#ruby-de']
     chans.each do |chan|
       ich = chan
       idf = bot.channels.map{ |c| c.name }.include?(ich)

@@ -92,10 +92,14 @@ module Rutot
 
             tchan = bot.config.channels[plugin.channel]
 
-            ignorelist = self.extend(Helper::Common).
-              hlp_fbk('ignorelist').definitions.map{ |id|
-              id.to_s
-            }
+            ignorelist =
+              begin
+                self.extend(Helper::Common).
+                  hlp_fbk('ignorelist').definitions.map{ |id| id.to_s }
+              rescue
+                []
+              end
+            
             sender = msg.prefix.split('!').first
             
             if(plugin && tchan &&
