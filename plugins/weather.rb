@@ -13,7 +13,7 @@ require 'pp'
 
 
 WFields = ['Temperature','Wind','Pressure','Humidity','Conditions','Sunrise','Moon Rise','Visibility']
-WMessage = "Temperature is %i°C (Chill is %i°C) with a Pressure of %ihPa and a Humidity of %s, %s\nSunrise at %s and Moon Rise at %s. Visibility %s."
+WMessage = "Temperature is %s°C (Chill is %s°C) with a Pressure of %shPa and a Humidity of %s, %s\nSunrise at %s and Moon Rise at %s. Visibility %s."
 
 def weather(str)
   station = "http://mobile.wunderground.com/cgi-bin/findweather/getForecast?query=#{CGI.escape(str)}"
@@ -36,7 +36,8 @@ def weather(str)
   end
   ret = ret.select{ |n,v| WFields.include?(n)}.sort_by{ |n,v| WFields.index(n) || 100}.
     map{ |n,v| v.kind_of?(Array) ? v.last : v}
-  "#{location} — #{header}\n" + WMessage % [*ret]
+  "#{location} — #{header}\n" + WMessage % [*ret.map{ |r| r.to_s}]
+  
 end
 
 respond_on(:PRIVMSG, :weather, prefix_or_nick(:wheater, :w), :args => [:Everything]) do |h|
@@ -47,7 +48,7 @@ respond_on(:PRIVMSG, :weather, prefix_or_nick(:wheater, :w), :args => [:Everythi
       h.respond('Say to me where you lurk around, dood.')
     end
   rescue
-    p $!
+    h.respond(ReplyBox.SRY)
   end
 end
 

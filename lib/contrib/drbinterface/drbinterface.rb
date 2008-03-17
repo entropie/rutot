@@ -15,7 +15,7 @@ class DRBInterface
 
   ACLS =
     ACL.new(%w(deny all
-      allow 10.0.187.*
+      allow 10.0.187.23
       allow localhost))
   
   def new?
