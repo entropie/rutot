@@ -49,8 +49,6 @@ module Rutot
 
 
       def hlp_google(api = File.open(File.expand_path("~/.google.api")).readlines.join.strip)
-        require 'google/api/web'
-        Google::API::Web.new(api)
       end
 
 
