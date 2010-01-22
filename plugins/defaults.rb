@@ -100,7 +100,7 @@ respond_on(:PRIVMSG, :quit, prefix_or_nick_r('quit$', :quit)) do |h|
 end
 
 respond_on(:PRIVMSG, :np, prefix_or_nick(:np)) do |h|
-  h.respond(`/home/mit/bin/np`)
+  h.respond(`np`)
 end
 
 respond_on(:PRIVMSG, :help, prefix_or_nick(:help), :args => [:String] ) do |h|
