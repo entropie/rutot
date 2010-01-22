@@ -15,6 +15,8 @@ class TryRuby
   def initialize
     @url = "http://tryruby.hobix.com/irb?cmd=%s"
     reload_session
+  rescue
+    puts :ERR, "no tryruby"
   end
 
   def eval(code)

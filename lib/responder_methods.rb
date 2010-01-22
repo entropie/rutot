@@ -97,6 +97,8 @@ module Rutot
         ret = @handler.call(self)
         self.clear!
         ret
+      rescue
+        $!.to_s
       end
 
     end

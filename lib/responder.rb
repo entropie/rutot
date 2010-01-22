@@ -15,6 +15,8 @@ module Rutot
 
     PluginDirectory = File.join(File.dirname(__FILE__), '..', 'plugins')
 
+    IgnoreList = ['Mathetes', 'et', 'shafire', 'AnalphaBestie'].map{ |e| e.downcase }
+    
     attr_reader :responder
 
     attr_reader :bot
@@ -25,7 +27,7 @@ module Rutot
 
     attr_accessor :responder_names
 
-
+    
     def initialize(bot)
       @bot, @independent = bot, Independent.new(bot)
       reset
@@ -92,19 +94,11 @@ module Rutot
 
             tchan = bot.config.channels[plugin.channel]
 
-            # ignorelist =
-            #   begin
-            #     self.extend(Helper::Common).
-            #       hlp_fbk('ignorelist').definitions.map{ |id| id.to_s }
-            #   rescue
-            #     []
-            #   end
-            
             sender = msg.prefix.split('!').first
             
             if(plugin && tchan &&
                tchan.plugins.include?(plugin.global_name) &&
-               plugin.keywords.any?{ |k| k =~ message}) # and not ignorelist.include?(sender))
+               plugin.keywords.any?{ |k| k =~ message}) and not IgnoreList.include?(sender.to_s.downcase)
               Thread.new do
                 puts :PLG, "> '#{message}' matches #{plugin.name}"
                 ret = parse_plugin_retval(plugin.call(message))

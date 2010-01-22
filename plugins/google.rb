@@ -3,19 +3,39 @@
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 
-google = hlp_google
+require "cgi"
+require "open-uri"
+require "json"
+require "pp"
+
+
+
+#google = hlp_google
+
+def google_search(str)
+  string = CGI.escape(str)
+  url = "http://ajax.googleapis.com/ajax/services/search/web?v=1.0&q=#{string}"
+
+  res = JSON.parse(open(url).read)["responseData"]["results"].first
+  url, title, text = res["unescapedUrl"], res["title"], res["content"]
+  strip_tags = proc{|s| s.gsub(/<\/?[^>]*>/, "")}
+  [url, strip_tags.call(title), strip_tags.call(text)]
+end
 
 def cl_title(t)
   t.gsub(/<.*>(.*)<.*>/, '\1')
 end
 
+
+
 respond_on(:PRIVMSG, :google, prefix_or_nick(:google, :g), :args => [:Everything], :arg_req => true) do |h|
   begin
-    query = google.search(a=h.args.join(' '))
-    r = query.results.first
-    nu = if r.url.to_s.size > 60 then hlp_tinyurl(r.url) else r.url end
-    h.respond "[G] \"%s\": %s (approx: %i results)" % [cl_title(r.title), nu, query.result_count]
+    #query = google.search(a=h.args.join(' '))
+    r = google_search(a=h.args.join(' '))
+    nu = if r.first.to_s.size > 60 then hlp_tinyurl(r.first) else r.first end
+    h.respond "[G] \"%s\": %s - %s" % [a, r.first, r[1]]
   rescue
+    p $!
     h.respond "[G] \"%s\" — No Matches" % a
   end
 end
