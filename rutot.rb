@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 #
 # $Id: 133 Michael Trommer <mictro@gmail.com>: $ header added$
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
@@ -5,7 +6,7 @@
 
 
 PWD = File.expand_path(File.dirname(__FILE__))
-Dir.chdir(File.expand_path('~/Source/rutot/'))
+Dir.chdir(File.expand_path('~/Source/rutot.git/'))
 
 require "rubygems"
 require "text/format"
@@ -27,6 +28,8 @@ class String
     end
   end
 end
+
+class NilClass; def to_irc_msg; "nil"; end; end
 
 class String; alias :dc :downcase end
 
