@@ -33,6 +33,16 @@ respond_on(:PRIVMSG, :kills, prefix_or_nick(:kills), :args => [:String]) do |h|
   end
 end
 
+respond_on(:PRIVMSG, :starbases, prefix_or_nick(:starbases), :args => [:String]) do |h|
+  arg = h.args.to_s.strip
+  begin
+    h.respond(starbase_details(arg.to_s.upcase))
+  rescue
+    h.respond("failed :/")
+  end
+end
+
+
 
 =begin
 Local Variables:
