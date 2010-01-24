@@ -16,7 +16,7 @@ require "/Users/mit/eve.rb"
 #api = Reve::API.new(UID, APIK)
 
 respond_on(:PRIVMSG, :tq, prefix_or_nick(:tq)) do |h|
-  ss = api.server_status
+  ss = API.server_status
   h.respond("Serverstatus: #{(ss.open and "up" or "down")}#{ss.open and " with #{ss.players} Players"}")
 end
 
