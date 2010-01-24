@@ -3,7 +3,7 @@
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 
-require "/Users/mit/eve.rb"
+include :eve
 
 # http://www.misuse.org/science/2008/03/27/converting-numbers-or-currency-to-comma-delimited-format-with-ruby-regex/
 def comma_numbers(number, delimiter = ',')

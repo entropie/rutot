@@ -5,15 +5,7 @@
 
 require 'reve'
 
-# if File.exist?(file="/Users/mit/.eve_api.rb")
-#   require file
-# else
-#   require File.expand_path("~/.eve_api.rb")
-# end
-
-require "/Users/mit/eve.rb"
-
-#api = Reve::API.new(UID, APIK)
+include :eve
 
 respond_on(:PRIVMSG, :tq, prefix_or_nick(:tq)) do |h|
   ss = API.server_status
