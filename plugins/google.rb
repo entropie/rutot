@@ -8,24 +8,7 @@ require "open-uri"
 require "json"
 require "pp"
 
-
-
-#google = hlp_google
-
-def google_search(str)
-  string = CGI.escape(str)
-  url = "http://ajax.googleapis.com/ajax/services/search/web?v=1.0&q=#{string}"
-
-  res = JSON.parse(open(url).read)["responseData"]["results"].first
-  url, title, text = res["unescapedUrl"], res["title"], res["content"]
-  strip_tags = proc{|s| s.gsub(/<\/?[^>]*>/, "")}
-  [url, strip_tags.call(title), strip_tags.call(text)]
-end
-
-def cl_title(t)
-  t.gsub(/<.*>(.*)<.*>/, '\1')
-end
-
+include :google
 
 
 respond_on(:PRIVMSG, :google, prefix_or_nick(:google, :g), :args => [:Everything], :arg_req => true) do |h|
@@ -40,14 +23,14 @@ respond_on(:PRIVMSG, :google, prefix_or_nick(:google, :g), :args => [:Everything
   end
 end
 
-respond_on(:PRIVMSG, :gspell, prefix_or_nick(:gspell), :args => [:Everything], :arg_req => true) do |h|
-  cp = google.spell(a=h.args.join(' '))
-  if cp
-    h.respond("[GS]  %s: %s" % [a, cp])
-  else
-    h.respond "[GS]  %s is spelled right." % a
-  end
-end
+# respond_on(:PRIVMSG, :gspell, prefix_or_nick(:gspell), :args => [:Everything], :arg_req => true) do |h|
+#   cp = google.spell(a=h.args.join(' '))
+#   if cp
+#     h.respond("[GS]  %s: %s" % [a, cp])
+#   else
+#     h.respond "[GS]  %s is spelled right." % a
+#   end
+# end
 
 
 =begin
