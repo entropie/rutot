@@ -100,7 +100,7 @@ class EveCentral
 
   BASE_URL = EVE_CENTRAL_BASE_URL
 
-  DEFAULT_PARAMS = {:sethours => 24}
+  DEFAULT_PARAMS = {:hours => 24}
 
   TIMEOUT = 5
   
@@ -149,6 +149,8 @@ end
 class EveCentralQuick < EveCentral
 
   extend EveHelper
+
+  DEFAULT_PARAMS = {:sethours => 4*7*24}
   
   BASE_URL = "http://eve-central.com/api/quicklook"
   def url
@@ -163,7 +165,7 @@ class EveCentralQuick < EveCentral
     url = mk_url(params)
     data, fields = {}, [:sell, :buy]
 
-    #xml = Hpricot.XML(open("/Users/mit/test1.xml"))
+    p url
     xml = Hpricot.XML(open(url))
 
     all_orders = {}
@@ -182,11 +184,11 @@ class EveCentralQuick < EveCentral
     all_orders
   end
 
-  def self.get_min_max(id, system)
+  def self.get_min_max(id, system, params = {})
     id = id.to_i
     ss = get_solarSystem_id_via_name(system)
     ret = []
-    data = ECQ.get_market_data(:typeID => id, :usesystem => ss)
+    data = ECQ.get_market_data({:typeID => id, :usesystem => ss}.merge(params))
     get_min_max = proc{|prices| [prices.min, prices.max]}
 
     ret = [:sell, :buy].map{|what|
@@ -204,7 +206,7 @@ include EveHelper
 
 if $0 == __FILE__
 
-  items = reject_non_market_item(get_item_from_name(item="10mn afterburner II", false))
+  items = reject_non_market_item(get_item_from_name(item="gallente freighter", false))
   p EveCentralQuick.get_min_max(items.first[0], "Jita")
 
   exit

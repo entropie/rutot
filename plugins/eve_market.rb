@@ -35,9 +35,12 @@ respond_on(:PRIVMSG, :pcs, prefix_or_nick(:pcs, :pc_system), :args => [:String, 
       ret << str
     else
       data = EveCentralQuick.get_min_max(items.first[0], ss)
-      vals = [data[:solar_system_name], data[:item_name], data[:buy].map{|i| comma_numbers(i)}, data[:sell].map{|i| comma_numbers(i)}].flatten
-      ret << "%s: '%s'  Buy: %s/%s  Sell: %s/%s" % vals
-      
+      unless (data[:sell] + data[:buy]).compact.empty?
+        vals = [data[:solar_system_name], data[:item_name], data[:buy].map{|i| comma_numbers(i)}, data[:sell].map{|i| comma_numbers(i)}].flatten
+        ret << "%s: '%s'  Buy: %s/%s  Sell: %s/%s" % vals
+      else
+        ret << "No Sell/Buy orders on '#{ss}' for '#{data[:item_name]}' or no data returned :/"
+      end
     end
   rescue Timeout::Error
     ret << "Request Timed out."
