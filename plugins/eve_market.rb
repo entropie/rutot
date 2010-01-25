@@ -5,6 +5,9 @@
 
 include :eve
 
+#Kernel.include ::EveHelper
+
+
 # http://www.misuse.org/science/2008/03/27/converting-numbers-or-currency-to-comma-delimited-format-with-ruby-regex/
 def comma_numbers(number, delimiter = ',')
   number.to_s.reverse.gsub(%r{([0-9]{3}(?=([0-9])))}, "\\1#{delimiter}").reverse
@@ -18,6 +21,31 @@ def market_data_to_s(id, what)
   end
   ret
 end
+
+respond_on(:PRIVMSG, :pcs, prefix_or_nick(:pcs, :pc_system), :args => [:String, :Everything]) do |h|
+  ss, item = h.args
+  items = reject_non_market_item(get_item_from_name(item, false))
+  ret = []
+
+  begin
+    if items.size > 1
+      ret << "Inconclusive item name '#{item}', try:"
+      str = items[0..10].map{|i| i[2]}.join(", ")
+      str << " ..." if items.size > 10
+      ret << str
+    else
+      data = EveCentralQuick.get_min_max(items.first[0], ss)
+      vals = [data[:solar_system_name], data[:item_name], data[:buy].map{|i| comma_numbers(i)}, data[:sell].map{|i| comma_numbers(i)}].flatten
+      ret << "%s: '%s'  Buy: %s/%s  Sell: %s/%s" % vals
+      
+    end
+  rescue Timeout::Error
+    ret << "Request Timed out."
+  end
+  
+  h.respond(ret)
+end
+
 
 respond_on(:PRIVMSG, :pc, prefix_or_nick(:pc, :pricecheck), :args => [:String, :Everything]) do |h|
   what = h.args.first
