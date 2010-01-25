@@ -45,15 +45,35 @@ def get_item_from_id(id)
   DB.execute("select * from invTypes where typeID = ?", id.to_i).flatten
 end
 
-def get_item_from_name(name, short = true)
-  DB.execute("select * from invTypes where typeName = ?", name.to_s.strip).map{|item|
-    if short
-      [item[0].to_i, item[2]]
+def get_item_from_name(name, short = true, like = false)
+  qry =
+    unless like
+      "select * from invTypes where UPPER(typeName) = UPPER('#{name.to_s.strip}')"
     else
-      item
+      "select * from invTypes where typeName like '%#{name.to_s.strip}%'"
     end
-  }
+  result = DB.execute(qry)
+  if result.empty?
+    return get_item_from_name(name, short, !like)
+  else
+    result.map do |item|
+      if short
+        [item[0].to_i, item[2]]
+      else
+        item
+      end
+    end
+  end
 end
+
+def reject_non_market_item(items, &blk)
+  ret = items.reject{|i|
+    i[13].nil?
+  }
+  ret.each(&blk) if block_given?
+  ret
+end
+
 
 def starbase_details(target_system = nil)
   ret = []
@@ -122,11 +142,20 @@ EC = EveCentral.new
 
 
 if $0 == __FILE__
-  get_item_from_name("Armageddon").each do |item|
-    itemID, itemName = item
-    p EC.get_market_data(:typeID => itemID)[:all]
+  items = reject_non_market_item(get_item_from_name(item="afterburner", false))
+  msg = []
+  if items.size > 10
+    msg << "More than 5 results yielded, please rephrase your input '#{item}'"
+  elsif items.size == 1
+    msg << "One Result for #{item}"
+    pp items
+    msg << EC.get_market_data(:typeID => 438)[:all]
+  elsif items.size == 0
+    msg << "No Result for #{item}"
+  else
+    msg << "Results for '#{item}', please specify\n"
+    msg << items.map{|i| i[2] }.join(", ")
   end
-  
 end
 
 
