@@ -36,8 +36,9 @@ respond_on(:PRIVMSG, :pc, prefix_or_nick(:pc, :pricecheck), :args => [:String, :
     msg = []
     if items.size > 10
       msg << "More than 10 results yielded, please rephrase your input '#{item}'"
+      msg << items[0..10].map{|i| i[2] }.join(", ") + " ..."
     elsif items.size == 1
-      msg << "One Result for #{item}"
+      msg << "One Result for #{items.first[2]}"
       msg << market_data_to_s(items.first[0].to_i, what)
     elsif items.size == 0
       msg << "No Result for #{item}"
@@ -47,7 +48,7 @@ respond_on(:PRIVMSG, :pc, prefix_or_nick(:pc, :pricecheck), :args => [:String, :
     end
     h.respond(msg)
   rescue Timeout::Error
-    h.respond("Request timed out. (#{!})")
+    h.respond("Request timed out. (#{$!})")
   end
   
 end
