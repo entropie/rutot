@@ -3,28 +3,37 @@
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 
-google = hlp_google
-include :imdb
+require "imdb"
 
 respond_on(:PRIVMSG, :imdb, prefix_or_nick(:imdb), :args => [:Everything], :arg_req => true) do |h|
- 
-  query = google.search("site:imdb.com \"" + (a=h.args.join(' ')) + "\"")
+
+  query = h.args.join(' ')
+
+
+  # TODO: rating (not supported by gem yet, possibly due html changes on imdb site)
   begin
-    if query
-      r = query.results.first
-      imdb = IMDB.new(r.url)
-      r = "%s: %s  Rating: %s" % [imdb.title, r.url, imdb.rating]
-      r << "\n%s"       % [imdb.extrainfo['plotoutline'].strip]
+
+    imdb = ::Imdb::Search.new(query.strip).movies
+
+    if imdb.size == 0
+      raise "not found"
+
+    else
+      movie = imdb.first
+      r = "%s: %s" % [movie.title.strip, movie.url]
+      r << "\n%s"       % [movie.plot.strip]
       r << "\nDirector: %s;  Tagline: %s; Runtime: %s" % [
-                                                          imdb.extrainfo['director'],
-                                                          imdb.extrainfo['tagline'],
-                                                          imdb.extrainfo['runtime']
+                                                          movie.director,
+                                                          movie.tagline,
+                                                          movie.length
                                                          ]
-      r.gsub!(/\smore/, '')
-      h.respond r
+      h.respond(r)
     end
+
+    
+    
   rescue
-    h.respond ReplyBox.NO
+    h.respond(ReplyBox.NO)
   end
 end
 
