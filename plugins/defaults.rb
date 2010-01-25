@@ -48,7 +48,7 @@ respond_on(:PRIVMSG, :botsnack, prefix_or_nick(:botsnack)) do |h|
 end
 
 respond_on(:PRIVMSG, :LOC, prefix_or_nick(:LOC)) do |h|
-  `/home/mit/bin/loc`.split("\n").join(' — ')
+  `loc`.split("\n").join(' — ')
 end
 
 respond_on(:PRIVMSG, :uptime, prefix_or_nick(:uptime)) do |h|
