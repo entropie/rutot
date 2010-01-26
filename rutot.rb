@@ -41,11 +41,16 @@ def puts(*args)
   Kernel.puts
 end
 
+# bug in feedzirra (or something)
+# need to require active_support or
+# .../activesupport-2.3.5/lib/active_support/basic_object.rb:12:in `undef_method': undefined method `==' for class `ActiveSupport::BasicObject' (NameError)
+require 'active_support' 
+
 begin
   require "lib/helper/paramhash"
   require "lib/helper/common"
   require "lib/helper/database"
-  require "lib/helper/shellwords"  
+  require "lib/helper/shellwords"
   require "lib/responder"
   require "lib/responder_methods"
   require "lib/plugins"
