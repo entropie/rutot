@@ -106,6 +106,12 @@ class Patch < Rss
   end
 end
 
+class XCKD < Rss
+  def url
+    "http://xkcd.com/rss.xml"
+  end
+end
+
 Rss.to_json unless File.exist?(Rss::DataFile)
 
 def feed_to_s(feedname, feed)
