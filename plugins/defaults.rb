@@ -56,8 +56,13 @@ respond_on(:PRIVMSG, :uptime, prefix_or_nick(:uptime)) do |h|
 end
 
 respond_on(:PRIVMSG, :nsregister, prefix_or_nick(:registerns)) do |h|
-  h.bot.msg('NickServ', "register #{bot.config.freenode}")
+  h.bot.msg('NickServ', "register #{bot.config.freenode} email")
   'k'
+end
+
+respond_on(:PRIVMSG, :nscomplete, prefix_or_nick(:completens)) do |h|
+  h.bot.msg('NickServ', "verify register #{bot.config.nick} password")
+  "k"
 end
 
 
