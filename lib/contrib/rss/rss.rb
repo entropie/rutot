@@ -86,6 +86,8 @@ class Rss
 
 end
 
+Rss.to_json unless File.exist?(Rss::DataFile)
+
 class DevBlog < Rss
   def url
     "http://www.eveonline.com/feed/rdfdevblog.asp"
@@ -101,6 +103,10 @@ end
 class Patch < Rss
   def url
     "http://www.eveonline.com/feed/rdfpatchnotes.asp"
+  end
+
+  def name
+    "eve"
   end
 end
 
