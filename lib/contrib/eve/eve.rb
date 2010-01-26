@@ -128,7 +128,7 @@ class EveCentral
       parse_market_data(params)
     end
   end
-
+  
   def parse_market_data(params)
     url = mk_url(params)
     data, fields = {}, [:all, :sell, :buy]
