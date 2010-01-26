@@ -86,7 +86,7 @@ class Rss
 
 end
 
-Rss.to_json unless File.exist?(Rss::DataFile)
+
 
 class DevBlog < Rss
   def url
@@ -94,7 +94,7 @@ class DevBlog < Rss
   end
 end
 
-class Announcements < Rss
+class Eve < Rss
   def url
     "http://www.eveonline.com/feed/rdfnews.asp?tid=1"
   end
@@ -104,12 +104,9 @@ class Patch < Rss
   def url
     "http://www.eveonline.com/feed/rdfpatchnotes.asp"
   end
-
-  def name
-    "eve"
-  end
 end
 
+Rss.to_json unless File.exist?(Rss::DataFile)
 
 def feed_to_s(feedname, feed)
   "[%s]: '%s' %s (%s)" % [feedname, feed["title"], hlp_tinyurl(feed["url"]), feed["published"]]
