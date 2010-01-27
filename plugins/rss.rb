@@ -20,10 +20,8 @@ respond_on(:PRIVMSG, :news, prefix_or_nick(:news), :args => [:Everything]) do |h
       ret << feed_to_s(feedname, feed)
     end
   end
-  p ret
   h.respond(ret)
 end
-
 
 
 =begin

@@ -7,8 +7,7 @@ require "rubygems"
 require "json"
 require "open-uri"
 require "pp"
-
-require "feedzirra"
+require "simple-rss"
 
 class Rss
 
@@ -21,19 +20,36 @@ class Rss
 
   attr_accessor :feed_data
 
-  def self.load(force = false)
-    if force or !@data
-      @data = JSON.parse(File.open(DataFile).read)
+  def Rss.current
+    @current
+  end
+  def Rss.current=(obj)
+    @current = obj
+  end
+  
+  def Rss.if_updated
+    if Rss.current
+      newf = Rss.write_json
+      Rss.feeds.map{|r| r.name}.each do |feedname|
+        if @current[feedname].first["published"].to_s != newf[feedname].first["published"].to_s
+          yield [feedname, newf[feedname].first]
+        end
+      end
     else
-      @data
+      @current = Rss.load
     end
   end
   
-  def self.feeds
+  
+  def Rss.load
+    JSON.parse(File.open(DataFile).read)
+  end
+  
+  def Rss.feeds
     (@feeds ||= [])
   end
 
-  def self.inherited(obj)
+  def Rss.inherited(obj)
     feeds << obj
     feeds.uniq!
   end
@@ -42,42 +58,55 @@ class Rss
   end
 
   class << self
+    # alias :oldname :name 
     alias :oldname :name 
     def name
       oldname.to_s.split("::").last.downcase
     end
   end
   
-  def self.fetch_all
+  def Rss.fetch_all
     to_save = {}
-    
     feeds.each do |feed|
       to_save[feed.name] = feed.fetch.feed_data
     end
     to_save
   end
 
-  def self.to_json
-    File.open(DataFile, "w+"){|f| f.write(fetch_all.to_json)}
+  def Rss.watch(int)
+    Thread.new do 
+      loop do
+        Rss.write_json
+        sleep int
+      end
+    end
+  end
+  
+  def Rss.write_json
+    puts "writing feedfile #{DataFile}"
+    ret = fetch_all
+    File.open(DataFile, "w+"){|f| f.write(ret.to_json)}
+    ret
   end
   
   def entries
     @entries ||= []
   end
   
-  def self.fetch
+  def Rss.fetch
     subfeed = new
-    rss = Feedzirra::Feed.fetch_and_parse(new.url)
+    rss = SimpleRSS.parse open(subfeed.url)
 
-    subfeed.title = rss.title.strip
-    subfeed.link = rss.feed_url
-    subfeed.etag = rss.etag
+    puts "fetching #{subfeed.url}"
+
+    subfeed.title = rss.channel.title.strip
+    subfeed.link = rss.channel.link
     subfeed.feed_data = []
-    
+
     rss.entries.each do |entry|
       contents = {}
-      [:title, :author, :published, :url].each do |key|
-        contents[key] = entry.send(key)
+      [:title, :author, :dc_date, :link].each do |key|
+        contents[key.to_s] = entry.send(key)
       end
       subfeed.feed_data << contents
     end
@@ -112,11 +141,19 @@ class XCKD < Rss
   end
 end
 
-Rss.to_json unless File.exist?(Rss::DataFile)
+class Twitter < Rss
+  def url
+    "http://twitter.com/statuses/user_timeline/7313002.rss"
+  end
+end
+
+Rss.write_json unless File.exist?(Rss::DataFile)
 
 def feed_to_s(feedname, feed)
-  "[%s]: '%s' %s (%s)" % [feedname, feed["title"], hlp_tinyurl(feed["url"]), feed["published"]]
+  "[%s]: '%s' %s (%s)" % [feedname, feed["title"], hlp_tinyurl(feed["link"]), feed["dc_date"]]
 end
+
+Rss.watch(60*2)
 
 =begin
 Local Variables:

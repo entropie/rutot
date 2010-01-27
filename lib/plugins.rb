@@ -20,7 +20,7 @@ module Rutot
   class Plugins
 
     class ReplyBox
-
+      
       Replies = {
         :k =>           [:aight, :k, :done, :mhmk, :yup, :klar],
         :YO =>          ["YEAH!", 'Yo.', 'Definitely yes.', 'Sure.', 'You really don’t want to know it.'],

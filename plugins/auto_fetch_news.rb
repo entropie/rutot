@@ -5,33 +5,23 @@
 
 include :rss
 
-$all = Rss.load
+Feeds = Hash[*Rss.feeds.map{|f| [f.name, Rss.load[f.name].first]}.flatten]
 
-def get_last(curr)
-  newf = Rss.load(true)
+timed_response(intv=10, :auto_fetch_news) do |h|
+  ret = []
   begin
-    Rss.feeds.map{|r| r.name}.each do |feedname|
-      if curr[feedname].first["published"] != newf[feedname].first["published"]
-        $all = newf
-        yield [feedname, newf[feedname].first]
+    Feeds.each do |feedname, feed|
+      top = Rss.load[feedname].first
+      if top["dc_date"] != feed["dc_date"] or top["title"] != feed["title"]
+        ret << feed_to_s(feedname, top)
+        Feeds[feedname] = top
       end
     end
+    h.respond(ret)
   rescue
     p $!
   end
-end
-
-# Rss.feeds.map{|r| r.name}.each do |feedname|
-#   $all[feedname].first["published"] = Time.now
-# end
-
-timed_response(10, :auto_fetch_news) do |h|
-  ret = []
-  get_last($all) do |feedname, feed|
-    ret << "[%s]: '%s' %s (%s)" % [feedname, feed["title"], hlp_tinyurl(feed["url"]), feed["published"]]
-  end
-  h.respond(ret)
-end
+end 
 
 =begin
 Local Variables:

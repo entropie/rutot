@@ -18,7 +18,7 @@ respond_on(:PRIVMSG, :kills, prefix_or_nick(:kills), :args => [:String]) do |h|
   arg = "D-GTMI" if arg.empty?
   kills = get_mapkills_from_solarSystem(arg)
   begin
-    ret = "%s Kills: Ships: %i  Pods: %i  NPCs: %i" % [arg, kills.ship_kills, kills.pod_kills, kills.faction_kills]
+    ret = "%s Kills within the last hour: Ships: %i  Pods: %i  NPCs: %i" % [arg, kills.ship_kills, kills.pod_kills, kills.faction_kills]
     h.respond(ret)
   rescue
     h.respond("%s Kills: dunno" % arg)
