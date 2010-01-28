@@ -87,6 +87,9 @@ class Rss
     ret = fetch_all
     File.open(DataFile, "w+"){|f| f.write(ret.to_json)}
     ret
+  rescue
+    puts :ERR, "error while fetching;  #{$!}"
+    Rss.load
   end
   
   def entries
@@ -153,7 +156,7 @@ def feed_to_s(feedname, feed)
   "[%s]: '%s' %s (%s)" % [feedname, feed["title"], hlp_tinyurl(feed["link"]), feed["dc_date"]]
 end
 
-Rss.watch(60*2)
+Rss.watch(60*5)
 
 =begin
 Local Variables:
