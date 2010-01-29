@@ -49,7 +49,7 @@ module Rutot
           end
         m = @more[ele.target] = Element.new(ele.target, lines)
         nel = Element.new(ele.target, ele.lines[0..MaxLines-1])
-        nel.lines.last << "  [#{m.lines.size} left, say ,more]" unless nel.lines.empty?
+        nel.lines.last << "  [#{m.lines.size} left, say #{@bot.config.prefix}more]" unless nel.lines.empty?
         nel
       else
         ele
@@ -97,13 +97,14 @@ module Rutot
     # checks whether there are ommited lines, parse in every channel
     # or in specifc if +chan+ is non +nil+.
     def channel_more(chan = nil)
+      msg = "[Say #{@bot.config.prefix}more for %i skipped lines]"
       if chan and not @bot.channels[chan].nil?
-        push(chan, "[Say ,more for %i skipped lines]" % @more[chan].lines.size) if
+        push(chan, msg % @more[chan].lines.size) if
           @more[chan] and not @more[chan].lines.empty?
       else
         @bot.channels.each do |chan|
           unless @more[chan.name].nil?
-            push(chan.name, "[Say ,more for %i skipped lines]" % @more[chan.name].lines.size) unless
+            push(chan.name, msg % @more[chan.name].lines.size) unless
               @more[chan.name].lines.empty?
           end
         end
