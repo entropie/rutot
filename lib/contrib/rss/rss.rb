@@ -87,7 +87,7 @@ class Rss
     ret = fetch_all
     File.open(DataFile, "w+"){|f| f.write(ret.to_json)}
     ret
-  rescue
+  rescue Timeout::Error
     puts :ERR, "error while fetching;  #{$!}"
     Rss.load
   end
@@ -144,9 +144,9 @@ class XCKD < Rss
   end
 end
 
-class Twitter < Rss
+class Source < Rss
   def url
-    "http://twitter.com/statuses/user_timeline/7313002.rss"
+    "http://github.com/feeds/entropie/commits/rutot/master"
   end
 end
 
